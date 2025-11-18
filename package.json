@@ -1,27 +1,27 @@
 {
-  "name": "vben-admin-monorepo",
+  "name": "ylfast-iot-ui-monorepo",
   "version": "5.5.9",
   "private": true,
   "keywords": [
     "monorepo",
     "turbo",
-    "vben",
-    "vben admin",
-    "vben pro",
+    "ylfast",
+    "ylfast iot ui",
+    "ylfast-iot-ui",
+    "iot",
     "vue",
     "vue admin",
-    "vue vben admin",
-    "vue vben admin pro",
+    "vue iot admin",
     "vue3"
   ],
-  "homepage": "https://github.com/vbenjs/vue-vben-admin",
-  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
-  "repository": "vbenjs/vue-vben-admin.git",
+  "homepage": "https://github.com/ylfast-iot/ylfast-iot-ui",
+  "bugs": "https://github.com/ylfast-iot/ylfast-iot-ui/issues",
+  "repository": "ylfast-iot/ylfast-iot-ui.git",
   "license": "MIT",
   "author": {
-    "name": "vben",
-    "email": "ann.vben@gmail.com",
-    "url": "https://github.com/anncwb"
+    "name": "yaolong",
+    "email": "1638538651@qq.com",
+    "url": "https://github.com/yaolonga"
   },
   "type": "module",
   "scripts": {
