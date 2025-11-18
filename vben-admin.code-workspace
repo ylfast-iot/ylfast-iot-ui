@@ -21,6 +21,10 @@
       "path": "apps/web-tdesign",
     },
     {
+      "name": "@vben/ylfast-iot-platform",
+      "path": "apps/ylfast-iot-platform",
+    },
+    {
       "name": "@vben/docs",
       "path": "docs",
     },

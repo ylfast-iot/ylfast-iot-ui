@@ -1,0 +1,50 @@
+{
+  "name": "@vben/ylfast-iot-platform",
+  "version": "5.5.9",
+  "homepage": "https://ylfast-iot.cn",
+  "bugs": "https://github.com/ylfast-iot/ylfast-iot-ui/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ylfast-iot/ylfast-iot-ui.git",
+    "directory": "apps/ylfast-iot-platform"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "yaolong",
+    "email": "1638538651@qq.com",
+    "url": "https://github.com/yaolonga"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  },
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "dependencies": {
+    "@vben/access": "workspace:*",
+    "@vben/common-ui": "workspace:*",
+    "@vben/constants": "workspace:*",
+    "@vben/hooks": "workspace:*",
+    "@vben/icons": "workspace:*",
+    "@vben/layouts": "workspace:*",
+    "@vben/locales": "workspace:*",
+    "@vben/plugins": "workspace:*",
+    "@vben/preferences": "workspace:*",
+    "@vben/request": "workspace:*",
+    "@vben/stores": "workspace:*",
+    "@vben/styles": "workspace:*",
+    "@vben/types": "workspace:*",
+    "@vben/utils": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "ant-design-vue": "catalog:",
+    "dayjs": "catalog:",
+    "pinia": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  }
+}
