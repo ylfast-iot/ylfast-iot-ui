@@ -1,8 +1,13 @@
 import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 
+import type { ComponentType } from './component';
+
 import { h } from 'vue';
 
-import { setupVbenVxeTable, useVbenVxeGrid } from '@vben/plugins/vxe-table';
+import {
+  setupVbenVxeTable,
+  useVbenVxeGrid as useGrid,
+} from '@vben/plugins/vxe-table';
 
 import { Button, Image } from 'ant-design-vue';
 
@@ -64,6 +69,8 @@ setupVbenVxeTable({
   useVbenForm,
 });
 
-export { useVbenVxeGrid };
+export const useVbenVxeGrid = <T extends Record<string, any>>(
+  ...rest: Parameters<typeof useGrid<T, ComponentType>>
+) => useGrid<T, ComponentType>(...rest);
 
 export type * from '@vben/plugins/vxe-table';

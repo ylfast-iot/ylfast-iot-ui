@@ -1,3 +1,6 @@
+import type { Authentication } from '#/adapter/hsweb/auth';
+
+import { adaptToPermissionCode } from '#/adapter/hsweb/auth';
 import { baseRequestClient, requestClient } from '#/api/request';
 
 export namespace AuthApi {
@@ -9,7 +12,9 @@ export namespace AuthApi {
 
   /** 登录接口返回值 */
   export interface LoginResult {
-    accessToken: string;
+    token: string;
+    expires?: number;
+    user?: any;
   }
 
   export interface RefreshTokenResult {
@@ -22,23 +27,26 @@ export namespace AuthApi {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  return requestClient.post<AuthApi.LoginResult>('/auth/login', data);
+  return requestClient.post<AuthApi.LoginResult>('/authorize/login', data);
 }
 
 /**
  * 刷新accessToken
  */
-export async function refreshTokenApi() {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>('/auth/refresh', {
-    withCredentials: true,
-  });
+export async function refreshTokenApi(token?: null | string) {
+  return baseRequestClient.get<AuthApi.RefreshTokenResult>(
+    `/user-token/${token}/touch`,
+    {
+      withCredentials: true,
+    },
+  );
 }
 
 /**
  * 退出登录
  */
 export async function logoutApi() {
-  return baseRequestClient.post('/auth/logout', {
+  return requestClient.get('/user-token/reset', {
     withCredentials: true,
   });
 }
@@ -47,5 +55,7 @@ export async function logoutApi() {
  * 获取用户权限码
  */
 export async function getAccessCodesApi() {
-  return requestClient.get<string[]>('/auth/codes');
+  return requestClient
+    .get<Authentication>('/authorize/me')
+    .then(adaptToPermissionCode);
 }

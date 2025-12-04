@@ -1,10 +1,11 @@
-import type { UserInfo } from '@vben/types';
+import type { UserDetail } from '#/adapter';
 
+import { adaptUserInfo } from '#/adapter';
 import { requestClient } from '#/api/request';
 
 /**
  * 获取用户信息
  */
 export async function getUserInfoApi() {
-  return requestClient.get<UserInfo>('/user/info');
+  return requestClient.get<UserDetail>('/user/detail').then(adaptUserInfo);
 }

@@ -1,0 +1,7 @@
+{
+  "viewMode": {
+    "card": "卡片视图",
+    "list": "列表视图"
+  },
+  "total": "共 {total} 条"
+}

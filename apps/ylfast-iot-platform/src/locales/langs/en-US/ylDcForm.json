@@ -1,0 +1,56 @@
+{
+  "action": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "reset": "Reset",
+    "search": "Search",
+    "more": "More",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "addGroup": "Add Group",
+  "moreFilters": "More Filters",
+  "collapse": "Collapse",
+  "group": "Group {index}",
+  "groupRelation": "Relation with previous group:",
+  "deleteGroup": "Delete Group",
+  "addCondition": "Add Condition",
+  "deleteCondition": "Delete Condition",
+  "logic": {
+    "and": "AND",
+    "or": "OR"
+  },
+  "termType": {
+    "eq": "Equals",
+    "not": "Not Equals",
+    "like": "Contains",
+    "nlike": "Not Contains",
+    "gt": "Greater Than",
+    "lt": "Less Than",
+    "gte": "Greater Than or Equal",
+    "lte": "Less Than or Equal",
+    "in": "In",
+    "nin": "Not In",
+    "empty": "Is Empty",
+    "nempty": "Is Not Empty"
+  },
+  "placeholder": {
+    "selectField": "Select Field",
+    "input": "Please input"
+  },
+  "conditionManagement": {
+    "save": "Save Condition",
+    "edit": "Edit Condition",
+    "load": "Load Condition",
+    "delete": "Delete Condition",
+    "list": "Condition List",
+    "inputName": "Please input condition name",
+    "confirmDelete": "Are you sure to delete this condition?",
+    "saveSuccess": "Saved successfully",
+    "loadSuccess": "Loaded successfully",
+    "deleteSuccess": "Deleted successfully",
+    "noConditions": "No saved conditions"
+  }
+}

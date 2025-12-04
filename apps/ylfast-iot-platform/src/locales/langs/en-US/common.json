@@ -1,0 +1,13 @@
+{
+  "action": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "reset": "Reset",
+    "search": "Search",
+    "more": "More",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  }
+}

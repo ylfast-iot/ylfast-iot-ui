@@ -1,0 +1,7 @@
+{
+  "viewMode": {
+    "card": "Card View",
+    "list": "List View"
+  },
+  "total": "Total {total} items"
+}

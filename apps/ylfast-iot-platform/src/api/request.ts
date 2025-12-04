@@ -50,7 +50,7 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
    */
   async function doRefreshToken() {
     const accessStore = useAccessStore();
-    const resp = await refreshTokenApi();
+    const resp = await refreshTokenApi(accessStore.accessToken);
     const newToken = resp.data;
     accessStore.setAccessToken(newToken);
     return newToken;
@@ -71,7 +71,27 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
     },
   });
 
-  // 处理返回的响应数据格式
+  // 处理返回的响应数据格式 - 适配 hsweb 框架
+  client.addResponseInterceptor({
+    fulfilled: (response) => {
+      const data = response.data;
+
+      // 检查是否是 hsweb 格式响应 { status, result, message }
+      // 注意：hsweb 响应中必须包含 status 字段，且通常包含 result 字段
+      if (typeof data === 'object' && 'status' in data) {
+        // 将 hsweb 格式转换为 Vben 标准格式
+        response.data = {
+          code: data.status === 200 ? 0 : Number(data.status) || -1,
+          data: data.result,
+          message: data.message,
+        };
+      }
+
+      return response;
+    },
+  });
+
+  // 使用 Vben 默认的响应拦截器处理转换后的数据
   client.addResponseInterceptor(
     defaultResponseInterceptor({
       codeField: 'code',

@@ -15,6 +15,8 @@ import { $t } from '@vben/locales';
 
 import { notification } from 'ant-design-vue';
 
+import YlConfigMetadataForm from '#/components/yl-config-metadata-form/src/yl-config-metadata-form.vue'; // New import
+
 const AutoComplete = defineAsyncComponent(
   () => import('ant-design-vue/es/auto-complete'),
 );
@@ -122,6 +124,7 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
+  | 'YlConfigMetadataForm' // New type
   | BaseFormComponentType;
 
 async function initComponentAdapter() {
@@ -160,6 +163,7 @@ async function initComponentAdapter() {
     AutoComplete,
     Checkbox,
     CheckboxGroup,
+
     DatePicker,
     // 自定义默认按钮
     DefaultButton: (props, { attrs, slots }) => {
@@ -190,6 +194,7 @@ async function initComponentAdapter() {
     TimePicker,
     TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
     Upload,
+    YlConfigMetadataForm, // New component
   };
 
   // 将组件注册到全局共享状态中
