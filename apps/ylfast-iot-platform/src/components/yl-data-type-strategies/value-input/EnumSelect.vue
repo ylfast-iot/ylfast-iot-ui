@@ -36,6 +36,7 @@ const innerValue = computed({
     :placeholder="`${$t('ylConfigMetadataForm.pleaseSelect')}${prop.name}`"
     allow-clear
     :disabled="isDisabled(prop)"
+    style="width: 100%"
     v-bind="getComponentProps(prop)"
   />
 </template>

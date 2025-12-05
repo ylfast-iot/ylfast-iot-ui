@@ -49,6 +49,15 @@ const routes: RouteRecordRaw[] = [
             '#/views/demos/components/yl-config-metadata-form-demo/index.vue'
           ),
       },
+      {
+        meta: {
+          title: 'YlConfigMetadataDesc 演示',
+        },
+        name: 'YlConfigMetadataDescDemo',
+        path: 'yl-config-metadata-desc',
+        component: () =>
+          import('#/views/demos/components/yl-config-metadata-desc/index.vue'),
+      },
     ],
   },
 ];
