@@ -114,9 +114,19 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
       };
     }
     if (linkageMetadata) {
-      // const isArray = Array.isArray(linkageMetadata.metadata);
-      // if (isArray){
-      // }
+      if (Array.isArray(linkageMetadata.metadata)) {
+        linkageMetadata.metadata = linkageMetadata.metadata.filter(
+          (meta) => meta.properties && meta.properties.length > 0,
+        );
+        if (linkageMetadata.metadata.length === 0) {
+          return undefined;
+        }
+      } else if (
+        !linkageMetadata.metadata?.properties ||
+        linkageMetadata.metadata?.properties.length === 0
+      ) {
+        return undefined;
+      }
       // 默认值
       formModel.value[linkageMetadata.linkageProperty] =
         formModel.value[linkageMetadata.linkageProperty] || {};
