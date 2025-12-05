@@ -154,6 +154,7 @@ const ConfigItemsRenderer = (renderProps: any) => {
     hideNestedHeader:
       renderProps.hideNestedHeader || renderProps['hide-nested-header'],
     slots,
+    parentProps: getFormProps,
     registerRef: (property, el) => {
       if (el) childRefs.value[property] = el;
     },

@@ -1,3 +1,6 @@
+import type { ComputedRef } from 'vue';
+
+import type { YlConfigMetadataFormProps } from '#/components/yl-config-metadata-form';
 import type {
   ConfigMetadata,
   ConfigPropertyMetadata,
@@ -35,6 +38,7 @@ interface RenderProps {
   hideNestedHeader?: boolean;
   slots?: any;
   registerRef: (property: string, el: any) => void;
+  parentProps: ComputedRef<YlConfigMetadataFormProps>;
 }
 
 export function renderConfigMetadataFormItems(props: RenderProps) {
@@ -248,6 +252,7 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                   {linkageMetadata && linkageMetadata.metadata && (
                     <div class="mb-4 mt-2 rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
                       <YlConfigMetadataForm
+                        {...props.parentProps.value}
                         hideNestedHeader={props.hideNestedHeader}
                         hideRootHeader={props.hideRootHeader}
                         isNested={true}

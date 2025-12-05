@@ -173,6 +173,7 @@ onMounted(() => {
             @register="register"
             :metadata="currentMetadata"
             :show-action="true"
+            layout="vertical"
             @submit="handleSubmit"
           />
         </div>
