@@ -45,7 +45,9 @@ const routes: RouteRecordRaw[] = [
         name: 'YlConfigMetadataFormDemo',
         path: 'yl-config-metadata-form',
         component: () =>
-          import('#/views/demos/components/YlConfigMetadataFormDemo.vue'),
+          import(
+            '#/views/demos/components/yl-config-metadata-form-demo/index.vue'
+          ),
       },
     ],
   },

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type {
+  Validator,
   YlConfigMetadataFormActionType,
   YlConfigMetadataFormProps,
 } from './types';
@@ -46,11 +47,11 @@ const formModel = reactive<Recordable>({});
 const metadataRef = ref<ConfigMetadata | ConfigMetadata[] | undefined>(
   props.metadata,
 );
-const childRefs = ref<any[]>([]);
+const childRefs = ref<{ [key: string]: Validator }>({});
 const innerProps = ref<Partial<YlConfigMetadataFormProps>>({});
 
 onBeforeUpdate(() => {
-  childRefs.value = [];
+  childRefs.value = {};
 });
 
 // Filter props for Form to avoid passing component-specific props
@@ -153,8 +154,8 @@ const ConfigItemsRenderer = (renderProps: any) => {
     hideNestedHeader:
       renderProps.hideNestedHeader || renderProps['hide-nested-header'],
     slots,
-    registerRef: (el) => {
-      if (el) childRefs.value.push(el);
+    registerRef: (property, el) => {
+      if (el) childRefs.value[property] = el;
     },
   });
 };
@@ -172,7 +173,7 @@ const action: YlConfigMetadataFormActionType = {
   },
   validate: async () => {
     const selfValidation = formRef.value?.validate();
-    const childrenValidations = childRefs.value.map((child) => {
+    const childrenValidations = Object.values(childRefs.value).map((child) => {
       if (child && typeof child.validate === 'function')
         return child.validate();
       return Promise.resolve();
@@ -183,7 +184,7 @@ const action: YlConfigMetadataFormActionType = {
   },
   resetFields: async () => {
     formRef.value?.resetFields();
-    childRefs.value.forEach((child) => {
+    Object.values(childRefs.value).forEach((child) => {
       if (child && typeof child.resetFields === 'function') child.resetFields();
     });
 

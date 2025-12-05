@@ -9,12 +9,14 @@ import { defineAsyncComponent } from 'vue';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
+import { useVModel } from '@vueuse/core';
 import { Col, Row, Tooltip } from 'ant-design-vue';
 
 import { YlMarkdown } from '#/components/yl-markdown';
 import { getSpan, isVisible } from '#/utils/config-metadata';
 
 import ConfigFormItem from './components/ConfigFormItem.vue';
+import StrategyInputFormItem from './components/StrategyInputFormItem.vue';
 
 // Async import to handle circular dependency
 const YlConfigMetadataForm = defineAsyncComponent(
@@ -32,37 +34,94 @@ interface RenderProps {
   hideRootHeader?: boolean;
   hideNestedHeader?: boolean;
   slots?: any;
-  registerRef: (el: any) => void;
+  registerRef: (property: string, el: any) => void;
 }
 
 export function renderConfigMetadataFormItems(props: RenderProps) {
   const groups = Array.isArray(props.metadata)
     ? props.metadata
     : [props.metadata].filter(Boolean);
-  const formModel = props.model;
+
+  const formModel = useVModel(props, 'model');
+
+  function getObjPropertyMetadata(
+    prop: ConfigPropertyMetadata,
+  ): ConfigMetadata | ConfigMetadata[] | undefined {
+    if (prop.type.type !== 'OBJECT') return;
+    const metadata = prop.type.expands?.configMetadata;
+
+    if (metadata && 'property' in metadata) {
+      return { name: '', properties: [metadata] };
+    } else if (Array.isArray(metadata)) {
+      return metadata.map((item) => {
+        if ('property' in item) {
+          return { name: '', properties: [item] };
+        }
+        return item;
+      });
+    }
+    return metadata;
+  }
 
   // Linkage logic helper
-  function getActiveLinkage(
-    prop: ConfigPropertyMetadata,
-  ): ConfigMetadata | undefined {
+  function getActiveLinkageMetadata(prop: ConfigPropertyMetadata):
+    | undefined
+    | {
+        linkageProperty: string;
+        metadata: ConfigMetadata | ConfigMetadata[] | undefined;
+      } {
     const linkageMap = prop.type.expands?.linkagePropertyEnumMapConfig;
+    const linkageProperty = prop.type.expands?.linkageProperty || '';
     if (!linkageMap) return undefined;
 
-    const val = formModel[prop.property];
+    const val = formModel.value[prop.property];
     if (val === undefined || val === null) return undefined;
 
     const config = linkageMap[String(val)];
     if (!config) return undefined;
 
+    let linkageMetadata:
+      | undefined
+      | {
+          linkageProperty: string;
+          metadata: ConfigMetadata | ConfigMetadata[] | undefined;
+        };
+
     if ('properties' in config && Array.isArray(config.properties)) {
-      return config as ConfigMetadata;
+      linkageMetadata = {
+        linkageProperty,
+        metadata: config as ConfigMetadata,
+      };
     } else if ('property' in config) {
-      return {
-        name: '',
-        properties: [config as ConfigPropertyMetadata],
+      linkageMetadata = {
+        linkageProperty,
+        metadata: {
+          name: '',
+          properties: [config as ConfigPropertyMetadata],
+        },
+      };
+    } else if (Array.isArray(config)) {
+      linkageMetadata = {
+        linkageProperty,
+        metadata: config.filter(Boolean).map((item) => {
+          return 'properties' in item
+            ? (item as ConfigMetadata)
+            : ({
+                name: '',
+                properties: [item as ConfigPropertyMetadata],
+              } as ConfigMetadata);
+        }),
       };
     }
-    return undefined;
+    if (linkageMetadata) {
+      // const isArray = Array.isArray(linkageMetadata.metadata);
+      // if (isArray){
+      // }
+      // 默认值
+      formModel.value[linkageMetadata.linkageProperty] =
+        formModel.value[linkageMetadata.linkageProperty] || {};
+    }
+    return linkageMetadata;
   }
 
   return (
@@ -142,35 +201,62 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
           )}
 
           <Row gutter={16}>
-            {group.properties.map((prop) =>
-              isVisible(prop) ? (
+            {group.properties.map((prop) => {
+              const linkageMetadata = getActiveLinkageMetadata(prop);
+              const objectMetadata = getObjPropertyMetadata(prop);
+              return isVisible(prop) ? (
                 <Col key={prop.property} span={getSpan(prop)}>
-                  <ConfigFormItem
-                    onUpdate:value={(val: any) =>
-                      (formModel[prop.property] = val)
-                    }
-                    prop={prop}
-                    ref={props.registerRef}
-                    value={formModel[prop.property]}
-                  />
+                  {/* 对象特殊处理*/}
+                  {objectMetadata ? (
+                    <ConfigFormItem prop={prop}>
+                      <div class="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
+                        <YlConfigMetadataForm
+                          hideNestedHeader={props.hideNestedHeader}
+                          hideRootHeader={props.hideRootHeader}
+                          isNested={true}
+                          metadata={objectMetadata}
+                          model={formModel.value[prop.property]}
+                          onUpdate:model={(val) =>
+                            (formModel.value[prop.property] = val)
+                          }
+                          ref={(el) => props.registerRef(prop.property, el)}
+                          v-slots={props.slots}
+                        />
+                      </div>
+                    </ConfigFormItem>
+                  ) : (
+                    <StrategyInputFormItem
+                      onUpdate:value={(val: any) =>
+                        (formModel.value[prop.property] = val)
+                      }
+                      prop={prop}
+                      ref={(el) => props.registerRef(prop.property, el)}
+                      value={formModel.value[prop.property]}
+                    ></StrategyInputFormItem>
+                  )}
 
-                  {getActiveLinkage(prop) && (
+                  {linkageMetadata && linkageMetadata.metadata && (
                     <div class="mb-4 mt-2 rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
                       <YlConfigMetadataForm
                         hideNestedHeader={props.hideNestedHeader}
                         hideRootHeader={props.hideRootHeader}
                         isNested={true}
-                        metadata={getActiveLinkage(prop)}
-                        model={formModel}
-                        onChange={(val: any) => Object.assign(formModel, val)}
-                        ref={props.registerRef}
+                        metadata={linkageMetadata.metadata}
+                        model={formModel.value[linkageMetadata.linkageProperty]}
+                        onUpdate:model={(val) =>
+                          (formModel.value[linkageMetadata.linkageProperty] =
+                            val)
+                        }
+                        ref={(el) =>
+                          props.registerRef(linkageMetadata.linkageProperty, el)
+                        }
                         v-slots={props.slots}
                       />
                     </div>
                   )}
                 </Col>
-              ) : null,
-            )}
+              ) : null;
+            })}
           </Row>
         </div>
       ))}

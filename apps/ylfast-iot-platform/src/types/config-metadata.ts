@@ -57,18 +57,32 @@ export interface PropertyValueType extends DataTypeDef {
   expands?: {
     [key: string]: any;
     componentProps?: Record<string, any>; // 组件属性
-    configMetadata?: ConfigMetadata; // 嵌套对象配置
+    configMetadata?:
+      | ConfigMetadata
+      | ConfigMetadata[]
+      | ConfigPropertyMetadata
+      | ConfigPropertyMetadata[]; // 嵌套对象配置
     defaultValue?: any; // 默认值
     disabled?: boolean; // 是否禁用
     ifShow?: boolean; // 是否显示
     linkageProperty?: string; // 属性联动
     linkagePropertyBooleanMapConfig?: {
       // key为属性标识 value为联动配置
-      [key: string]: ConfigMetadata | ConfigPropertyMetadata | null;
+      [key: string]:
+        | ConfigMetadata
+        | ConfigMetadata[]
+        | ConfigPropertyMetadata
+        | ConfigPropertyMetadata[]
+        | null;
     }; // 布尔映射
     linkagePropertyEnumMapConfig?: {
       // key为属性标识 value为联动配置
-      [key: string]: ConfigMetadata | ConfigPropertyMetadata | null;
+      [key: string]:
+        | ConfigMetadata
+        | ConfigMetadata[]
+        | ConfigPropertyMetadata
+        | ConfigPropertyMetadata[]
+        | null;
     }; // 属性联动枚举映射
     maxLength?: number; // 最大长度
     required?: boolean; // 是否必填

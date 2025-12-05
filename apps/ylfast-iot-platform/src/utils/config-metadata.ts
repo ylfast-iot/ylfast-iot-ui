@@ -1,5 +1,5 @@
-import type { ConfigPropertyMetadata, Rule } from '#/types/config-metadata';
-import type { EmunTypeDef, EnumItem } from '#/types/data-type';
+import type { ConfigPropertyMetadata } from '#/types/config-metadata';
+import type { EmunTypeDef, EnumItem, Rule } from '#/types/data-type';
 
 import { $t } from '@vben/locales';
 

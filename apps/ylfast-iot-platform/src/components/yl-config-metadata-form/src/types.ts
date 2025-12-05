@@ -11,6 +11,11 @@ export interface YlConfigMetadataFormActionType {
   getFieldsValue: () => Recordable;
 }
 
+export interface Validator {
+  validate: () => Promise<any>;
+  resetFields: () => Promise<void>;
+}
+
 export interface YlConfigMetadataFormProps extends FormProps {
   metadata?: ConfigMetadata | ConfigMetadata[];
   // Initial values for the form
