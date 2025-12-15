@@ -184,6 +184,7 @@ defineExpose({
           v-if="propsConfig.mode !== 'table' && propsConfig.mode !== 'card'"
           #toolbar-tools
         >
+          <slot name="toolbar-tools"></slot>
           <div
             class="ml-2 flex items-center rounded-lg bg-gray-100 p-1 dark:bg-[#262626]"
           >
@@ -212,6 +213,9 @@ defineExpose({
               />
             </Tooltip>
           </div>
+        </template>
+        <template v-else #toolbar-tools>
+          <slot name="toolbar-tools"></slot>
         </template>
       </component>
     </div>

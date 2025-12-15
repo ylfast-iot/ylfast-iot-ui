@@ -1,53 +1,104 @@
-import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { VbenFormSchema } from '@vben/common-ui';
+import type { VxeGridProps } from '@vben/plugins/vxe-table';
+
+import type { YlDcFormSchema } from '#/components/yl-dc-form';
+
+import { z } from '@vben/common-ui';
+
+export const searchFormSchemas: YlDcFormSchema[] = [
+  {
+    component: 'Input',
+    field: 'name',
+    label: '姓名',
+    termTypes: ['like', 'nlike', 'eq'],
+  },
+  {
+    component: 'Input',
+    field: 'username',
+    label: '用户名',
+    termTypes: ['like', 'nlike', 'eq'],
+  },
+  {
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '启用', value: 1 },
+        { label: '禁用', value: 0 },
+      ],
+    },
+    field: 'status',
+    label: '状态',
+    termTypes: ['eq', 'not'],
+  },
+];
 
 export const columns: VxeGridProps['columns'] = [
-  { type: 'checkbox', width: 60 },
-  {
-    field: 'userName',
-    title: '名称',
-    minWidth: 80,
-  },
-  {
-    field: 'nickName',
-    title: '昵称',
-    minWidth: 130,
-  },
-  {
-    field: 'avatar',
-    title: '头像',
-    // slots: { default: 'avatar' },
-    minWidth: 80,
-  },
-  {
-    field: 'deptName',
-    title: '部门',
-    minWidth: 120,
-  },
-  {
-    field: 'phonenumber',
-    title: '手机号',
-    formatter({ cellValue }) {
-      return cellValue || '暂无';
-    },
-    minWidth: 120,
-  },
+  { field: 'name', minWidth: 120, title: '姓名' },
+  { field: 'username', minWidth: 120, title: '用户名' },
   {
     field: 'status',
-    title: '状态',
-    // slots: { default: 'status' },
     minWidth: 100,
+    slots: { default: 'status' },
+    title: '状态',
   },
-  {
-    field: 'createTime',
-    title: '创建时间',
-    minWidth: 150,
-  },
+  { field: 'createTime', minWidth: 160, title: '创建时间' },
   {
     field: 'action',
     fixed: 'right',
-    // slots: { default: 'action' },
+    minWidth: 160,
+    slots: { default: 'action' },
     title: '操作',
-    resizable: false,
-    width: 'auto',
+  },
+];
+
+export const modalFormSchemas: VbenFormSchema[] = [
+  {
+    component: 'Input',
+    fieldName: 'id',
+    label: 'ID',
+    dependencies: {
+      show: false,
+      triggerFields: ['id'],
+    },
+  },
+  {
+    component: 'Input',
+    fieldName: 'name',
+    label: '姓名',
+    rules: z.string().min(1, '请输入姓名'),
+  },
+  {
+    component: 'Input',
+    fieldName: 'username',
+    label: '用户名',
+    rules: z.string().min(1, '请输入用户名'),
+  },
+  {
+    component: 'InputPassword',
+    fieldName: 'password',
+    label: '密码',
+    // 编辑时不强制，创建时强制，这里简单处理，后续可以在view中动态控制
+  },
+  {
+    component: 'Input',
+    fieldName: 'email',
+    label: '邮箱',
+  },
+  {
+    component: 'Input',
+    fieldName: 'telephone',
+    label: '电话',
+  },
+  {
+    component: 'RadioGroup',
+    componentProps: {
+      options: [
+        { label: '启用', value: 1 },
+        { label: '禁用', value: 0 },
+      ],
+    },
+    defaultValue: 1,
+    fieldName: 'status',
+    label: '状态',
   },
 ];

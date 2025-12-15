@@ -1,6 +1,6 @@
 import type { Component } from 'vue';
 
-import type { ComponentType } from '#/adapter/component';
+import type { ComponentType } from '#/adapter/component/components';
 import type { Term, TermType } from '#/adapter/hsweb/QueryParams';
 
 export type ConditionType = TermType;
