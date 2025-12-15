@@ -24,7 +24,7 @@ const props = withDefaults(
 const emit = defineEmits(['update:modelValue', 'change']);
 
 // @ts-ignore
-this.MonacoEnvironment = {
+window.MonacoEnvironment = {
   getWorker(_: any, label: string) {
     if (label === 'json') {
       return new JsonWorker();
