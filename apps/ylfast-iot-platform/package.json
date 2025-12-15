@@ -44,6 +44,7 @@
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
     "md-editor-v3": "catalog:",
+    "monaco-editor": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",
     "vue-router": "catalog:"

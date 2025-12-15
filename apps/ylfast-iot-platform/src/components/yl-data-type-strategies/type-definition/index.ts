@@ -1,14 +1,36 @@
+import ArrayDefinition from './ArrayDefinition.vue';
+import BooleanDefinition from './BooleanDefinition.vue';
+import DateDefinition from './DateDefinition.vue';
 import EnumDefinition from './EnumDefinition.vue';
-import FloatDefinition from './FloatDefinition.vue';
+import FileDefinition from './FileDefinition.vue';
+import GeoDefinition from './GeoDefinition.vue';
+import NumberDefinition from './NumberDefinition.vue';
+import ObjectDefinition from './ObjectDefinition.vue';
 import {
   getTypeDefinitionComponent,
   registerTypeDefinitionComponent,
 } from './registry';
+import StringDefinition from './StringDefinition.vue';
 
 // Register defaults
-registerTypeDefinitionComponent('FLOAT', FloatDefinition);
-registerTypeDefinitionComponent('DOUBLE', FloatDefinition);
+registerTypeDefinitionComponent('FLOAT', NumberDefinition);
+registerTypeDefinitionComponent('DOUBLE', NumberDefinition);
+registerTypeDefinitionComponent('INTEGER', NumberDefinition);
+registerTypeDefinitionComponent('LONG', NumberDefinition);
+registerTypeDefinitionComponent('SHORT', NumberDefinition);
+
+registerTypeDefinitionComponent('STRING', StringDefinition);
+registerTypeDefinitionComponent('PASSWORD', StringDefinition);
+
+registerTypeDefinitionComponent('BOOLEAN', BooleanDefinition);
+
+registerTypeDefinitionComponent('DATE', DateDefinition);
 
 registerTypeDefinitionComponent('ENUM', EnumDefinition);
+
+registerTypeDefinitionComponent('OBJECT', ObjectDefinition);
+registerTypeDefinitionComponent('ARRAY', ArrayDefinition);
+registerTypeDefinitionComponent('FILE', FileDefinition);
+registerTypeDefinitionComponent('GEO', GeoDefinition);
 
 export { getTypeDefinitionComponent, registerTypeDefinitionComponent };

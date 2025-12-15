@@ -2,6 +2,8 @@ import ArrayInput from './ArrayInput.vue';
 import BooleanInput from './BooleanInput.vue';
 import DateInput from './DateInput.vue';
 import EnumSelect from './EnumSelect.vue';
+import FileInput from './FileInput.vue';
+import GeoInput from './GeoInput.vue';
 import NumberInput from './NumberInput.vue';
 import ObjectInput from './ObjectInput.vue';
 import { getFormItemComponent, registerFormItemComponent } from './registry';
@@ -26,5 +28,8 @@ registerFormItemComponent('ENUM', EnumSelect);
 registerFormItemComponent('OBJECT', ObjectInput);
 
 registerFormItemComponent('ARRAY', ArrayInput);
+
+registerFormItemComponent('FILE', FileInput);
+registerFormItemComponent('GEO', GeoInput);
 
 export { getFormItemComponent, registerFormItemComponent };

@@ -1,5 +1,5 @@
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
-import type { EmunTypeDef, EnumItem, Rule } from '#/types/data-type';
+import type { EnumItem, EnumTypeDef, Rule } from '#/types/data-type';
 
 import { $t } from '@vben/locales';
 
@@ -35,9 +35,9 @@ export function getComponentProps(prop: ConfigPropertyMetadata) {
 }
 
 export function getEnumOptions(prop: ConfigPropertyMetadata) {
-  // Prioritize EmunTypeDef's 'enums' property if type is ENUM
+  // Prioritize EnumTypeDef's 'enums' property if type is ENUM
   if (prop.type.type === 'ENUM') {
-    const enumDef = prop.type as EmunTypeDef; // Cast to EmunTypeDef
+    const enumDef = prop.type as EnumTypeDef; // Cast to EnumTypeDef
     if (enumDef.enums && Array.isArray(enumDef.enums)) {
       return enumDef.enums.map((item: EnumItem) => ({
         label: item.label || String(item.value), // Use label or value as label

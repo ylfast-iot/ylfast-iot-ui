@@ -7,6 +7,7 @@ const routes: RouteRecordRaw[] = [
     meta: {
       icon: 'ic:baseline-view-in-ar',
       keepAlive: true,
+      requiresAuth: false,
       order: 1000,
       title: $t('demos.title'),
     },
@@ -57,6 +58,40 @@ const routes: RouteRecordRaw[] = [
         path: 'yl-config-metadata-desc',
         component: () =>
           import('#/views/demos/components/yl-config-metadata-desc/index.vue'),
+      },
+      {
+        meta: {
+          title: 'YlDesc 演示',
+        },
+        name: 'YlDescDemo',
+        path: '/demos/yl-desc',
+        component: () => import('#/views/demos/components/YlDescDemo.vue'),
+      },
+      {
+        meta: {
+          title: '数据类型策略演示',
+        },
+        name: 'YlDataTypeStrategiesDemo',
+        path: '/demos/yl-data-type-strategies',
+        component: () =>
+          import('#/views/demos/components/yl-data-type-strategies/index.vue'),
+      },
+      {
+        meta: {
+          title: 'Thing Model Editor Demo',
+        },
+        name: 'ThingModelEditorDemo',
+        path: '/demos/thing-model-editor',
+        component: () =>
+          import('#/views/demos/components/ThingModelEditorDemo.vue'),
+      },
+      {
+        meta: {
+          title: 'vben编辑表格演示',
+        },
+        name: 'VbenEditableTableDemo',
+        path: '/demos/vben-editable-table',
+        component: () => import('#/views/demos/components/VbenTableDemo.vue'),
       },
     ],
   },

@@ -103,7 +103,11 @@ pnpm build
 1.  **新增功能**: 请优先在 `apps/ylfast-iot-platform/src/views` 下创建新的业务模块。
 2.  **路由**: 在 `apps/ylfast-iot-platform/src/router/routes` 下定义新的路由。
 3.  **样式**: 优先使用 Tailwind CSS 类名，减少手写 CSS/SCSS。
-4.  **组件**: 业务组件放在 `src/components`，通用组件若需跨项目复用才考虑放入 `packages/`。
+4.  **组件存放规范**:
+    - **页面私有组件**: 仅在当前页面使用的组件，存放在 `src/views/[module]/[page]/components/`。
+    - **模块共享组件**: 在同一业务模块下多个页面复用的组件，存放在 `src/views/[module]/components/`。
+    - **全局业务组件**: 跨模块复用的业务组件（如 `yl-desc`, `dc-form`），存放在 `src/components/`。
+    - **通用基础组件**: 纯 UI 组件或底层封装，若需跨 app 复用，放入 `packages/`。
 5.  **API**: 使用 `src/api` 定义接口，保持与后端路径一致。
 
 ---
@@ -264,6 +268,7 @@ const schemas: DcFormSchema[] = [
 - **Import 排序**: 项目集成了 `perfectionist` 插件，Imports 必须按特定顺序排列（通常是内置模块 -> 外部库 -> 内部别名 -> 相对路径）。
 - **Prettier**: 所有代码必须符合 Prettier 格式化标准。
 - **Vue 3**: 强制使用 `<script setup lang="ts">` 和 Composition API。
+- **自动检查**: 除非用户明确要求，否则不要主动运行 `npx prettier` 或 `pnpm lint`。
 
 ### 8.3 组件接口一致性
 
@@ -282,6 +287,8 @@ const schemas: DcFormSchema[] = [
 ## 10. 实例展示
 
 当用户需要给组件添加测试页面时你需要遵循：在apps\ylfast-iot-platform\src\router\routes\modules\demos.ts文件中新增具体的组件测试页面路由，路由所绑定的测试页面路径均在apps\ylfast-iot-platform\src\views\demos\components
+
+- 案例生成时的模拟数据如果合理请带上作者：yaolonga 邮箱：1638538651@qq.com
 
 # 语言约束
 

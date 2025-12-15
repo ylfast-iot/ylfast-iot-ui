@@ -1,0 +1,135 @@
+{
+  "defaultValue": "默认值",
+  "types": {
+    "STRING": "字符串",
+    "PASSWORD": "密码",
+    "INTEGER": "整数",
+    "LONG": "长整数",
+    "SHORT": "短整数",
+    "DOUBLE": "双精度浮点",
+    "FLOAT": "单精度浮点",
+    "BOOLEAN": "布尔值",
+    "DATE": "日期时间",
+    "ENUM": "枚举",
+    "OBJECT": "对象",
+    "ARRAY": "数组",
+    "GEO": "地理位置",
+    "FILE": "文件"
+  },
+  "strategies": {
+    "file": {
+      "bodyType": "存储格式",
+      "types": {
+        "base64": "Base64 编码",
+        "url": "URL 链接"
+      }
+    },
+    "geo": {
+      "lat": "纬度",
+      "lon": "经度",
+      "latProperty": "纬度属性名",
+      "lngProperty": "经度属性名",
+      "placeholders": {
+        "latProperty": "默认: lat",
+        "lngProperty": "默认: lon"
+      }
+    },
+    "boolean": {
+      "mapping": "布尔映射",
+      "trueText": "True 文本",
+      "falseText": "False 文本",
+      "trueValue": "True 值",
+      "falseValue": "False 值",
+      "defaultYes": "是",
+      "defaultNo": "否",
+      "name": "名称",
+      "value": "值",
+      "valueTypes": {
+        "string": "String",
+        "number": "Number",
+        "boolean": "Boolean"
+      }
+    },
+    "date": {
+      "displayMode": "显示模式",
+      "storageType": "存储类型",
+      "format": "格式化",
+      "rangeSelection": "范围选择",
+      "modes": {
+        "datetime": "日期时间 (Datetime)",
+        "date": "日期 (Date)",
+        "time": "时间 (Time)",
+        "month": "月份 (Month)",
+        "year": "年份 (Year)",
+        "decade": "十年 (Decade)"
+      },
+      "types": {
+        "string": "字符串 (String)",
+        "timestamp": "时间戳 (Timestamp - Long)"
+      },
+      "placeholders": {
+        "mode": "请选择显示模式",
+        "type": "请选择值存储类型",
+        "format": "例如: YYYY-MM-DD HH:mm:ss"
+      }
+    },
+    "enum": {
+      "multiSelect": "多选",
+      "elementType": "元素类型",
+      "list": "枚举项列表",
+      "label": "标签",
+      "value": "值",
+      "description": "描述",
+      "action": "操作",
+      "add": "添加枚举项",
+      "deleteConfirm": "确定删除吗?",
+      "placeholders": {
+        "label": "标签",
+        "description": "描述"
+      }
+    },
+    "number": {
+      "min": "最小值",
+      "max": "最大值",
+      "unit": "单位",
+      "scale": "缩放比例",
+      "precision": "精度/缩放",
+      "placeholders": {
+        "min": "请输入最小值",
+        "max": "请输入最大值",
+        "unit": "请选择或输入单位 (如: m, kg)",
+        "scale": "请输入缩放",
+        "precision": "请输入精度 (小数位数)"
+      }
+    },
+    "string": {
+      "maxLength": "最大长度",
+      "placeholders": {
+        "maxLength": "请输入最大长度"
+      }
+    },
+        "object": {
+          "properties": "属性列表",
+          "addProperty": "添加属性",
+          "id": "标识 (ID)",
+          "name": "名称",
+          "type": "类型",
+          "required": "必填",
+          "action": "操作",
+          "uniqueIdError": "属性标识(ID)必须唯一",
+          "configTitle": "类型配置",
+          "save": "保存",
+          "saveSuccess": "保存成功",
+          "cancel": "取消",
+          "edit": "编辑",
+          "copy": "复制",
+          "delete": "删除",
+          "searchPlaceholder": "搜索名称或ID",
+          "placeholders": {
+            "id": "请输入属性ID",
+            "name": "请输入属性名称"
+          }
+        }
+      }
+    }
+    

@@ -1,38 +1,124 @@
 <script setup lang="ts">
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
+import type { ArrayDef } from '#/types/data-type';
 
 import { computed } from 'vue';
 
+import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { Select } from 'ant-design-vue';
+import { Button } from 'ant-design-vue';
 
-import { getComponentProps, isDisabled } from '#/utils/config-metadata';
+import { isDisabled } from '#/utils/config-metadata';
+
+import { getFormItemComponent } from './registry';
 
 const props = defineProps<{
+  disabled?: boolean;
   prop: ConfigPropertyMetadata;
   value: any;
 }>();
 
 const emit = defineEmits(['update:value', 'change']);
 
+const DeleteOutlined = createIconifyIcon('ant-design:delete-outlined');
+const PlusOutlined = createIconifyIcon('ant-design:plus-outlined');
+
 const innerValue = computed({
-  get: () => props.value || [],
+  get: () => (Array.isArray(props.value) ? props.value : []),
   set: (val) => {
     emit('update:value', val);
     emit('change', val);
   },
 });
+
+const arrayDef = computed(() => props.prop.type as ArrayDef);
+const elementType = computed(() => arrayDef.value.elementType);
+
+function addItem() {
+  // TODO: Add default value based on type (e.g. empty object for OBJECT)
+  // For now adding null/undefined lets the child component handle default or start empty
+  const newItem = null;
+  const newList = [...innerValue.value, newItem];
+  innerValue.value = newList;
+}
+
+function removeItem(index: number) {
+  const newList = [...innerValue.value];
+  newList.splice(index, 1);
+  innerValue.value = newList;
+}
+
+function updateItem(index: number, val: any) {
+  const newList = [...innerValue.value];
+  newList[index] = val;
+  innerValue.value = newList;
+}
+
+function getChildProp(): ConfigPropertyMetadata {
+  return {
+    ...props.prop,
+    name: '', // Hide name in list
+    type: elementType.value,
+  };
+}
 </script>
 
 <template>
-  <Select
-    v-model:value="innerValue"
-    mode="tags"
-    :placeholder="`${$t('ylConfigMetadataForm.pleaseEnter')}${prop.name}`"
-    :disabled="isDisabled(prop)"
-    allow-clear
-    class="w-full"
-    v-bind="getComponentProps(prop)"
-  />
+  <div
+    class="array-input overflow-hidden rounded-md border border-border p-2"
+    :class="{ 'opacity-60': disabled || isDisabled(prop) }"
+  >
+    <div v-if="innerValue.length > 0" class="flex flex-col gap-2">
+      <div
+        v-for="(item, index) in innerValue"
+        :key="index"
+        class="flex items-start gap-2"
+      >
+        <div
+          class="mt-2 flex w-6 shrink-0 justify-center text-xs text-muted-foreground"
+        >
+          {{ index + 1 }}.
+        </div>
+        <div class="flex-1">
+          <component
+            :is="getFormItemComponent(elementType.type)"
+            v-if="elementType && getFormItemComponent(elementType.type)"
+            :prop="getChildProp()"
+            :value="item"
+            :disabled="disabled || isDisabled(prop)"
+            @update:value="(val: any) => updateItem(index, val)"
+            @change="(val: any) => updateItem(index, val)"
+          />
+          <div v-else class="text-sm italic text-muted-foreground">
+            Unknown type: {{ elementType?.type }}
+          </div>
+        </div>
+        <Button
+          type="text"
+          danger
+          size="small"
+          class="mt-1"
+          @click="removeItem(index)"
+          :disabled="disabled || isDisabled(prop)"
+        >
+          <template #icon><DeleteOutlined /></template>
+        </Button>
+      </div>
+    </div>
+    <div v-else class="py-2 text-center text-sm text-muted-foreground">
+      Empty list
+    </div>
+
+    <Button
+      type="dashed"
+      block
+      class="mt-2"
+      @click="addItem"
+      :disabled="disabled || isDisabled(prop)"
+    >
+      <template #icon><PlusOutlined /></template>
+      {{ $t('dataType.strategies.enum.add') }}
+    </Button>
+  </div>
 </template>

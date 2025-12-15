@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { DataType, EmunTypeDef, EnumItem } from '#/types/data-type';
+import type { DataType, EnumItem, EnumTypeDef } from '#/types/data-type';
 
 import { computed } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
+import { $t } from '@vben/locales';
 
 import {
   Button,
@@ -17,9 +18,11 @@ import {
   Table,
 } from 'ant-design-vue';
 
+import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
+
 const props = defineProps<{
   disabled?: boolean;
-  value?: EmunTypeDef;
+  value?: EnumTypeDef;
 }>();
 const emit = defineEmits(['update:value', 'change']);
 const DeleteOutlined = createIconifyIcon('ant-design:delete-outlined');
@@ -34,34 +37,58 @@ const innerValue = computed({
       enums: [],
       multi: false,
       elementValueType: { type: 'STRING' },
-    } as EmunTypeDef),
+    } as EnumTypeDef),
   set: (val) => {
     emit('update:value', val);
     emit('change', val);
   },
 });
 
-const dataTypes: DataType[] = [
-  'STRING',
+const ALLOWED_ENUM_TYPES = new Set([
+  'BOOLEAN',
+  'DOUBLE',
   'INTEGER',
   'LONG',
-  'DOUBLE',
-  'BOOLEAN',
-];
+  'STRING',
+]);
+const dataTypes = DATA_TYPE_OPTIONS.filter((opt) =>
+  ALLOWED_ENUM_TYPES.has(opt.value),
+);
 
-const columns = [
-  { title: '标签', dataIndex: 'label', key: 'label', width: '25%' },
-  { title: '值', dataIndex: 'value', key: 'value', width: '25%' },
-  { title: '描述', dataIndex: 'description', key: 'description', width: '35%' },
-  { title: '操作', key: 'action', width: '15%', align: 'center' },
-];
+const columns = computed(() => [
+  {
+    title: $t('dataType.strategies.enum.label'),
+    dataIndex: 'label',
+    key: 'label',
+    width: '25%',
+  },
+  {
+    title: $t('dataType.strategies.enum.value'),
+    dataIndex: 'value',
+    key: 'value',
+    width: '25%',
+  },
+  {
+    title: $t('dataType.strategies.enum.description'),
+    dataIndex: 'description',
+    key: 'description',
+    width: '35%',
+  },
+  {
+    title: $t('dataType.strategies.enum.action'),
+    key: 'action',
+    width: '15%',
+    align: 'center',
+  },
+]);
 
 function addEnumItem() {
-  const newItem: EnumItem = {
+  const newItem: EnumItem & { key: string } = {
     label: '',
     value: null,
     description: '',
     propertyValueType: innerValue.value.elementValueType || { type: 'STRING' },
+    key: `${Date.now()}-${Math.random()}`, // Internal unique key for UI stability
   };
   // Create a new array to trigger reactivity properly
   const newEnums = [...(innerValue.value.enums || []), newItem];
@@ -91,35 +118,39 @@ function handleTypeChange(type: DataType) {
     class="enum-definition rounded border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-900"
   >
     <Form layout="vertical">
-      <div class="flex gap-4">
-        <FormItem label="多选" class="mb-2">
-          <Switch v-model:checked="innerValue.multi" :disabled="disabled" />
-        </FormItem>
+      <FormItem
+        :label="$t('dataType.strategies.enum.multiSelect')"
+        class="mb-2"
+      >
+        <Switch v-model:checked="innerValue.multi" :disabled="disabled" />
+      </FormItem>
 
-        <FormItem label="元素类型" class="mb-2 flex-1">
-          <Select
-            :value="innerValue.elementValueType?.type"
-            @update:value="handleTypeChange"
-            :options="dataTypes.map((t) => ({ label: t, value: t }))"
-            :disabled="disabled"
-          />
-        </FormItem>
-      </div>
+      <FormItem
+        :label="$t('dataType.strategies.enum.elementType')"
+        class="mb-2 flex-1"
+      >
+        <Select
+          :value="innerValue.elementValueType?.type"
+          @update:value="handleTypeChange"
+          :options="dataTypes"
+          :disabled="disabled"
+        />
+      </FormItem>
 
-      <FormItem label="枚举项列表" class="mb-0">
+      <FormItem :label="$t('dataType.strategies.enum.list')" class="mb-0">
         <Table
           :data-source="innerValue.enums || []"
           :columns="columns"
           size="small"
           :pagination="false"
           bordered
-          row-key="value"
+          row-key="key"
         >
           <template #bodyCell="{ column, record, index }">
             <template v-if="column.key === 'label'">
               <Input
                 v-model:value="record.label"
-                placeholder="标签"
+                :placeholder="$t('dataType.strategies.enum.placeholders.label')"
                 :disabled="disabled"
               />
             </template>
@@ -139,8 +170,14 @@ function handleTypeChange(type: DataType) {
                 v-else-if="innerValue.elementValueType?.type === 'BOOLEAN'"
                 v-model:value="record.value"
                 :options="[
-                  { label: 'True', value: true },
-                  { label: 'False', value: false },
+                  {
+                    label: $t('dataType.strategies.boolean.defaultYes'),
+                    value: true,
+                  },
+                  {
+                    label: $t('dataType.strategies.boolean.defaultNo'),
+                    value: false,
+                  },
                 ]"
                 :disabled="disabled"
               />
@@ -155,13 +192,18 @@ function handleTypeChange(type: DataType) {
             <template v-if="column.key === 'description'">
               <Input
                 v-model:value="record.description"
-                placeholder="描述"
+                :placeholder="
+                  $t('dataType.strategies.enum.placeholders.description')
+                "
                 :disabled="disabled"
               />
             </template>
 
             <template v-if="column.key === 'action'">
-              <Popconfirm title="确定删除吗?" @confirm="removeEnumItem(index)">
+              <Popconfirm
+                :title="$t('dataType.strategies.enum.deleteConfirm')"
+                @confirm="removeEnumItem(index)"
+              >
                 <Button type="text" danger size="small">
                   <template #icon><DeleteOutlined /></template>
                 </Button>
@@ -176,7 +218,8 @@ function handleTypeChange(type: DataType) {
           @click="addEnumItem"
           :disabled="disabled"
         >
-          <template #icon><PlusOutlined /></template> 添加枚举项
+          <template #icon><PlusOutlined /></template>
+          {{ $t('dataType.strategies.enum.add') }}
         </Button>
       </FormItem>
     </Form>

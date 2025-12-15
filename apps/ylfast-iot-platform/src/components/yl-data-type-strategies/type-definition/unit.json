@@ -1,0 +1,440 @@
+[
+  {
+    "id": "percent",
+    "symbol": "%",
+    "name": "百分比",
+    "description": "百分比(%)"
+  },
+  {
+    "id": "count",
+    "symbol": "count",
+    "name": "次",
+    "description": "次"
+  },
+  {
+    "id": "turnPerSeconds",
+    "symbol": "r/min",
+    "name": "转每分钟",
+    "description": "转每分钟"
+  },
+  {
+    "id": "nanometer",
+    "symbol": "nm",
+    "name": "纳米",
+    "description": "长度单位:纳米(nm)"
+  },
+  {
+    "id": "micron",
+    "symbol": "μm",
+    "name": "微米",
+    "description": "长度单位:微米(μm)"
+  },
+  {
+    "id": "millimeter",
+    "symbol": "mm",
+    "name": "毫米",
+    "description": "长度单位:毫米(mm)"
+  },
+  {
+    "id": "centimeter",
+    "symbol": "cm",
+    "name": "厘米",
+    "description": "长度单位:厘米(cm)"
+  },
+  {
+    "id": "meter",
+    "symbol": "m",
+    "name": "米",
+    "description": "长度单位:米(m)"
+  },
+  {
+    "id": "kilometer",
+    "symbol": "km",
+    "name": "千米",
+    "description": "长度单位:千米(km)"
+  },
+  {
+    "id": "squareMillimeter",
+    "symbol": "mm²",
+    "name": "平方毫米",
+    "description": "面积单位:平方毫米(mm²)"
+  },
+  {
+    "id": "squareCentimeter",
+    "symbol": "cm²",
+    "name": "平方厘米",
+    "description": "面积单位:平方厘米(cm²)"
+  },
+  {
+    "id": "squareMeter",
+    "symbol": "m²",
+    "name": "平方米",
+    "description": "面积单位:平方米(m²)"
+  },
+  {
+    "id": "squareKilometer",
+    "symbol": "km²",
+    "name": "平方千米",
+    "description": "面积单位:平方千米(km²)"
+  },
+  {
+    "id": "hectare",
+    "symbol": "hm²",
+    "name": "公顷",
+    "description": "面积单位:公顷(hm²)"
+  },
+  {
+    "id": "days",
+    "symbol": "d",
+    "name": "天",
+    "description": "时间单位:天(d)"
+  },
+  {
+    "id": "hour",
+    "symbol": "h",
+    "name": "小时",
+    "description": "时间单位:小时(h)"
+  },
+  {
+    "id": "minutes",
+    "symbol": "min",
+    "name": "分钟",
+    "description": "时间单位:分钟(m)"
+  },
+  {
+    "id": "seconds",
+    "symbol": "s",
+    "name": "秒",
+    "description": "时间单位:秒(s)"
+  },
+  {
+    "id": "milliseconds",
+    "symbol": "ms",
+    "name": "毫秒",
+    "description": "时间单位:毫秒(ms)"
+  },
+  {
+    "id": "microseconds",
+    "symbol": "μs",
+    "name": "微秒",
+    "description": "时间单位:微秒(μs)"
+  },
+  {
+    "id": "nanoseconds",
+    "symbol": "ns",
+    "name": "纳秒",
+    "description": "时间单位:纳秒(ns)"
+  },
+  {
+    "id": "cubicMillimeter",
+    "symbol": "mm³",
+    "name": "立方毫米",
+    "description": "体积单位:立方毫米(mm³)"
+  },
+  {
+    "id": "cubicCentimeter",
+    "symbol": "cm³",
+    "name": "立方厘米",
+    "description": "体积单位:立方厘米(cm³)"
+  },
+  {
+    "id": "cubicMeter",
+    "symbol": "m³",
+    "name": "立方米",
+    "description": "体积单位:立方米(m³)"
+  },
+  {
+    "id": "cubicKilometer",
+    "symbol": "km³",
+    "name": "立方千米",
+    "description": "体积单位:立方千米(km³)"
+  },
+  {
+    "id": "cubicMeterPerSec",
+    "symbol": "m³/s",
+    "name": "立方米每秒",
+    "description": "流量单位:立方米每秒(m³/s)"
+  },
+  {
+    "id": "cubicKilometerPerSec",
+    "symbol": "km³/s",
+    "name": "立方千米每秒",
+    "description": "流量单位:立方千米每秒(km³/s)"
+  },
+  {
+    "id": "cubicCentimeterPerSec",
+    "symbol": "cm³/s",
+    "name": "立方厘米每秒",
+    "description": "流量单位:立方厘米每秒(cm³/s)"
+  },
+  {
+    "id": "litrePerSec",
+    "symbol": "l/s",
+    "name": "升每秒",
+    "description": "流量单位:升每秒(l/s)"
+  },
+  {
+    "id": "cubicMeterPerHour",
+    "symbol": "m³/h",
+    "name": "立方米每小时",
+    "description": "流量单位:立方米每小时(m³/h)"
+  },
+  {
+    "id": "cubicKilometerPerHour",
+    "symbol": "km³/h",
+    "name": "立方千米每小时",
+    "description": "流量单位:立方千米每小时(km³/h)"
+  },
+  {
+    "id": "cubicCentimeterPerHour",
+    "symbol": "cm³/h",
+    "name": "立方厘米每小时",
+    "description": "流量单位:立方厘米每小时(cm³/h)"
+  },
+  {
+    "id": "litrePerHour",
+    "symbol": "l/h",
+    "name": "升每小时",
+    "description": "流量单位:升每小时(l/h)"
+  },
+  {
+    "id": "milliliter",
+    "symbol": "mL",
+    "name": "毫升",
+    "description": "容积单位:毫升(mL)"
+  },
+  {
+    "id": "litre",
+    "symbol": "L",
+    "name": "升",
+    "description": "容积单位:升(L)"
+  },
+  {
+    "id": "milligram",
+    "symbol": "mg",
+    "name": "毫克",
+    "description": "重量单位:毫克(mg)"
+  },
+  {
+    "id": "gramme",
+    "symbol": "g",
+    "name": "克",
+    "description": "重量单位:克(g)"
+  },
+  {
+    "id": "kilogram",
+    "symbol": "kg",
+    "name": "千克",
+    "description": "重量单位:千克(kg)"
+  },
+  {
+    "id": "ton",
+    "symbol": "t",
+    "name": "吨",
+    "description": "重量单位:吨(t)"
+  },
+  {
+    "id": "pascal",
+    "symbol": "Pa",
+    "name": "帕斯卡",
+    "description": "压力单位:帕斯卡(Pa)"
+  },
+  {
+    "id": "kiloPascal",
+    "symbol": "kPa",
+    "name": "千帕斯卡",
+    "description": "压力单位:千帕斯卡(kPa)"
+  },
+  {
+    "id": "newton",
+    "symbol": "N",
+    "name": "牛顿",
+    "description": "力单位:牛顿(N)"
+  },
+  {
+    "id": "newtonMeter",
+    "symbol": "N.m",
+    "name": "牛·米",
+    "description": "力单位:牛·米(N.m)"
+  },
+  {
+    "id": "kelvin",
+    "symbol": "K",
+    "name": "开尔文",
+    "description": "温度单位:开尔文(K)"
+  },
+  {
+    "id": "celsiusDegrees",
+    "symbol": "℃",
+    "name": "摄氏度",
+    "description": "温度单位:摄氏度(℃)"
+  },
+  {
+    "id": "fahrenheit",
+    "symbol": "℉",
+    "name": "华氏度",
+    "description": "温度单位:华氏度(℉)"
+  },
+  {
+    "id": "joule",
+    "symbol": "J",
+    "name": "焦耳",
+    "description": "能单位:焦耳(J)"
+  },
+  {
+    "id": "cal",
+    "symbol": "cal",
+    "name": "卡",
+    "description": "能单位:卡(cal)"
+  },
+  {
+    "id": "watt",
+    "symbol": "W",
+    "name": "瓦特",
+    "description": "功率单位:瓦特(W)"
+  },
+  {
+    "id": "kilowatt",
+    "symbol": "kW",
+    "name": "千瓦特",
+    "description": "功率单位:千瓦特(kW)"
+  },
+  {
+    "id": "radian",
+    "symbol": "rad",
+    "name": "弧度",
+    "description": "角度单位:弧度(rad)"
+  },
+  {
+    "id": "degrees",
+    "symbol": "°",
+    "name": "度",
+    "description": "角度单位:度(°)"
+  },
+  {
+    "id": "fen",
+    "symbol": "′",
+    "name": "[角]分",
+    "description": "角度单位:分(′)"
+  },
+  {
+    "id": "angleSeconds",
+    "symbol": "″",
+    "name": "[角]秒",
+    "description": "角度单位:度(″)"
+  },
+  {
+    "id": "hertz",
+    "symbol": "Hz",
+    "name": "赫兹",
+    "description": "频率单位:赫兹(Hz)"
+  },
+  {
+    "id": "megahertz",
+    "symbol": "MHz",
+    "name": "兆赫兹",
+    "description": "频率单位:兆赫兹(MHz)"
+  },
+  {
+    "id": "ghertz",
+    "symbol": "GHz",
+    "name": "G赫兹",
+    "description": "频率单位:G赫兹(GHz)"
+  },
+  {
+    "id": "mPerSec",
+    "symbol": "m/s",
+    "name": "米每秒",
+    "description": "速度单位:米每秒(m/s)"
+  },
+  {
+    "id": "kmPerHr",
+    "symbol": "km/h",
+    "name": "千米每小时",
+    "description": "速度单位:千米每小时(km/h)"
+  },
+  {
+    "id": "knots",
+    "symbol": "kn",
+    "name": "节",
+    "description": "速度单位:节(kn)"
+  },
+  {
+    "id": "volt",
+    "symbol": "V",
+    "name": "伏特",
+    "description": "电压:伏特(V)"
+  },
+  {
+    "id": "kiloVolt",
+    "symbol": "kV",
+    "name": "千伏",
+    "description": "电压:千伏(kV)"
+  },
+  {
+    "id": "milliVolt",
+    "symbol": "mV",
+    "name": "毫伏",
+    "description": "电压:毫伏(mV)"
+  },
+  {
+    "id": "microVolt",
+    "symbol": "μV",
+    "name": "微伏",
+    "description": "电压:微伏(μV)"
+  },
+  {
+    "id": "ampere",
+    "symbol": "A",
+    "name": "安培",
+    "description": "电流:安培(A)"
+  },
+  {
+    "id": "milliAmpere",
+    "symbol": "mA",
+    "name": "毫安",
+    "description": "电流:毫安(mA)"
+  },
+  {
+    "id": "microAmpere",
+    "symbol": "μA",
+    "name": "微安",
+    "description": "电流:微安(μA)"
+  },
+  {
+    "id": "nanoAmpere",
+    "symbol": "nA",
+    "name": "纳安",
+    "description": "电流:纳安(nA)"
+  },
+  {
+    "id": "ohm",
+    "symbol": "Ω",
+    "name": "欧姆",
+    "description": "电阻:欧姆(Ω)"
+  },
+  {
+    "id": "kiloOhm",
+    "symbol": "KΩ",
+    "name": "千欧",
+    "description": "电阻:千欧(KΩ)"
+  },
+  {
+    "id": "millionOhm",
+    "symbol": "MΩ",
+    "name": "兆欧",
+    "description": "电阻:兆欧(MΩ)"
+  },
+  {
+    "id": "electronVolts",
+    "symbol": "eV",
+    "name": "电子伏",
+    "description": "能单位:电子伏(eV)"
+  },
+  {
+    "id": "kWattsHour",
+    "symbol": "kW·h",
+    "name": "千瓦·时",
+    "description": "能单位:千瓦·时(kW·h)"
+  }
+]

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
+import type { NumberTypeDef } from '#/types/data-type';
 
 import { computed } from 'vue';
 
@@ -24,6 +25,8 @@ const innerValue = computed({
   },
 });
 
+const typeDef = computed(() => props.prop.type as NumberTypeDef);
+
 const isFloat = computed(() =>
   ['DOUBLE', 'FLOAT'].includes(props.prop.type.type),
 );
@@ -36,6 +39,8 @@ const isFloat = computed(() =>
     class="w-full"
     :precision="isFloat ? undefined : 0"
     :step="isFloat ? 0.1 : 1"
+    :min="typeDef.min"
+    :max="typeDef.max"
     :disabled="isDisabled(prop)"
     v-bind="getComponentProps(prop)"
   />

@@ -1,0 +1,135 @@
+{
+  "defaultValue": "Default Value",
+  "types": {
+    "STRING": "String",
+    "PASSWORD": "Password",
+    "INTEGER": "Integer",
+    "LONG": "Long",
+    "SHORT": "Short",
+    "DOUBLE": "Double",
+    "FLOAT": "Float",
+    "BOOLEAN": "Boolean",
+    "DATE": "Date/Time",
+    "ENUM": "Enum",
+    "OBJECT": "Object",
+    "ARRAY": "Array",
+    "GEO": "Geo Location",
+    "FILE": "File"
+  },
+  "strategies": {
+    "file": {
+      "bodyType": "Body Type",
+      "types": {
+        "base64": "Base64",
+        "url": "URL"
+      }
+    },
+    "geo": {
+      "lat": "Latitude",
+      "lon": "Longitude",
+      "latProperty": "Latitude Property",
+      "lngProperty": "Longitude Property",
+      "placeholders": {
+        "latProperty": "Default: lat",
+        "lngProperty": "Default: lon"
+      }
+    },
+    "boolean": {
+      "mapping": "Boolean Mapping",
+      "trueText": "True Text",
+      "falseText": "False Text",
+      "trueValue": "True Value",
+      "falseValue": "False Value",
+      "defaultYes": "Yes",
+      "defaultNo": "No",
+      "name": "Name",
+      "value": "Value",
+      "valueTypes": {
+        "string": "String",
+        "number": "Number",
+        "boolean": "Boolean"
+      }
+    },
+    "date": {
+      "displayMode": "Display Mode",
+      "storageType": "Storage Type",
+      "format": "Format",
+      "rangeSelection": "Range Selection",
+      "modes": {
+        "datetime": "Datetime",
+        "date": "Date",
+        "time": "Time",
+        "month": "Month",
+        "year": "Year",
+        "decade": "Decade"
+      },
+      "types": {
+        "string": "String",
+        "timestamp": "Timestamp (Long)"
+      },
+      "placeholders": {
+        "mode": "Select display mode",
+        "type": "Select value storage type",
+        "format": "e.g., YYYY-MM-DD HH:mm:ss"
+      }
+    },
+    "enum": {
+      "multiSelect": "Multi Select",
+      "elementType": "Element Type",
+      "list": "Enum List",
+      "label": "Label",
+      "value": "Value",
+      "description": "Description",
+      "action": "Action",
+      "add": "Add Item",
+      "deleteConfirm": "Are you sure?",
+      "placeholders": {
+        "label": "Label",
+        "description": "Description"
+      }
+    },
+    "number": {
+      "min": "Min Value",
+      "max": "Max Value",
+      "unit": "Unit",
+      "scale": "Scale",
+      "precision": "Precision/Scale",
+      "placeholders": {
+        "min": "Enter min value",
+        "max": "Enter max value",
+        "unit": "Select or enter unit (e.g., m, kg)",
+        "scale": "Enter scale",
+        "precision": "Enter precision (decimal places)"
+      }
+    },
+    "string": {
+      "maxLength": "Max Length",
+      "placeholders": {
+        "maxLength": "Enter max length"
+      }
+    },
+        "object": {
+          "properties": "Properties",
+          "addProperty": "Add Property",
+          "id": "ID",
+          "name": "Name",
+          "type": "Type",
+          "required": "Required",
+          "action": "Action",
+          "uniqueIdError": "Property ID must be unique",
+          "configTitle": "Type Configuration",
+          "save": "Save",
+          "saveSuccess": "Saved successfully",
+          "cancel": "Cancel",
+          "edit": "Edit",
+          "copy": "Copy",
+          "delete": "Delete",
+          "searchPlaceholder": "Search Name or ID",
+          "placeholders": {
+            "id": "Enter Property ID",
+            "name": "Enter Property Name"
+          }
+        }
+      }
+    }
+    

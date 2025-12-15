@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
+import type { StringTypeDef } from '#/types/data-type';
 
 import { computed } from 'vue';
 
@@ -23,6 +24,8 @@ const innerValue = computed({
     emit('change', val);
   },
 });
+
+const typeDef = computed(() => props.prop.type as StringTypeDef);
 </script>
 
 <template>
@@ -31,6 +34,7 @@ const innerValue = computed({
     v-model:value="innerValue"
     :placeholder="`${$t('ylConfigMetadataForm.pleaseEnter')}${prop.name}`"
     :disabled="isDisabled(prop)"
+    :maxlength="typeDef.maxLength"
     allow-clear
     v-bind="getComponentProps(prop)"
   />
@@ -39,6 +43,7 @@ const innerValue = computed({
     v-model:value="innerValue"
     :placeholder="`${$t('ylConfigMetadataForm.pleaseEnter')}${prop.name}`"
     :disabled="isDisabled(prop)"
+    :maxlength="typeDef.maxLength"
     allow-clear
     v-bind="getComponentProps(prop)"
   />
