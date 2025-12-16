@@ -18,17 +18,51 @@ export class UserEntityType implements EnumDict<string> {
    *     APPLICATION("application", "第三方用户"),
    *     OTHER("other", "其他");
    */
-  static readonly ADMIN = new UserEntityType('admin', '超级管理员');
-  static readonly APPLICATION = new UserEntityType('application', '第三方用户');
-  static readonly OTHER = new UserEntityType('other', '其他');
-  static readonly USER = new UserEntityType('user', '普通用户');
+  static readonly ADMIN = new UserEntityType('admin', '超级管理员', 'blue');
+  static readonly APPLICATION = new UserEntityType(
+    'application',
+    '第三方用户',
+    'red',
+  );
+  static readonly OTHER = new UserEntityType('other', '其他', '');
+  static readonly USER = new UserEntityType('user', '普通用户', 'info');
 
+  color?: string;
   text: string;
   value: string;
 
-  constructor(value: string, text: string) {
+  constructor(value: string, text: string, color?: string) {
     this.value = value;
     this.text = text;
+    this.color = color;
+  }
+  static of(value: string): UserEntityType {
+    switch (value) {
+      case 'admin': {
+        return UserEntityType.ADMIN;
+      }
+      case 'application': {
+        return UserEntityType.APPLICATION;
+      }
+      case 'other': {
+        return UserEntityType.OTHER;
+      }
+      case 'user': {
+        return UserEntityType.USER;
+      }
+      default: {
+        return UserEntityType.OTHER;
+      }
+    }
+  }
+
+  static values(): UserEntityType[] {
+    return [
+      UserEntityType.ADMIN,
+      UserEntityType.APPLICATION,
+      UserEntityType.OTHER,
+      UserEntityType.USER,
+    ];
   }
 }
 

@@ -15,30 +15,30 @@ export namespace SystemUserApi {
     /**
      * 创建用户
      */
-    createUser: `${basicApi}/_create`,
+    create: `${basicApi}/_create`,
     /**
      * 根据用户ID获取用户信息
      */
-    getUserById: `${basicApi}/{userId}`,
+    byId: `${basicApi}/{userId}`,
     /**
      * 获取所有用户类型
      */
-    getUserTypes: `${basicApi}/types`,
+    getTypes: `${basicApi}/types`,
 
     /**
      * 获取用户列表
      */
-    queryUsers: `${basicApi}/_query`,
+    query: `${basicApi}/_query`,
 
     /**
      * 更新用户
      */
-    updateUser: `${basicApi}/{userId}/_update`,
+    update: `${basicApi}/{userId}/_update`,
 
     /**
      * 删除用户
      */
-    deleteUser: `/user/{userId}`,
+    delete: `/user/{userId}`,
   };
 }
 
@@ -48,7 +48,7 @@ export namespace SystemUserApi {
  */
 export const queryUsers = async (params?: QueryParamEntity) => {
   return requestClient.post<PagerResult<UserDetail>>(
-    SystemUserApi.ApiMethod.queryUsers,
+    SystemUserApi.ApiMethod.query,
     params,
   );
 };
@@ -59,7 +59,7 @@ export const queryUsers = async (params?: QueryParamEntity) => {
  */
 export const getUserById = async (userId: string) => {
   return requestClient.get<UserDetail>(
-    parseTemplate(SystemUserApi.ApiMethod.getUserById, {
+    parseTemplate(SystemUserApi.ApiMethod.byId, {
       userId,
     }),
   );
@@ -70,10 +70,7 @@ export const getUserById = async (userId: string) => {
  * @param data 用户数据
  */
 export const createUser = async (data: Omit<UserDetail, 'id'>) => {
-  return requestClient.post<UserDetail>(
-    SystemUserApi.ApiMethod.createUser,
-    data,
-  );
+  return requestClient.post<UserDetail>(SystemUserApi.ApiMethod.create, data);
 };
 
 /**
@@ -86,7 +83,7 @@ export const updateUser = async (
   data: Omit<UserDetail, 'id'>,
 ) => {
   return requestClient.put<UserDetail>(
-    parseTemplate(SystemUserApi.ApiMethod.updateUser, {
+    parseTemplate(SystemUserApi.ApiMethod.update, {
       userId,
     }),
     data,
@@ -99,7 +96,7 @@ export const updateUser = async (
  */
 export const deleteUser = async (userId: string) => {
   return requestClient.delete<boolean>(
-    parseTemplate(SystemUserApi.ApiMethod.deleteUser, {
+    parseTemplate(SystemUserApi.ApiMethod.delete, {
       userId,
     }),
   );
@@ -109,9 +106,7 @@ export const deleteUser = async (userId: string) => {
  * 获取所有用户类型
  */
 export const getUserTypes = async () => {
-  return requestClient.get<UserEntityType[]>(
-    SystemUserApi.ApiMethod.getUserTypes,
-  );
+  return requestClient.get<UserEntityType[]>(SystemUserApi.ApiMethod.getTypes);
 };
 
 /**

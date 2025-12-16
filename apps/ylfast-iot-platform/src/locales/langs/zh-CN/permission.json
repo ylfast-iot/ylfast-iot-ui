@@ -1,0 +1,46 @@
+{
+  "field": {
+    "id": "标识",
+    "name": "名称",
+    "describe": "说明",
+    "status": "状态",
+    "actionType": "操作类型"
+  },
+  "action": {
+    "add": "新增权限",
+    "import": "导入",
+    "edit": "编辑",
+    "delete": "删除",
+    "enable": "启用",
+    "disable": "禁用",
+    "confirmDelete": "确认删除?",
+    "confirmEnable": "确认启用?",
+    "confirmDisable": "确认禁用?",
+    "addOperation": "添加"
+  },
+  "msg": {
+    "success": {
+      "create": "创建成功",
+      "update": "更新成功",
+      "delete": "删除成功",
+      "statusUpdate": "状态更新成功",
+      "import": "导入成功"
+    },
+    "error": {
+      "importFormat": "文件格式错误，应为 JSON 数组",
+      "import": "导入失败"
+    }
+  },
+  "placeholder": {
+    "id": "请输入标识(ID)",
+    "name": "请输入名称",
+    "actionType": "请输入操作类型",
+    "actionName": "请输入操作名称",
+    "describe": "说明"
+  },
+  "text": {
+    "noData": "暂无操作，请添加",
+    "idHelp": "权限的唯一标识",
+    "list": "权限列表"
+  }
+}

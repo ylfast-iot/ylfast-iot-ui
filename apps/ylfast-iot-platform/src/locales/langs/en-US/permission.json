@@ -1,0 +1,46 @@
+{
+  "field": {
+    "id": "ID",
+    "name": "Name",
+    "describe": "Description",
+    "status": "Status",
+    "actionType": "Action Type"
+  },
+  "action": {
+    "add": "Add Permission",
+    "import": "Import",
+    "edit": "Edit",
+    "delete": "Delete",
+    "enable": "Enable",
+    "disable": "Disable",
+    "confirmDelete": "Confirm delete?",
+    "confirmEnable": "Confirm enable?",
+    "confirmDisable": "Confirm disable?",
+    "addOperation": "Add"
+  },
+  "msg": {
+    "success": {
+      "create": "Create success",
+      "update": "Update success",
+      "delete": "Delete success",
+      "statusUpdate": "Status update success",
+      "import": "Import success"
+    },
+    "error": {
+      "importFormat": "File format error, should be JSON array",
+      "import": "Import failed"
+    }
+  },
+  "placeholder": {
+    "id": "Please enter ID",
+    "name": "Please enter name",
+    "actionType": "Please enter action type",
+    "actionName": "Please enter action name",
+    "describe": "Description"
+  },
+  "text": {
+    "noData": "No operations, please add",
+    "idHelp": "Unique identifier for permission",
+    "list": "Permission List"
+  }
+}

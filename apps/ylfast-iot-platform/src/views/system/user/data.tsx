@@ -5,6 +5,8 @@ import type { YlDcFormSchema } from '#/components/yl-dc-form';
 
 import { z } from '@vben/common-ui';
 
+import { UserEntityType } from '#/adapter/hsweb/user';
+
 export const searchFormSchemas: YlDcFormSchema[] = [
   {
     component: 'Input',
@@ -34,14 +36,68 @@ export const searchFormSchemas: YlDcFormSchema[] = [
 
 export const columns: VxeGridProps['columns'] = [
   { field: 'name', minWidth: 120, title: '姓名' },
-  { field: 'username', minWidth: 120, title: '用户名' },
+  {
+    field: 'username',
+    minWidth: 120,
+    title: '用户名',
+    cellRender: {
+      name: 'CellTag',
+    },
+  },
+  {
+    field: 'typeId',
+    minWidth: 100,
+    title: '用户类型',
+    cellRender: {
+      name: 'CellTag',
+      options: UserEntityType.values().map((item) => {
+        return {
+          label: item.text,
+          value: item.value,
+          color: item.color,
+        };
+      }),
+    },
+  },
   {
     field: 'status',
     minWidth: 100,
     slots: { default: 'status' },
     title: '状态',
   },
-  { field: 'createTime', minWidth: 160, title: '创建时间' },
+  {
+    field: 'telephone',
+    minWidth: 120,
+    title: '手机号',
+    cellRender: {
+      name: 'CustomRender',
+      props: {
+        renderComponent(params: any) {
+          return <div>{params.row.telephone || '--'}</div>;
+        },
+      },
+    },
+  },
+  {
+    field: 'email',
+    minWidth: 120,
+    title: '邮箱',
+    cellRender: {
+      name: 'CustomRender',
+      props: {
+        renderComponent(params: any) {
+          return <div>{params.row.email || '--'}</div>;
+        },
+      },
+    },
+  },
+  {
+    field: 'createTime',
+    minWidth: 160,
+    title: '创建时间',
+    formatter: 'formatDateTime',
+  },
+
   {
     field: 'action',
     fixed: 'right',
