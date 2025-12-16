@@ -134,6 +134,19 @@ setupVbenVxeTable({
       },
     });
 
+    vxeUI.renderer.add('VbenIcon', {
+      renderTableDefault(renderOpts, params) {
+        const { props } = renderOpts;
+        const { column, row } = params;
+        const iconName = row[column.field];
+        return h(
+          'div',
+          { class: 'flex items-center justify-center w-full h-full' },
+          [h(IconifyIcon, { icon: iconName, class: 'size-4', ...props })],
+        );
+      },
+    });
+
     vxeUI.renderer.add('CellSwitch', {
       renderTableDefault({ attrs, props }, { column, row }) {
         const loadingKey = `__loading_${column.field}`;

@@ -4,6 +4,7 @@
     "name": "名称",
     "describe": "说明",
     "status": "状态",
+    "actions": "权限操作",
     "actionType": "操作类型"
   },
   "action": {

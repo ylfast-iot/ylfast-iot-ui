@@ -119,6 +119,7 @@ export type ComponentType =
   | 'TreeSelect'
   | 'Upload'
   | 'YlConfigMetadataForm' // New type
+  | 'RadioButtonGroup'
   | BaseFormComponentType;
 
 const components: Partial<Record<ComponentType, Component>> = {
@@ -178,6 +179,7 @@ const components: Partial<Record<ComponentType, Component>> = {
   },
   Radio,
   RadioGroup,
+  RadioButtonGroup: RadioGroup, // Register RadioButtonGroup as an alias for RadioGroup
   RangePicker,
   Rate,
   Select: withDefaultPlaceholder(Select, 'select'),

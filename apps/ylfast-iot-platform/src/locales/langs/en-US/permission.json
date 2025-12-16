@@ -4,6 +4,7 @@
     "name": "Name",
     "describe": "Description",
     "status": "Status",
+    "actions": "Actions",
     "actionType": "Action Type"
   },
   "action": {

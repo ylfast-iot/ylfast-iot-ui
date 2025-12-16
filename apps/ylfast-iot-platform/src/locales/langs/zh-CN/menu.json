@@ -1,0 +1,45 @@
+{
+  "name": "菜单名称",
+  "namePlaceholder": "请输入菜单名称",
+  "nameRequired": "菜单名称不能为空",
+  "code": "菜单编码",
+  "codePlaceholder": "请输入菜单编码",
+  "codeRequired": "菜单编码不能为空",
+  "icon": "图标",
+  "parent": "上级菜单",
+  "parentPlaceholder": "请选择上级菜单",
+  "url": "路由地址",
+  "urlPlaceholder": "请输入路由地址",
+  "component": "组件路径",
+  "componentPlaceholder": "请输入组件路径",
+  "sort": "排序",
+  "status": "状态",
+  "enable": "启用",
+  "disable": "禁用",
+  "describe": "说明",
+  "add": "新增菜单",
+  "addSub": "新增子菜单",
+  "edit": "编辑菜单",
+  "delete": "删除菜单",
+  "confirmDelete": "确认删除该菜单吗？这将同时删除所有子菜单。",
+  "success": {
+    "create": "创建成功",
+    "update": "更新成功",
+    "delete": "删除成功"
+  },
+  "tab": {
+    "basicInfo": "基本信息",
+    "permissions": "权限配置",
+    "buttons": "按钮管理"
+  },
+  "button": {
+    "add": "新增按钮",
+    "edit": "编辑按钮",
+    "code": "编码",
+    "codePlaceholder": "请输入编码",
+    "name": "名称",
+    "namePlaceholder": "请输入名称",
+    "description": "说明",
+    "associatedPermissions": "关联权限"
+  }
+}

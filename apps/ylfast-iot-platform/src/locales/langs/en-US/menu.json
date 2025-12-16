@@ -1,0 +1,45 @@
+{
+  "name": "Menu Name",
+  "namePlaceholder": "Please enter menu name",
+  "nameRequired": "Menu name is required",
+  "code": "Menu Code",
+  "codePlaceholder": "Please enter menu code",
+  "codeRequired": "Menu code is required",
+  "icon": "Icon",
+  "parent": "Parent Menu",
+  "parentPlaceholder": "Please select parent menu",
+  "url": "Route Path",
+  "urlPlaceholder": "Please enter route path",
+  "component": "Component Path",
+  "componentPlaceholder": "Please enter component path",
+  "sort": "Sort",
+  "status": "Status",
+  "enable": "Enabled",
+  "disable": "Disabled",
+  "describe": "Description",
+  "add": "Add Menu",
+  "addSub": "Add Submenu",
+  "edit": "Edit Menu",
+  "delete": "Delete Menu",
+  "confirmDelete": "Are you sure you want to delete this menu? This will also delete all submenus.",
+  "success": {
+    "create": "Created successfully",
+    "update": "Updated successfully",
+    "delete": "Deleted successfully"
+  },
+  "tab": {
+    "basicInfo": "Basic Info",
+    "permissions": "Permissions",
+    "buttons": "Buttons"
+  },
+  "button": {
+    "add": "Add Button",
+    "edit": "Edit Button",
+    "code": "Code",
+    "codePlaceholder": "Please enter code",
+    "name": "Name",
+    "namePlaceholder": "Please enter name",
+    "description": "Description",
+    "associatedPermissions": "Associated Permissions"
+  }
+}
