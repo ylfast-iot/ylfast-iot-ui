@@ -272,8 +272,8 @@ async function handleDelete(row: Recordable<any>) {
     </TableCard>
 
     <Drawer>
-      <div class="h-full flex flex-col">
-        <Tabs v-model:activeKey="activeTab" class="flex-1">
+      <div class="flex h-full flex-col">
+        <Tabs v-model:active-key="activeTab" class="flex-1">
           <Tabs.TabPane key="basic" :tab="$t('menu.tab.basicInfo')">
             <div class="p-4">
               <Form />

@@ -108,6 +108,7 @@ export type ComponentType =
   | 'Mentions'
   | 'PrimaryButton'
   | 'Radio'
+  | 'RadioButtonGroup'
   | 'RadioGroup'
   | 'RangePicker'
   | 'Rate'
@@ -119,7 +120,6 @@ export type ComponentType =
   | 'TreeSelect'
   | 'Upload'
   | 'YlConfigMetadataForm' // New type
-  | 'RadioButtonGroup'
   | BaseFormComponentType;
 
 const components: Partial<Record<ComponentType, Component>> = {
