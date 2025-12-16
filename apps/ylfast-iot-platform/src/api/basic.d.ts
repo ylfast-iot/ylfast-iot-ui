@@ -8,8 +8,6 @@ export interface BasicModel {
   modifyTime?: number;
 }
 
-
-
 export interface PagerResult<T> {
   pageIndex: number;
   pageSize: number;
