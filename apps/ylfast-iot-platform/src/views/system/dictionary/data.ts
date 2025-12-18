@@ -1,8 +1,8 @@
 import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
+import type { YlDcFormSchema } from '#/components/yl-dc-form';
 
 import { $t } from '@vben/locales';
-import type {YlDcFormSchema} from "#/components/yl-dc-form";
 
 export const dictionaryModalSchemas: VbenFormSchema[] = [
   {
