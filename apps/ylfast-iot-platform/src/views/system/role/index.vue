@@ -1,154 +1,252 @@
-<script setup lang="tsx">
-import type { ConfigMetadata } from '#/types/config-metadata';
+<script setup lang="ts">
+import type { Recordable } from '@vben/types';
 
-import { useVbenForm } from '#/adapter';
-import { useYlConfigMetadataForm } from '#/components/yl-config-metadata-form';
+import type { Term } from '#/adapter';
+import type { SystemRoleApi } from '#/api/system/role';
 
-const longMarkdown = `
-# MQTT Client Configuration Guide
+import { ref } from 'vue';
 
-This comprehensive guide details how to configure your MQTT client for optimal performance and security.
+import {
+  Page,
+  useVbenDrawer,
+  useVbenForm,
+  useVbenModal,
+} from '@vben/common-ui';
+import { $t } from '@vben/locales';
 
-## 1. Introduction
+import { Button, message, Popconfirm, Tag } from 'ant-design-vue';
 
-MQTT (Message Queuing Telemetry Transport) is a lightweight, publish-subscribe network protocol that transports messages between devices. It is ideal for remote locations with devices that have a small code footprint or are on networks with expensive or low bandwidth.
+import { deleteRole, queryRolePost, saveRole } from '#/api/system/role';
+import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 
-## 2. Basic Connection Settings
+import PermissionGrantDrawer from './components/PermissionGrantDrawer.vue';
+import RoleGroup from './components/RoleGroup.vue';
+import { columns, modalFormSchemas, searchFormSchemas } from './data';
 
-To establish a connection, you must provide the basic broker details.
+const currentGroupId = ref<null | string>(null);
+const formType = ref<'add' | 'edit'>('add');
 
-### 2.1 Host
-The **Host** is the IP address or domain name of your MQTT broker.
-- Example:
-- Example IP:
-
-### 2.2 Port
-The **Port** determines the communication channel.
-- **1883**: Default non-secure port.
-- **8883**: Default secure port (TLS/SSL).
-
-### 2.3 Client Type
-Choose the role of this client:
-- **Publisher**: Sends messages to topics.
-- **Subscriber**: Listens for messages on topics.
-
-## 3. Security Settings
-
-Security is paramount in IoT networks.
-
-### 3.1 Use TLS
-Enable **Use TLS** to encrypt the connection. This is highly recommended for production environments to prevent eavesdropping and tampering.
-
-### 3.2 Authentication
-(Not yet implemented in this form, but conceptually important)
-- **Username/Password**: Basic auth.
-- **Client Certificates**: Mutual TLS authentication.
-
-## 4. Advanced Features (Conceptual)
-
-### 4.1 Quality of Service (QoS)
-- **QoS 0**: At most once (fire and forget).
-- **QoS 1**: At least once (guaranteed delivery).
-- **QoS 2**: Exactly once (guaranteed no duplicates).
-
-### 4.2 Retained Messages
-Messages that are stored by the broker and sent to new subscribers immediately.
-
-### 4.3 Last Will and Testament (LWT)
-A message sent by the broker if the client disconnects ungracefully.
-
-## 5. Troubleshooting
-
-If you cannot connect:
-1. Check network connectivity.
-2. Verify Host and Port.
-3. Ensure firewall rules allow traffic on the specified port.
-4. Check broker logs for authentication errors.
-
-## 6. Example Configuration
-
-
-
-## 7. Appendix
-
-### 7.1 Glossary
-- **Broker**: The server that routes messages.
-- **Topic**: The string used to filter messages.
-
----
-*End of Document*
-
-
-  `;
-const basicMetadata: ConfigMetadata = {
-  name: 'Simple MQTT Config',
-  description: 'A flat configuration example',
-  document: longMarkdown,
-  properties: [
-    {
-      property: 'host',
-      name: 'Host',
-      type: { type: 'STRING', expands: { required: true, span: 24 } },
+// Form
+const [Form, formApi] = useVbenForm({
+  commonConfig: {
+    componentProps: {
+      class: 'w-full',
     },
-    {
-      property: 'port',
-      name: 'Port',
-      type: {
-        type: 'INTEGER',
-        expands: { required: true, span: 24, defaultValue: 1883 },
+  },
+  layout: 'vertical',
+  schema: modalFormSchemas,
+  showDefaultActions: false,
+});
+
+// Modal (Role Form)
+const [RoleModal, roleModalApi] = useVbenModal({
+  onCancel() {
+    roleModalApi.close();
+  },
+  onConfirm: async () => {
+    try {
+      const { valid } = await formApi.validate();
+      if (!valid) return;
+      const values = await formApi.getValues();
+      roleModalApi.setState({ confirmLoading: true });
+
+      // If adding, ensure groupId is set if selected
+      if (formType.value === 'add' && currentGroupId.value && !values.groupId) {
+        values.groupId = currentGroupId.value;
+      }
+
+      await saveRole(values as SystemRoleApi.RoleEntity);
+      message.success(
+        formType.value === 'add'
+          ? $t('common.createSuccess')
+          : $t('common.updateSuccess'),
+      );
+      roleModalApi.close();
+      gridApi.reload();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      roleModalApi.setState({ confirmLoading: false });
+    }
+  },
+});
+
+// Permission Grant Drawer
+const [GrantDrawer, grantDrawerApi] = useVbenDrawer({
+  connectedComponent: PermissionGrantDrawer,
+});
+
+const gridQuery = async (_params: any, ...args: any[]) => {
+  const queryParams = args[0] || {};
+  const { page } = _params;
+
+  const termsToCombine: Term[] = [];
+
+  // 合并来自搜索表单的条件
+  if (queryParams.terms && queryParams.terms.length > 0) {
+    termsToCombine.push(...queryParams.terms);
+  }
+
+  // 仅在 currentGroupId 存在时才添加分组过滤条件
+  if (currentGroupId.value) {
+    termsToCombine.push({
+      column: 'groupId',
+      termType: 'eq',
+      value: currentGroupId.value,
+    });
+  }
+
+  const { data, total } = await queryRolePost({
+    pageIndex: page.currentPage - 1,
+    pageSize: page.pageSize,
+    sorts: [
+      {
+        name: 'createTime',
+        order: 'desc',
       },
-    },
-    {
-      property: 'useTls',
-      name: 'Use TLS',
-      type: { type: 'BOOLEAN', expands: { defaultValue: false } },
-    },
-    {
-      property: 'type',
-      name: 'Client Type',
-      type: {
-        type: 'ENUM',
-        expands: {
-          options: [
-            { label: 'Publisher', value: 'PUB' },
-            { label: 'Subscriber', value: 'SUB' },
-          ],
-          required: true,
-        },
+      {
+        name: 'id',
+        order: 'desc',
       },
-    },
-  ],
+    ],
+    terms: termsToCombine,
+  });
+
+  return {
+    items: data,
+    total,
+  };
 };
 
-const [register] = useYlConfigMetadataForm({
-  metadata: basicMetadata,
+const [TableCard, gridApi] = useYlVxeTableCard<SystemRoleApi.RoleEntity>({
+  cardOptions: {
+    minWidth: 300,
+  },
+  mode: 'table',
+  gridOptions: {
+    columns: columns!,
+    height: 'auto',
+    pagerConfig: {
+      enabled: true,
+    },
+    rowConfig: {
+      keyField: 'id',
+    },
+    proxyConfig: {
+      response: {},
+      ajax: {
+        query: gridQuery,
+      },
+      enabled: true,
+    },
+    toolbarConfig: {
+      custom: true,
+      export: true,
+      refresh: true,
+      search: true,
+      zoom: true,
+    },
+  },
+  searchFormMode: 'yl-dc-form',
+  showSearchForm: true,
+  tableTitle: $t('role.list', 'Role List'),
+  ylDcFromOptions: {
+    formSchemas: searchFormSchemas,
+  },
 });
 
-const [Form] = useVbenForm({
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'roleName',
-      label: '角色名称',
-    },
-    {
-      component: 'Input',
-      fieldName: 'roleKey',
-      label: '权限字符',
-    },
-    {
-      fieldName: 'configuration',
-      component: 'YlConfigMetadataForm',
-      componentProps: {
-        onRegister: register,
-      },
-    },
-  ],
-});
+function handleGroupSelect(groupId: null | string) {
+  currentGroupId.value = groupId;
+  gridApi.reload();
+}
+
+function handleAdd() {
+  formType.value = 'add';
+  roleModalApi.setState({ title: $t('role.add', 'Add Role') });
+  formApi.resetForm();
+  if (currentGroupId.value) {
+    formApi.setValues({ groupId: currentGroupId.value });
+  }
+  roleModalApi.open();
+}
+
+function handleEdit(row: Recordable<any>) {
+  formType.value = 'edit';
+  roleModalApi.setState({ title: $t('role.edit', 'Edit Role') });
+  formApi.resetForm();
+  formApi.setValues(row);
+  roleModalApi.open();
+}
+
+function handlePermissionConfig(row: Recordable<any>) {
+  grantDrawerApi.setData({ roleId: row.id });
+  grantDrawerApi.open();
+}
+
+async function handleDelete(row: Recordable<any>) {
+  try {
+    await deleteRole(row.id);
+    message.success($t('common.deleteSuccess'));
+    gridApi.reload();
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <template>
-  <Form />
-</template>
+  <Page auto-content-height>
+    <div class="flex h-full w-full">
+      <RoleGroup @select="handleGroupSelect" />
 
-<style scoped></style>
+      <div class="flex-1 overflow-hidden">
+        <TableCard>
+          <template #toolbar-tools>
+            <Button type="primary" size="small" @click="handleAdd">
+              {{ $t('role.add', 'Add Role') }}
+            </Button>
+          </template>
+
+          <template #state="{ row }">
+            <Tag :color="row.state === 'enabled' ? 'success' : 'error'">
+              {{
+                row.state === 'enabled'
+                  ? $t('common.enable')
+                  : $t('common.disable')
+              }}
+            </Tag>
+          </template>
+
+          <template #action="{ row }">
+            <Button size="small" type="link" @click="handleEdit(row)">
+              {{ $t('common.action.edit') }}
+            </Button>
+            <Button
+              size="small"
+              type="link"
+              @click="handlePermissionConfig(row)"
+            >
+              {{ $t('role.configPermission', 'Permission Config') }}
+            </Button>
+            <Popconfirm
+              :title="$t('common.confirmDelete')"
+              @confirm="handleDelete(row)"
+            >
+              <Button danger size="small" type="link">
+                {{ $t('common.action.delete') }}
+              </Button>
+            </Popconfirm>
+          </template>
+        </TableCard>
+      </div>
+    </div>
+
+    <RoleModal>
+      <div class="p-4">
+        <Form />
+      </div>
+    </RoleModal>
+
+    <GrantDrawer />
+  </Page>
+</template>

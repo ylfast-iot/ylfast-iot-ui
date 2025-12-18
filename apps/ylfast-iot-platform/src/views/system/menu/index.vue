@@ -49,7 +49,10 @@ const [Drawer, drawerApi] = useVbenDrawer({
   },
   onConfirm: async () => {
     try {
-      await formApi.validate();
+      const { valid } = await formApi.validate();
+      if (!valid) {
+        return;
+      }
       const values = await formApi.getValues();
       drawerApi.setState({ confirmLoading: true });
 

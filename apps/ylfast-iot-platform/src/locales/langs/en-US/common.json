@@ -10,5 +10,22 @@
     "more": "More",
     "confirm": "Confirm",
     "cancel": "Cancel"
-  }
+  },
+  "autoGenerate": "Auto Generate",
+  "name": "Name",
+  "status": "Status",
+  "description": "Description",
+  "createTime": "Create Time",
+  "enable": "Enabled",
+  "disable": "Disabled",
+  "sort": "Sort",
+  "deleteSuccess": "Delete Success",
+  "saveSuccess": "Save Success",
+  "createSuccess": "Create Success",
+  "updateSuccess": "Update Success",
+  "confirmDelete": "Confirm Delete",
+  "confirmDeleteMsg": "Are you sure you want to delete this record? This action cannot be undone.",
+  "comingSoon": "Coming Soon",
+  "noData": "No Data",
+  "select": "Please Select"
 }

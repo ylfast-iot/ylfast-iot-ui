@@ -1,0 +1,17 @@
+{
+  "title": "组织机构",
+  "userList": "组织用户",
+  "batchBind": "批量绑定",
+  "batchUnbind": "批量解绑",
+  "bindUser": "绑定用户",
+  "bindUserTitle": "待绑定用户",
+  "unbind": "解绑",
+  "add": "新增",
+  "addSub": "新增子节点",
+  "edit": "编辑",
+  "delete": "删除",
+  "confirmUnbind": "确认解绑?",
+  "confirmUnbindMsg": "确认要解绑选中的用户吗?",
+  "pleaseSelectNode": "请选择一个组织",
+  "nameRequired": "名称不能为空"
+}

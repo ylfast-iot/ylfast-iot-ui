@@ -61,6 +61,8 @@ export interface YlDcFormSchema {
   component?: ComponentType;
   // 所有条件共用的组件属性
   componentProps?: Record<string, any>;
+  // 格式化值
+  valueFormatter?: (value: any) => any;
 }
 
 export interface YlDcFormProps {

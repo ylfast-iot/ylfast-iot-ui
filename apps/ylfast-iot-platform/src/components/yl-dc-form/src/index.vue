@@ -150,11 +150,18 @@ const gridCols = computed(() => {
 });
 
 const schemas = ref<YlDcFormSchema[]>([]);
-
+const findSchemaByField = (field: string): undefined | YlDcFormSchema => {
+  return schemas.value.find((s) => s.field === field);
+};
 // 根据字段获取默认值
 const getDefaultValueForField = (field: string): any => {
-  const schema = schemas.value.find((s) => s.field === field);
+  const schema = findSchemaByField(field);
   return schema?.defaultValue === undefined ? '' : schema.defaultValue;
+};
+
+const formatValueForField = (field: string, val: any): any => {
+  const schema = findSchemaByField(field);
+  return schema?.valueFormatter ? schema.valueFormatter(val) : val;
 };
 
 function initFormSchemas(
@@ -256,10 +263,14 @@ function buildTerms() {
           );
         })
         .map((cond) => {
+          let rawValue = cond.value;
+          if (['like', 'nlike'].includes(cond.termType)) {
+            rawValue = `%${rawValue}%`;
+          }
           return {
             column: cond.column,
             termType: cond.termType as any,
-            value: cond.value,
+            value: formatValueForField(cond.column, rawValue),
             type: cond.type,
           };
         });

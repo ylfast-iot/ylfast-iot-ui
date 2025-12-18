@@ -1,0 +1,20 @@
+{
+  "list": "Role List",
+  "add": "Add Role",
+  "edit": "Edit Role",
+  "group": {
+    "title": "Role Group",
+    "add": "Add Group",
+    "edit": "Edit Group",
+    "rootName": "All Roles"
+  },
+  "configPermission": "Permission Config",
+  "tab": {
+    "permissionAllocation": "Permission Allocation",
+    "userManagement": "User Management"
+  },
+  "permission": {
+    "menu": "Menu Permission",
+    "operation": "Operation Permission"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Organization",
+  "userList": "Organization Users",
+  "batchBind": "Batch Bind",
+  "batchUnbind": "Batch Unbind",
+  "bindUser": "Bind User",
+  "bindUserTitle": "Users to Bind",
+  "unbind": "Unbind",
+  "add": "Add",
+  "addSub": "Add Sub Node",
+  "edit": "Edit",
+  "delete": "Delete",
+  "confirmUnbind": "Confirm Unbind?",
+  "confirmUnbindMsg": "Are you sure you want to unbind the selected users?",
+  "pleaseSelectNode": "Please select an organization",
+  "nameRequired": "Name cannot be empty"
+}

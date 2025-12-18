@@ -1,6 +1,6 @@
 import type { Recordable } from '@vben/types';
 
-import type { QueryParamEntity } from '#/adapter';
+import type { HswebMenu, QueryParamEntity } from '#/adapter';
 import type { I18nSupport, TreeSortSupport } from '#/api/basic.d';
 
 import { requestClient } from '#/api/request';
@@ -18,6 +18,17 @@ export namespace SystemMenuApi {
     id: string;
     name: string;
     description: string;
+    granted: boolean;
+  }
+
+  export type MenuView = HswebMenu;
+
+  export interface MenuGrantRequest {
+    targetType: string;
+    targetId: string;
+    merge?: boolean;
+    priority?: number;
+    menus: SystemMenuApi.MenuView[]; // Or SystemMenuApi.MenuView[]
   }
 
   export interface Menu extends I18nSupport, TreeSortSupport<Menu> {
@@ -107,7 +118,7 @@ export function deleteMenu(id: string) {
  * 根据菜单获取对应的权限
  * @param menus 菜单列表
  */
-export function getPermissionsByMenuGrant(menus: SystemMenuApi.Menu[]) {
+export function getPermissionsByMenuGrant(menus: SystemMenuApi.MenuView[]) {
   return requestClient.post<SystemMenuApi.PermissionInfo[]>(
     '/menu/permissions',
     menus,
@@ -221,4 +232,87 @@ export function validateMenuCode(code: string, owner: string, appId?: string) {
   return requestClient.get<any>('/menu/code/_validate', {
     params: { appId, code, owner },
   });
+}
+
+/**
+ * 获取菜单授权信息 (树结构)
+ * @param targetType 目标类型 (role/user)
+ * @param targetId 目标ID (roleId/userId)
+ * @param params 查询参数
+ */
+export function getGrantInfoTree(
+  targetType: string,
+  targetId: string,
+  params?: QueryParamEntity,
+) {
+  return requestClient.get<SystemMenuApi.MenuView[]>(
+    `/menu/${targetType}/${targetId}/_grant/tree`,
+    {
+      params,
+    },
+  );
+}
+
+/**
+ * 获取菜单授权信息 (列表结构)
+ * @param targetType 目标类型 (role/user)
+ * @param targetId 目标ID (roleId/userId)
+ * @param params 查询参数
+ */
+export function getGrantInfoList(
+  targetType: string,
+  targetId: string,
+  params?: QueryParamEntity,
+) {
+  return requestClient.get<SystemMenuApi.MenuView[]>(
+    `/menu/${targetType}/${targetId}/_grant/list`,
+    {
+      params,
+    },
+  );
+}
+
+/**
+ * 获取菜单授权信息 (树结构)
+ * @param targetType 目标类型 (role/user)
+ * @param targetId 目标ID (roleId/userId)
+ * @param params 查询参数
+ */
+export function getGrantInfoTreePost(
+  targetType: string,
+  targetId: string,
+  params?: QueryParamEntity,
+) {
+  return requestClient.post<SystemMenuApi.MenuView[]>(
+    `/menu/${targetType}/${targetId}/_grant/tree`,
+    params,
+  );
+}
+
+/**
+ * 获取菜单授权信息 (列表结构)
+ * @param targetType 目标类型 (role/user)
+ * @param targetId 目标ID (roleId/userId)
+ * @param params 查询参数
+ */
+export function getGrantInfoListPost(
+  targetType: string,
+  targetId: string,
+  params?: QueryParamEntity,
+) {
+  return requestClient.post<SystemMenuApi.MenuView[]>(
+    `/menu/${targetType}/${targetId}/_grant/list`,
+    params,
+  );
+}
+
+/**
+ * 保存菜单授权
+ * @param data 授权请求
+ */
+export function saveGrantInfo(data: SystemMenuApi.MenuGrantRequest) {
+  return requestClient.put(
+    `/menu/${data.targetType}/${data.targetId}/_grant`,
+    data,
+  );
 }

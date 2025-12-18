@@ -290,7 +290,171 @@ const schemas: DcFormSchema[] = [
 
 - 案例生成时的模拟数据如果合理请带上作者：yaolonga 邮箱：1638538651@qq.com
 
-# 语言约束
+## 11. 国际化文件创建规范 (Internationalization File Creation Conventions)
+
+为了保持多语言环境的一致性和可维护性，请严格遵守以下规范：
+
+1.  **文件位置**:
+    - 中文: `apps/ylfast-iot-platform/src/locales/langs/zh-CN/[module].json`
+    - 英文: `apps/ylfast-iot-platform/src/locales/langs/en-US/[module].json`
+    - **必须成对创建**: 每次新增中文配置时，必须同步创建对应的英文配置（即使英文暂时使用中文占位）。
+
+2.  **模块化管理**:
+    - **通用词汇**: 如“名称”、“状态”、“操作”、“确认”、“取消”等全局通用的词汇，**必须**复用 `common.json`，严禁在业务模块文件中重复定义。
+      - 使用方式: `$t('common.name')`, `$t('common.action.add')`。
+    - **业务模块**: 为每个独立的业务模块创建单独的 JSON 文件（如 `role.json`, `device.json`）。
+      - Key 命名推荐: 简洁明了，无需重复模块前缀（因为文件名已隔离命名空间）。
+      - 例: `role.json` 中定义 `"group": "分组"`, 使用时 `$t('role.group')`。
+
+3.  **结构规范**:
+    - 推荐使用嵌套结构对相关文案进行分组。
+    - ```json
+      {
+        "list": "列表",
+        "tab": {
+          "basic": "基础信息",
+          "setting": "设置"
+        }
+      }
+      ```
+
+## 12. 组件图标开发规范 (Component Icon Development Conventions)
+
+本项目统一使用 **Iconify** 图标体系，并结合 **Vben Admin** 的工具函数进行按需引入，**严禁**直接引入组件库（如 Ant Design Vue）的内置图标组件。
+
+1.  **图标集**:
+    - **首选**: `lucide` 图标集 (风格现代、统一)。
+    - 格式: `lucide:icon-name` (如 `lucide:plus`, `lucide:trash-2`, `lucide:settings`)。
+
+2.  **引入方式 (Script)**:
+    - 使用 `@vben/icons` 中的 `createIconifyIcon` 函数创建图标组件。
+    - **禁止**: `import { PlusOutlined } from '@ant-design/icons-vue'` (除极特殊情况外)。
+    - **禁止**: 使用 `VbenIcon` 组件包裹 (除非动态渲染场景)，应直接创建组件以获得更好的类型提示和性能。
+
+    ```typescript
+    // 推荐写法
+    import { createIconifyIcon } from '@vben/icons';
+
+    const PlusIcon = createIconifyIcon('lucide:plus');
+    const DeleteIcon = createIconifyIcon('lucide:trash-2');
+    ```
+
+3.  **使用方式 (Template)**:
+    - 作为普通组件使用，或传入组件插槽。
+
+    ```html
+    <!-- 基础使用 -->
+    <PlusIcon class="size-4" />
+
+    <!-- 在 Ant Design Vue 组件插槽中使用 -->
+    <a-button>
+      <template #icon>
+        <PlusIcon />
+      </template>
+      新增
+    </a-button>
+
+    <!-- 在 Menu Item 中使用 -->
+    <a-menu-item>
+      <template #icon>
+        <DeleteIcon />
+      </template>
+      删除
+    </a-menu-item>
+    ```
+
+## 13. 列表页的 gridQuery 分页和非分页规范
+
+在使用 `useYlVxeTableCard` 组件时，其 `gridOptions.proxyConfig.ajax.query` 函数（即 `gridQuery`）用于处理列表数据的查询逻辑。根据业务需求，查询可能涉及到分页或非分页两种模式。
+
+### 13.1 `gridQuery` 函数签名
+
+`gridQuery` 函数会接收两个参数：
+
+- `_params: any`: 包含 `vxe-table` 内部的分页、排序等参数（例如 `_params.page`）。
+- `...args: any[]`: 包含来自 `yl-dc-form` 搜索表单的查询条件（通常是 `args[0]`）。
+
+### 13.2 分页查询规范
+
+当列表需要分页显示数据时，`gridQuery` 必须实现分页逻辑。
+
+1.  **获取分页参数**: 从 `_params` 中提取当前页码 (`_params.page.currentPage`) 和每页大小 (`_params.page.pageSize`)。
+2.  **构建 `QueryParamEntity`**: 将分页参数转换为后端接口所需的 `pageIndex` (注意：通常 `pageIndex = currentPage - 1`) 和 `pageSize`。
+3.  **合并查询条件**: 将搜索表单 (`args[0]`) 中提取的 `terms` 与其他固定或动态条件（如 `groupId`）合并。
+4.  **调用分页 API**: 调用后端提供的分页查询接口（通常是 `POST` 请求，如 `queryRolePost`）。
+5.  **返回数据**: API 返回的数据必须包含 `records` (当前页数据列表) 和 `total` (总记录数)。
+
+```typescript
+// 示例 (从 role/index.vue 简化)
+const gridQuery = async (_params: any, ...args: any[]) => {
+  const queryParams = args[0] || {}; // 搜索表单的条件
+  const { page } = _params; // vxe-table 分页参数
+
+  let termsToCombine: Term[] = [];
+
+  // 合并来自搜索表单的条件
+  if (queryParams.terms && queryParams.terms.length > 0) {
+    termsToCombine.push(...queryParams.terms);
+  }
+
+  // 添加特定过滤条件 (例如: 角色分组ID)
+  if (currentGroupId.value) {
+    // 假设 currentGroupId 是从左侧分组选择中获取的
+    termsToCombine.push({
+      column: 'groupId',
+      termType: 'eq',
+      value: currentGroupId.value,
+    });
+  }
+
+  const { data, total } = await queryRolePost({
+    // 假设 queryRolePost 是一个分页查询接口
+    pageIndex: page.currentPage - 1, // 当前页码 (从0开始)
+    pageSize: page.pageSize, // 每页数量
+    sorts: [
+      // 默认排序规则
+      { name: 'createTime', order: 'desc' },
+      { name: 'id', order: 'desc' },
+    ],
+    terms: termsToCombine, // 合并后的所有查询条件
+  });
+
+  return {
+    items: data,
+    total,
+  };
+};
+```
+
+### 13.3 非分页查询规范 (适用于树形列表或获取全部数据)
+
+当列表数据不需要分页（例如显示为树形结构）时，`gridQuery` 必须实现非分页逻辑。
+
+1.  **构建 `QueryParamEntity`**:
+    - 将 `pageIndex` 设置为 `0`。
+    - 将 `pageSize` 设置为一个足够大的值 (如 `9999`)，以确保获取所有数据。
+    - **关键**: 明确设置 `paging: false`。
+2.  **合并查询条件**: 同分页查询。
+3.  **调用非分页 API**: 调用后端提供的非分页查询接口（如 `getAllMenuTree` 或 `queryRoleGroupNoPaging`）。
+4.  **返回数据**: API 返回的数据应直接为数据列表（`T[]`）。
+
+```typescript
+// 示例 (从 menu/index.vue 简化)
+const gridQuery = async (_params: any, ...args: any[]) => {
+  const formValues = args[0] || { terms: [] };
+  // ... 其他默认或固定条件 ...
+
+  const data = await getAllMenuTree({
+    // 假设 getAllMenuTree 是一个非分页查询接口
+    pageIndex: 0,
+    pageSize: 9999, // 获取所有数据
+    paging: false, // 禁用分页
+    sorts: [{ name: 'sortIndex', order: 'asc' }],
+    terms: [...formValues.terms /* ...其他条件 */],
+  });
+  return data;
+};
+```
 
 输出的文档和代码都必须是中文的，代码注释尽量中文
 

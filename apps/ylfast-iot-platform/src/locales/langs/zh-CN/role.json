@@ -1,0 +1,20 @@
+{
+  "list": "角色列表",
+  "add": "新增角色",
+  "edit": "编辑角色",
+  "group": {
+    "title": "角色分组",
+    "add": "新增分组",
+    "edit": "编辑分组",
+    "rootName": "全部角色"
+  },
+  "configPermission": "权限配置",
+  "tab": {
+    "permissionAllocation": "权限分配",
+    "userManagement": "用户管理"
+  },
+  "permission": {
+    "menu": "菜单权限",
+    "operation": "操作权限"
+  }
+}

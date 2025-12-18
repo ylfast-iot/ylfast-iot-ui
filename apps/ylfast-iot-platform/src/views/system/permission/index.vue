@@ -44,7 +44,10 @@ const [Modal, modalApi] = useVbenModal({
   },
   onConfirm: async () => {
     try {
-      await formApi.validate();
+      const { valid } = await formApi.validate();
+      if (!valid) {
+        return;
+      }
       const values = await formApi.getValues();
       modalApi.setState({ confirmLoading: true });
       if (formType.value === 'add') {

@@ -139,6 +139,10 @@ export function useYlVxeTableCard<RowType extends Record<string, any> = any>(
   // 6. 扩展 API
   const extendedApi = {
     ...gridApi,
+    getGrid: () => gridApi.grid,
+    get grid() {
+      return gridApi.grid;
+    },
     getMode: () => unref(currentMode),
     setMode: (mode: 'card' | 'table') => {
       currentMode.value = mode;
@@ -148,6 +152,9 @@ export function useYlVxeTableCard<RowType extends Record<string, any> = any>(
     },
     query(...args: any[]) {
       return gridApi.grid.commitProxy('query', ...args);
+    },
+    getCheckboxRecords(isFull?: boolean) {
+      return gridApi.grid.getCheckboxRecords(isFull);
     },
     resize() {
       // 重新计算宽高
