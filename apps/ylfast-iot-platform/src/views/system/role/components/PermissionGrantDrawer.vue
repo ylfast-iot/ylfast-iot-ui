@@ -380,7 +380,7 @@ async function handleBatchUnbind() {
   }
 
   const userIds = selectedRecords.map((item) => item.id);
-  
+
   try {
     await unbindUsersFromRole(roleId.value, userIds);
     message.success($t('common.success'));
