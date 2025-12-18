@@ -171,10 +171,10 @@ async function handleBatchUnbind() {
       <div class="flex-1 overflow-hidden pl-2">
         <TableCard>
           <template #toolbar-tools>
-            <Button type="primary" size="small" @click="handleBindUser">
+            <Button type="primary" @click="handleBindUser">
               {{ $t('organization.batchBind') }}
             </Button>
-            <Button danger size="small" class="ml-2" @click="handleBatchUnbind">
+            <Button danger class="ml-2" @click="handleBatchUnbind">
               {{ $t('organization.batchUnbind') }}
             </Button>
           </template>

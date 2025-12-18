@@ -217,11 +217,11 @@ async function handleImport(file: File) {
           :show-upload-list="false"
           accept=".json"
         >
-          <Button type="primary" ghost class="mr-2" size="small">
+          <Button type="primary" ghost class="mr-2">
             {{ $t('permission.action.import') }}
           </Button>
         </Upload>
-        <Button type="primary" size="small" @click="handleAdd">
+        <Button type="primary" @click="handleAdd">
           {{ $t('permission.action.add') }}
         </Button>
       </template>

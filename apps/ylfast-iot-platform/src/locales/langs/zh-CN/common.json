@@ -27,5 +27,6 @@
   "confirmDeleteMsg": "确认删除该记录吗？此操作不可恢复。",
   "comingSoon": "敬请期待",
   "noData": "暂无数据",
-  "select": "请选择"
+  "select": "请选择",
+  "pleaseSelect": "请选择数据"
 }

@@ -3,7 +3,6 @@ import type { VxeGridProps } from '@vben/plugins/vxe-table';
 
 import type { YlDcFormSchema } from '#/components/yl-dc-form';
 
-import { z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { queryRoleGroupNoPaging } from '#/api/system/role-group';
@@ -86,7 +85,7 @@ export const modalFormSchemas: VbenFormSchema[] = [
     component: 'Input',
     fieldName: 'name',
     label: $t('common.name'),
-    rules: z.string().min(1),
+    rules: 'required',
   },
   {
     component: 'ApiTreeSelect',
@@ -105,11 +104,11 @@ export const modalFormSchemas: VbenFormSchema[] = [
       childrenField: 'children',
       placeholder: $t('common.select'),
     },
-    rules: z.string().min(1),
+    rules: 'required',
   },
   {
     component: 'RadioGroup',
-    fieldName: 'state',
+    fieldName: 'state.value',
     label: $t('common.status'),
     defaultValue: 'enabled',
     componentProps: {
@@ -118,7 +117,7 @@ export const modalFormSchemas: VbenFormSchema[] = [
         { label: $t('common.disable'), value: 'disabled' },
       ],
     },
-    rules: z.string().min(1),
+    rules: 'required',
   },
   {
     component: 'Textarea',
@@ -145,7 +144,7 @@ export const groupFormSchemas: VbenFormSchema[] = [
     component: 'Input',
     fieldName: 'name',
     label: $t('common.name'),
-    rules: z.string().min(1),
+    rules: 'required',
   },
   {
     component: 'InputNumber',

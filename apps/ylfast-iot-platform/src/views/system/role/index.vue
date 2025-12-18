@@ -202,15 +202,15 @@ async function handleDelete(row: Recordable<any>) {
       <div class="flex-1 overflow-hidden">
         <TableCard>
           <template #toolbar-tools>
-            <Button type="primary" size="small" @click="handleAdd">
+            <Button type="primary" @click="handleAdd">
               {{ $t('role.add', 'Add Role') }}
             </Button>
           </template>
 
           <template #state="{ row }">
-            <Tag :color="row.state === 'enabled' ? 'success' : 'error'">
+            <Tag :color="row.state.value === 'enabled' ? 'success' : 'error'">
               {{
-                row.state === 'enabled'
+                row.state.value === 'enabled'
                   ? $t('common.enable')
                   : $t('common.disable')
               }}

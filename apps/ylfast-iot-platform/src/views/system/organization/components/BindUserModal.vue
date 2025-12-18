@@ -83,6 +83,7 @@ const [TableCard, gridApi] = useYlVxeTableCard<UserDetail>({
 });
 
 const [Modal, modalApi] = useVbenModal({
+  draggable: true,
   onCancel() {
     modalApi.close();
   },
@@ -136,7 +137,7 @@ defineExpose({ open });
 </script>
 
 <template>
-  <Modal class="w-2/5">
+  <Modal class="w-3/5">
     <div class="h-[500px]">
       <TableCard />
     </div>

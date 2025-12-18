@@ -27,5 +27,6 @@
   "confirmDeleteMsg": "Are you sure you want to delete this record? This action cannot be undone.",
   "comingSoon": "Coming Soon",
   "noData": "No Data",
-  "select": "Please Select"
+  "select": "Please Select",
+  "pleaseSelect": "Please select data"
 }
