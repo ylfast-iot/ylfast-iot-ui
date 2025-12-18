@@ -1,0 +1,9 @@
+{
+  "title": "Dictionary Management",
+  "item": "Dictionary Item",
+  "idHelp": "Unique identifier",
+  "value": "Value",
+  "text": "Text",
+  "itemExists": "The current dictionary item already exists, please do not add it again",
+  "systemBuiltInNoModify": "System built-in enum does not support modification"
+}

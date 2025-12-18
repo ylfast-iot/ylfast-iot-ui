@@ -33,5 +33,15 @@
   "comingSoon": "Coming Soon",
   "noData": "No Data",
   "select": "Please Select",
-  "pleaseSelect": "Please select data"
+  "pleaseSelect": "Please select data",
+  "add": "Add",
+  "edit": "Edit",
+  "dictionary": "Dictionary",
+  "dictionaryItem": "Dictionary Item",
+  "id": "ID",
+  "idHelp": "Unique identifier",
+  "value": "Value",
+  "text": "Text",
+  "error": "Error",
+  "disabled": "Disabled"
 }

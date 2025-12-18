@@ -33,5 +33,15 @@
   "comingSoon": "敬请期待",
   "noData": "暂无数据",
   "select": "请选择",
-  "pleaseSelect": "请选择数据"
+  "pleaseSelect": "请选择数据",
+  "add": "新增",
+  "edit": "编辑",
+  "dictionary": "字典",
+  "dictionaryItem": "字典项",
+  "id": "ID",
+  "idHelp": "唯一标识",
+  "value": "值",
+  "text": "文本",
+  "error": "错误",
+  "disabled": "已禁用"
 }

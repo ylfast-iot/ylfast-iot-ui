@@ -1,0 +1,9 @@
+{
+  "title": "字典管理",
+  "item": "字典项",
+  "idHelp": "唯一标识",
+  "value": "值",
+  "text": "文本",
+  "itemExists": "当前字典项已经存在，请勿重复添加",
+  "systemBuiltInNoModify": "系统内置枚举不支持修改"
+}
