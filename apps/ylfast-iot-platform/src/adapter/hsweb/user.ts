@@ -25,7 +25,7 @@ export class UserEntityType implements EnumDict<string> {
     'red',
   );
   static readonly OTHER = new UserEntityType('other', '其他', '');
-  static readonly USER = new UserEntityType('user', '普通用户', 'info');
+  static readonly USER = new UserEntityType('user', '普通用户', 'green');
 
   color?: string;
   text: string;

@@ -43,3 +43,14 @@ export interface TreeSortSupport<T = any> {
 
   children: T[];
 }
+
+export interface ValidateResult {
+  /**
+   * 是否通过
+   */
+  passed: boolean;
+  /**
+   * 原因
+   */
+  reason?: string;
+}

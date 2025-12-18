@@ -32,7 +32,7 @@ const emit = defineEmits(['select']);
 interface TreeItem extends SystemRoleGroupApi.RoleGroupEntity {
   isRoot?: boolean;
   isNew?: boolean;
-  children?: TreeItem[];
+  [key: string]: any;
 }
 
 const treeData = ref<TreeItem[]>([]);
@@ -88,7 +88,7 @@ function filterTree(
         }
         acc.push({
           ...item,
-          children: children.length > 0 ? children : undefined,
+          children: children.length > 0 ? children : [],
         });
       }
       return acc;
@@ -242,11 +242,11 @@ async function handleSave(node: TreeItem) {
 function removeNodeFromTree(nodes: TreeItem[], id: string): boolean {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i];
-    if (node.id === id) {
+    if (node?.id === id) {
       nodes.splice(i, 1);
       return true;
     }
-    if (node.children && removeNodeFromTree(node.children, id)) {
+    if (node?.children && removeNodeFromTree(node.children, id)) {
       return true;
     }
   }

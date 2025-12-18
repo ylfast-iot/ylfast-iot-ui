@@ -2,6 +2,7 @@
   "list": "Role List",
   "add": "Add Role",
   "edit": "Edit Role",
+  "bindUser": "Bind User",
   "group": {
     "title": "Role Group",
     "add": "Add Group",

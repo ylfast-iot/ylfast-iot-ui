@@ -3,6 +3,7 @@ import type { VxeGridProps } from '@vben/plugins/vxe-table';
 
 import type { YlDcFormSchema } from '#/components/yl-dc-form';
 
+import { z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { queryRoleGroupNoPaging } from '#/api/system/role-group';
@@ -85,7 +86,7 @@ export const modalFormSchemas: VbenFormSchema[] = [
     component: 'Input',
     fieldName: 'name',
     label: $t('common.name'),
-    rules: 'required',
+    rules: z.string().min(1),
   },
   {
     component: 'ApiTreeSelect',
@@ -104,11 +105,11 @@ export const modalFormSchemas: VbenFormSchema[] = [
       childrenField: 'children',
       placeholder: $t('common.select'),
     },
-    rules: 'required',
+    rules: z.string().min(1),
   },
   {
     component: 'RadioGroup',
-    fieldName: 'state.value',
+    fieldName: 'state',
     label: $t('common.status'),
     defaultValue: 'enabled',
     componentProps: {
@@ -117,7 +118,7 @@ export const modalFormSchemas: VbenFormSchema[] = [
         { label: $t('common.disable'), value: 'disabled' },
       ],
     },
-    rules: 'required',
+    rules: z.string().min(1),
   },
   {
     component: 'Textarea',
@@ -144,7 +145,7 @@ export const groupFormSchemas: VbenFormSchema[] = [
     component: 'Input',
     fieldName: 'name',
     label: $t('common.name'),
-    rules: 'required',
+    rules: z.string().min(1),
   },
   {
     component: 'InputNumber',
@@ -165,14 +166,64 @@ export const permissionColumns: VxeGridProps['columns'] = [
     field: 'name',
     title: $t('role.permission.menu'),
     treeNode: true,
-    slots: { default: 'name' },
-    align: 'left',
     width: 300,
+    slots: { default: 'name' }, // Make sure to use the slot we defined
   },
   {
     field: 'actions',
     title: $t('role.permission.operation'),
-    align: 'left',
     slots: { default: 'actions' },
+  },
+];
+
+// User Management in Role (Drawer)
+export const userColumns: VxeGridProps['columns'] = [
+  {
+    type: 'checkbox',
+    width: 50,
+  },
+  {
+    field: 'name',
+    title: $t('common.name'),
+    minWidth: 100,
+  },
+  {
+    field: 'username',
+    title: $t('common.username'),
+    minWidth: 100,
+  },
+  {
+    field: 'createTime',
+    title: $t('common.createTime'),
+    formatter: 'formatDateTime',
+    width: 160,
+  },
+  {
+    field: 'status',
+    title: $t('common.status'),
+    slots: { default: 'status' }, // Slot for status tag
+    width: 100,
+  },
+  {
+    field: 'action',
+    title: $t('common.action.label'),
+    fixed: 'right',
+    width: 100,
+    slots: { default: 'action' }, // Slot for unbind
+  },
+];
+
+export const userSearchFormSchemas: YlDcFormSchema[] = [
+  {
+    component: 'Input',
+    field: 'name',
+    label: $t('common.name'),
+    termTypes: ['like', 'nlike', 'eq'],
+  },
+  {
+    component: 'Input',
+    field: 'username',
+    label: $t('common.username'),
+    termTypes: ['like', 'nlike', 'eq'],
   },
 ];

@@ -1,0 +1,49 @@
+{
+  "field": {
+    "id": "ID",
+    "name": "姓名",
+    "username": "用户名",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "newPassword": "新密码",
+    "email": "邮箱",
+    "telephone": "手机号",
+    "role": "角色",
+    "organization": "组织",
+    "status": "状态",
+    "userType": "用户类型",
+    "createTime": "创建时间"
+  },
+  "placeholder": {
+    "name": "请输入姓名",
+    "username": "请输入用户名",
+    "password": "请输入密码",
+    "confirmPassword": "请再次输入密码",
+    "email": "请输入邮箱",
+    "telephone": "请输入手机号",
+    "role": "请选择角色",
+    "organization": "请选择组织"
+  },
+  "validate": {
+    "required": "此项必填",
+    "passwordMismatch": "两次输入的密码不一致",
+    "passwordStrength": "密码强度不足",
+    "usernameExists": "用户名已存在",
+    "emailFormat": "邮箱格式不正确",
+    "telephoneFormat": "手机号格式不正确"
+  },
+  "group": {
+    "basic": "基础信息",
+    "account": "账号信息"
+  },
+  "action": {
+    "addUser": "新增用户",
+    "resetPassword": "重置密码",
+    "disable": "禁用",
+    "enable": "启用",
+    "delete": "删除",
+    "confirmDisable": "确认禁用此账号?",
+    "confirmEnable": "确认启用此账号?",
+    "confirmDelete": "确认删除此账号?"
+  }
+}

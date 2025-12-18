@@ -15,6 +15,11 @@ export namespace SystemRoleApi {
     modifierId?: string;
     modifyTime?: number;
   }
+  export interface RoleGroupDetailTree {
+    groupId: string;
+    groupName: string;
+    roles: RoleEntity[];
+  }
 }
 
 /**
@@ -55,4 +60,26 @@ export function getRoleById(id: string) {
   return requestClient.get<SystemRoleApi.RoleEntity>(`/role/${id}`);
 }
 
-// Grant APIs - moved to menu.ts
+// Bind/Unbind Users
+export function bindUsersToRole(roleId: string, userIds: string[]) {
+  return requestClient.post<boolean>(`/role/${roleId}/users/_bind`, userIds);
+}
+
+export function unbindUsersFromRole(roleId: string, userIds: string[]) {
+  return requestClient.post<boolean>(`/role/${roleId}/users/_unbind`, userIds);
+}
+
+export function queryGroupTree(param: QueryParamEntity) {
+  return requestClient.post<any>('/role/group/tree', { params: param });
+}
+
+/**
+ * 查询分组及角色(树状)
+ * @param param
+ */
+export function queryGroupDetailTree(param: QueryParamEntity) {
+  return requestClient.post<SystemRoleApi.RoleGroupDetailTree[]>(
+    '/role/group/detail/_query/tree',
+    param,
+  );
+}

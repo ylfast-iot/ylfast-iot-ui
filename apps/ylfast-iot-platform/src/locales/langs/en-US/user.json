@@ -1,0 +1,49 @@
+{
+  "field": {
+    "id": "ID",
+    "name": "Name",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "newPassword": "New Password",
+    "email": "Email",
+    "telephone": "Phone",
+    "role": "Role",
+    "organization": "Organization",
+    "status": "Status",
+    "userType": "User Type",
+    "createTime": "Create Time"
+  },
+  "placeholder": {
+    "name": "Please enter name",
+    "username": "Please enter username",
+    "password": "Please enter password",
+    "confirmPassword": "Please enter password again",
+    "email": "Please enter email",
+    "telephone": "Please enter phone number",
+    "role": "Please select role",
+    "organization": "Please select organization"
+  },
+  "validate": {
+    "required": "This field is required",
+    "passwordMismatch": "Passwords do not match",
+    "passwordStrength": "Password strength is insufficient",
+    "usernameExists": "Username already exists",
+    "emailFormat": "Invalid email format",
+    "telephoneFormat": "Invalid phone number format"
+  },
+  "group": {
+    "basic": "Basic Info",
+    "account": "Account Info"
+  },
+  "action": {
+    "addUser": "Add User",
+    "resetPassword": "Reset Password",
+    "disable": "Disable",
+    "enable": "Enable",
+    "delete": "Delete",
+    "confirmDisable": "Confirm disable this account?",
+    "confirmEnable": "Confirm enable this account?",
+    "confirmDelete": "Confirm delete this account?"
+  }
+}
