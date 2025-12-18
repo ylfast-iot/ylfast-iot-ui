@@ -243,7 +243,7 @@ async function handleDelete(row: Recordable<any>) {
   <Page auto-content-height>
     <TableCard>
       <template #toolbar-tools>
-        <Button type="primary"  @click="handleAdd">
+        <Button type="primary" @click="handleAdd">
           {{ $t('menu.add') }}
         </Button>
       </template>
