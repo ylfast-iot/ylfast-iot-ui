@@ -20,6 +20,7 @@ import {
 } from 'ant-design-vue';
 
 import { batchSaveConfig, getScopeConfigDetail } from '#/api/system/config';
+import { $t } from '#/locales';
 
 import ImageUpload from './components/ImageUpload.vue';
 
@@ -54,11 +55,21 @@ interface ConfigRules {
 
 const rules: ConfigRules = {
   front: {
-    title: [{ required: true, message: '请输入系统名称', trigger: 'blur' }],
+    title: [
+      {
+        required: true,
+        message: $t('config.placeholder.title'),
+        trigger: 'blur',
+      },
+    ],
   },
   paths: {
     'base-path': [
-      { required: true, message: '请输入基础路径', trigger: 'blur' },
+      {
+        required: true,
+        message: $t('config.placeholder.basePath'),
+        trigger: 'blur',
+      },
     ],
   },
 };
@@ -140,7 +151,7 @@ const handleSave = async () => {
     );
 
     await batchSaveConfig(dataToSave);
-    message.success('保存成功');
+    message.success($t('config.message.saveSuccess'));
   } catch (error) {
     console.error('Failed to save config:', error);
   } finally {
@@ -154,10 +165,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <Page title="系统参数配置">
+  <Page :title="$t('config.title')">
     <template #extra>
       <Button type="primary" :loading="loading" @click="handleSave">
-        保存配置
+        {{ $t('config.action.save') }}
       </Button>
     </template>
     <div class="p-4">
@@ -169,29 +180,29 @@ onMounted(() => {
           class="space-y-4"
         >
           <!-- 基础设置卡片 -->
-          <Card title="基础设置" :bordered="false">
+          <Card :title="$t('config.card.basic')" :bordered="false">
             <Row :gutter="24">
               <Col :span="12">
                 <FormItem
-                  label="系统名称"
+                  :label="$t('config.front.title')"
                   :name="['front', 'title']"
                   :rules="rules.front.title"
                 >
                   <Input
                     v-model:value="configData.front.title"
-                    placeholder="请输入系统名称"
+                    :placeholder="$t('config.placeholder.title')"
                   />
                 </FormItem>
               </Col>
               <Col :span="12">
                 <FormItem
-                  label="基础路径 (Base Path)"
+                  :label="$t('config.paths.basePath')"
                   :name="['paths', 'base-path']"
                   :rules="rules.paths['base-path']"
                 >
                   <Input
                     v-model:value="configData.paths['base-path']"
-                    placeholder="请输入API基础路径"
+                    :placeholder="$t('config.placeholder.basePath')"
                   />
                 </FormItem>
               </Col>
@@ -200,9 +211,9 @@ onMounted(() => {
             <Row :gutter="24">
               <Col :span="6">
                 <FormItem
-                  label="系统 Logo"
+                  :label="$t('config.front.logo')"
                   :name="['front', 'logo']"
-                  extra="支持jpg,png,svg,jfif,pjp,pjpeg,jpeg 推荐尺寸200*200"
+                  :extra="$t('config.front.supportImage')"
                 >
                   <ImageUpload
                     v-model:value="configData.front.logo"
@@ -213,9 +224,9 @@ onMounted(() => {
               </Col>
               <Col :span="6">
                 <FormItem
-                  label="ICO 图标"
+                  :label="$t('config.front.ico')"
                   :name="['front', 'ico']"
-                  extra="支持ico格式 推荐尺寸64*64"
+                  :extra="$t('config.front.supportIco')"
                 >
                   <ImageUpload
                     v-model:value="configData.front.ico"
@@ -226,9 +237,9 @@ onMounted(() => {
               </Col>
               <Col :span="12">
                 <FormItem
-                  label="登录页背景"
+                  :label="$t('config.front.background')"
                   :name="['front', 'background']"
-                  extra="支持jpg,png,svg,jfif,pjp,pjpeg,jpeg"
+                  :extra="$t('config.front.supportBg')"
                 >
                   <ImageUpload
                     v-model:value="configData.front.background"
@@ -241,32 +252,38 @@ onMounted(() => {
           </Card>
 
           <!-- 高德地图卡片 -->
-          <Card title="高德地图配置" :bordered="false">
+          <Card :title="$t('config.card.amap')" :bordered="false">
             <Row :gutter="24">
               <Col :span="8">
-                <FormItem label="高德地图 apiKey" :name="['amap', 'apiKey']">
+                <FormItem
+                  :label="$t('config.amap.apiKey')"
+                  :name="['amap', 'apiKey']"
+                >
                   <Input
                     v-model:value="configData.amap.apiKey"
-                    placeholder="请输入 apiKey"
+                    :placeholder="$t('config.placeholder.input') + ' apiKey'"
                   />
                 </FormItem>
               </Col>
               <Col :span="8">
                 <FormItem
-                  label="高德地图 secretKey"
+                  :label="$t('config.amap.secretKey')"
                   :name="['amap', 'secretKey']"
                 >
                   <Input
                     v-model:value="configData.amap.secretKey"
-                    placeholder="请输入 secretKey"
+                    :placeholder="$t('config.placeholder.input') + ' secretKey'"
                   />
                 </FormItem>
               </Col>
               <Col :span="8">
-                <FormItem label="高德地图 webKey" :name="['amap', 'webKey']">
+                <FormItem
+                  :label="$t('config.amap.webKey')"
+                  :name="['amap', 'webKey']"
+                >
                   <Input
                     v-model:value="configData.amap.webKey"
-                    placeholder="请输入 webKey"
+                    :placeholder="$t('config.placeholder.input') + ' webKey'"
                   />
                 </FormItem>
               </Col>

@@ -8,6 +8,7 @@ import { createIconifyIcon } from '@vben/icons';
 import { message, Upload } from 'ant-design-vue';
 
 import { uploadApi } from '#/api/system/file';
+import { $t } from '#/locales';
 
 const props = withDefaults(
   defineProps<{
@@ -17,7 +18,7 @@ const props = withDefaults(
     disabled?: boolean;
     height?: string;
     objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
-    value: string;
+    value?: string;
   }>(),
   {
     bucketName: 'public',
@@ -25,6 +26,7 @@ const props = withDefaults(
     defaultValue: '',
     height: '128px',
     objectFit: 'contain',
+    value: '',
   },
 );
 
@@ -60,10 +62,10 @@ const customRequest = async (options: any) => {
     emit('update:value', url);
     emit('change', url);
     onSuccess(res, file);
-    message.success('上传成功');
+    message.success($t('config.message.uploadSuccess'));
   } catch (error) {
     onError(error);
-    message.error('上传失败');
+    message.error($t('config.message.uploadError'));
   } finally {
     loading.value = false;
   }
@@ -92,11 +94,11 @@ const beforeUpload = (file: File) => {
     file.type === 'image/webp' ||
     file.type === 'image/svg+xml';
   if (!isJpgOrPng) {
-    message.error('只能上传图片文件!');
+    message.error($t('config.hint.uploadImageOnly'));
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('图片大小不能超过 2MB!');
+    message.error($t('config.hint.imageSizeLimit'));
   }
   return isJpgOrPng && isLt2M;
 };
@@ -124,7 +126,7 @@ const beforeUpload = (file: File) => {
     <div v-else>
       <LoadingOutlined v-if="loading" />
       <PlusOutlined v-else />
-      <div class="ant-upload-text">上传</div>
+      <div class="ant-upload-text">{{ $t('config.action.upload') }}</div>
     </div>
   </Upload>
 </template>

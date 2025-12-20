@@ -1,0 +1,42 @@
+{
+  "title": "System Configuration",
+  "card": {
+    "basic": "Basic Settings",
+    "amap": "AMap Settings"
+  },
+  "front": {
+    "title": "System Name",
+    "logo": "System Logo",
+    "ico": "ICO Icon",
+    "background": "Login Background",
+    "supportImage": "Supports jpg, png, svg, jfif, pjp, pjpeg, jpeg. Recommended size 200*200",
+    "supportIco": "Supports ico format. Recommended size 64*64",
+    "supportBg": "Supports jpg, png, svg, jfif, pjp, pjpeg, jpeg"
+  },
+  "paths": {
+    "basePath": "Base Path"
+  },
+  "amap": {
+    "apiKey": "AMap apiKey",
+    "secretKey": "AMap secretKey",
+    "webKey": "AMap webKey"
+  },
+  "placeholder": {
+    "title": "Please enter system name",
+    "basePath": "Please enter API base path",
+    "input": "Please enter"
+  },
+  "action": {
+    "save": "Save Config",
+    "upload": "Upload"
+  },
+  "hint": {
+    "uploadImageOnly": "Only image files can be uploaded!",
+    "imageSizeLimit": "Image size cannot exceed 2MB!"
+  },
+  "message": {
+    "saveSuccess": "Saved successfully",
+    "uploadSuccess": "Upload successful",
+    "uploadError": "Upload failed"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "系统参数配置",
+  "card": {
+    "basic": "基础设置",
+    "amap": "高德地图配置"
+  },
+  "front": {
+    "title": "系统名称",
+    "logo": "系统 Logo",
+    "ico": "ICO 图标",
+    "background": "登录页背景",
+    "supportImage": "支持 jpg,png,svg,jfif,pjp,pjpeg,jpeg 推荐尺寸 200*200",
+    "supportIco": "支持 ico 格式 推荐尺寸 64*64",
+    "supportBg": "支持 jpg,png,svg,jfif,pjp,pjpeg,jpeg"
+  },
+  "paths": {
+    "basePath": "基础路径 (Base Path)"
+  },
+  "amap": {
+    "apiKey": "高德地图 apiKey",
+    "secretKey": "高德地图 secretKey",
+    "webKey": "高德地图 webKey"
+  },
+  "placeholder": {
+    "title": "请输入系统名称",
+    "basePath": "请输入API基础路径",
+    "input": "请输入"
+  },
+  "action": {
+    "save": "保存配置",
+    "upload": "上传"
+  },
+  "hint": {
+    "uploadImageOnly": "只能上传图片文件!",
+    "imageSizeLimit": "图片大小不能超过 2MB!"
+  },
+  "message": {
+    "saveSuccess": "保存成功",
+    "uploadSuccess": "上传成功",
+    "uploadError": "上传失败"
+  }
+}
