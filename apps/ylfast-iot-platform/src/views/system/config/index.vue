@@ -261,7 +261,7 @@ onMounted(() => {
                 >
                   <Input
                     v-model:value="configData.amap.apiKey"
-                    :placeholder="$t('config.placeholder.input') + ' apiKey'"
+                    :placeholder="`${$t('config.placeholder.input')} apiKey`"
                   />
                 </FormItem>
               </Col>
@@ -272,7 +272,7 @@ onMounted(() => {
                 >
                   <Input
                     v-model:value="configData.amap.secretKey"
-                    :placeholder="$t('config.placeholder.input') + ' secretKey'"
+                    :placeholder="`${$t('config.placeholder.input')} secretKey`"
                   />
                 </FormItem>
               </Col>
@@ -283,7 +283,7 @@ onMounted(() => {
                 >
                   <Input
                     v-model:value="configData.amap.webKey"
-                    :placeholder="$t('config.placeholder.input') + ' webKey'"
+                    :placeholder="`${$t('config.placeholder.input')} webKey`"
                   />
                 </FormItem>
               </Col>
