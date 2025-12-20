@@ -1,0 +1,35 @@
+{
+  "system": {
+    "title": "System Log",
+    "name": "Log Name",
+    "level": "Log Level",
+    "message": "Content",
+    "serviceName": "Service Name",
+    "server": "Service",
+    "createTime": "Create Time",
+    "exceptionStack": "Exception Stack",
+    "threadName": "Thread Name",
+    "className": "Class Name",
+    "methodName": "Method Name",
+    "lineNumber": "Line Number",
+    "detail": "Log Detail"
+  },
+  "access": {
+    "title": "Access Log",
+    "ip": "IP Address",
+    "url": "Request URL",
+    "describe": "Description",
+    "method": "Method",
+    "requestTime": "Request Time",
+    "duration": "Duration (ms)",
+    "user": "User",
+    "detail": "Access Detail",
+    "parameters": "Parameters",
+    "httpHeaders": "Headers",
+    "response": "Response Time",
+    "exception": "Exception",
+    "ipRegion": "IP Region",
+    "action": "Action",
+    "target": "Target Class"
+  }
+}

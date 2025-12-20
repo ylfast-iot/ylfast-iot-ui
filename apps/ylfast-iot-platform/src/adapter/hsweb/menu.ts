@@ -151,7 +151,10 @@ export function adaptHswebMenu(
   menus: HswebMenu[],
 ): RouteRecordStringComponent[] {
   return menus.map((menu) => {
-    const component = menu.component ? `${menu.component}` : 'BasicLayout';
+    let component = menu.component ? `${menu.component}` : 'BasicLayout';
+    if (menu.children && menu.children.length > 0) {
+      component = '';
+    }
 
     const vbenMenu: RouteRecordStringComponent = {
       path: menu.url,

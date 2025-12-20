@@ -1,0 +1,35 @@
+{
+  "system": {
+    "title": "系统日志",
+    "name": "日志名称",
+    "level": "日志级别",
+    "message": "日志内容",
+    "serviceName": "服务名",
+    "server": "服务",
+    "createTime": "创建时间",
+    "exceptionStack": "异常堆栈",
+    "threadName": "线程名",
+    "className": "类名",
+    "methodName": "方法名",
+    "lineNumber": "行号",
+    "detail": "日志详情"
+  },
+  "access": {
+    "title": "访问日志",
+    "ip": "IP地址",
+    "url": "请求路径",
+    "describe": "说明",
+    "method": "请求方法",
+    "requestTime": "请求时间",
+    "duration": "耗时(ms)",
+    "user": "请求用户",
+    "detail": "访问详情",
+    "parameters": "请求参数",
+    "httpHeaders": "请求头",
+    "response": "响应时间",
+    "exception": "异常信息",
+    "ipRegion": "IP地域",
+    "action": "操作",
+    "target": "请求类"
+  }
+}
