@@ -7,11 +7,16 @@ import { preferences, usePreferences } from '@vben/preferences';
 import { App, ConfigProvider, theme } from 'ant-design-vue';
 
 import { antdLocale } from '#/locales';
+import { useSystemStore } from '#/store/system';
 
 defineOptions({ name: 'App' });
 
 const { isDark } = usePreferences();
 const { tokens } = useAntdDesignTokens();
+const systemStore = useSystemStore();
+
+// 初始化系统配置 (使用 Public 接口)
+systemStore.initPublicConfig();
 
 const tokenTheme = computed(() => {
   const algorithm = isDark.value

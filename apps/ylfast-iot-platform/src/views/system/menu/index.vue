@@ -134,7 +134,7 @@ const gridQuery = async (_params: any, ...args: any[]) => {
         order: 'asc',
       },
     ],
-    terms: [...formValues.terms, ...defaultTerms],
+    terms: [...(formValues.terms || []), ...defaultTerms],
   });
   return data;
 };

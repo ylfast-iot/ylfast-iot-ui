@@ -12,6 +12,7 @@ import { defineStore } from 'pinia';
 
 import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
 import { $t } from '#/locales';
+import { useSystemStore } from '#/store/system';
 
 export const useAuthStore = defineStore('auth', () => {
   const accessStore = useAccessStore();
@@ -102,6 +103,11 @@ export const useAuthStore = defineStore('auth', () => {
     let userInfo: null | UserInfo = null;
     userInfo = await getUserInfoApi();
     userStore.setUserInfo(userInfo);
+
+    // 初始化完整配置 (包含需要权限的配置)
+    const systemStore = useSystemStore();
+    systemStore.initPrivateConfig();
+
     return userInfo;
   }
 

@@ -80,13 +80,18 @@ function createRequestClient(baseURL: string, options?: RequestClientOptions) {
       // 注意：hsweb 响应中必须包含 status 字段，且通常包含 result 字段
       if (typeof data === 'object' && 'status' in data) {
         // 将 hsweb 格式转换为 Vben 标准格式
+        const result = data.result;
+        if (result && result.code && result.data) {
+          // 这种是老的方式
+          data.result = result.data;
+        }
+
         response.data = {
           code: data.status === 200 ? 0 : Number(data.status) || -1,
           data: data.result,
           message: data.message,
         };
       }
-
       return response;
     },
   });
