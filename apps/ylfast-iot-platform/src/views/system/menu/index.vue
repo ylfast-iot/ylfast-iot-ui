@@ -44,6 +44,7 @@ const [Form, formApi] = useVbenForm({
 
 // Drawer
 const [Drawer, drawerApi] = useVbenDrawer({
+  destroyOnClose: true,
   onCancel() {
     drawerApi.close();
   },

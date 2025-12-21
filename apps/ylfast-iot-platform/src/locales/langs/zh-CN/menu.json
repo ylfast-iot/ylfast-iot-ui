@@ -14,6 +14,7 @@
   "componentPlaceholder": "请输入组件路径",
   "sort": "排序",
   "status": "状态",
+  "options": "配置",
   "enable": "启用",
   "disable": "禁用",
   "describe": "说明",
@@ -41,5 +42,26 @@
     "namePlaceholder": "请输入名称",
     "description": "说明",
     "associatedPermissions": "关联权限"
+  },
+  "dataType": {
+    "string": "字符串",
+    "number": "数字",
+    "boolean": "布尔值",
+    "json": "JSON"
+  },
+  "option": {
+    "showDesc": "是否在菜单栏中显示",
+    "keepAliveDesc": "是否开启页面缓存",
+    "activePathDesc": "当前激活的菜单，用于激活父级菜单",
+    "openInNewWindowDesc": "在新窗口打开",
+    "affixTabDesc": "是否固定标签页",
+    "affixTabOrderDesc": "固定标签页的顺序",
+    "ignoreAccessDesc": "忽略权限验证，可直接访问",
+    "hideInBreadcrumbDesc": "在面包屑中隐藏",
+    "hideChildrenInMenuDesc": "在菜单中隐藏子菜单",
+    "hideInMenuDesc": "在菜单中隐藏",
+    "hideInTabDesc": "在标签页中隐藏",
+    "iframeSrcDesc": "内嵌 iframe 地址",
+    "linkDesc": "外链跳转路径"
   }
 }

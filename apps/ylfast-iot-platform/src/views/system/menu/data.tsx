@@ -3,10 +3,14 @@ import type { VxeGridProps } from '@vben/plugins/vxe-table';
 
 import type { YlDcFormSchema } from '#/components/yl-dc-form';
 
+import { markRaw } from 'vue';
+
 import { z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
 import { getAllMenuTree } from '#/api/system/menu';
+
+import MenuOptionsEditor from './components/MenuOptionsEditor.vue';
 
 /**
  * 获取所有视图组件路径
@@ -226,6 +230,94 @@ export const modalFormSchemas: VbenFormSchema[] = [
         { label: $t('menu.disable'), value: 0 },
       ],
     },
+  },
+  {
+    component: markRaw(MenuOptionsEditor),
+    fieldName: 'options',
+    label: $t('menu.options'),
+    formItemClass: 'col-span-2',
+    modelPropName: 'value',
+    componentProps: {
+      fixedOptions: [
+        {
+          key: 'show',
+          type: 'boolean',
+          value: true,
+          description: $t('menu.option.showDesc'),
+        },
+        {
+          key: 'activePath',
+          type: 'string',
+          description: $t('menu.option.activePathDesc'),
+        },
+        {
+          key: 'keepAlive',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.keepAliveDesc'),
+        },
+        { key: 'appName', type: 'string' },
+        {
+          key: 'openInNewWindow',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.openInNewWindowDesc'),
+        },
+        {
+          key: 'affixTab',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.affixTabDesc'),
+        },
+        {
+          key: 'affixTabOrder',
+          type: 'number',
+          value: 0,
+          description: $t('menu.option.affixTabOrderDesc'),
+        },
+        {
+          key: 'ignoreAccess',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.ignoreAccessDesc'),
+        },
+        {
+          key: 'hideInBreadcrumb',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.hideInBreadcrumbDesc'),
+        },
+        {
+          key: 'hideChildrenInMenu',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.hideChildrenInMenuDesc'),
+        },
+        {
+          key: 'hideInMenu',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.hideInMenuDesc'),
+        },
+        {
+          key: 'hideInTab',
+          type: 'boolean',
+          value: false,
+          description: $t('menu.option.hideInTabDesc'),
+        },
+        {
+          key: 'iframeSrc',
+          type: 'string',
+          description: $t('menu.option.iframeSrcDesc'),
+        },
+        {
+          key: 'link',
+          type: 'string',
+          description: $t('menu.option.linkDesc'),
+        },
+      ],
+    },
+
   },
   {
     component: 'Textarea',

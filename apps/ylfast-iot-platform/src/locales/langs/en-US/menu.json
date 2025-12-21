@@ -14,6 +14,7 @@
   "componentPlaceholder": "Please enter component path",
   "sort": "Sort",
   "status": "Status",
+  "options": "Configuration",
   "enable": "Enabled",
   "disable": "Disabled",
   "describe": "Description",
@@ -41,5 +42,26 @@
     "namePlaceholder": "Please enter name",
     "description": "Description",
     "associatedPermissions": "Associated Permissions"
+  },
+  "dataType": {
+    "string": "String",
+    "number": "Number",
+    "boolean": "Boolean",
+    "json": "JSON"
+  },
+  "option": {
+    "showDesc": "Whether to show in menu",
+    "keepAliveDesc": "Whether to enable page cache",
+    "activePathDesc": "Currently active menu, used to highlight parent menu",
+    "openInNewWindowDesc": "Open in new window",
+    "affixTabDesc": "Whether to affix the tab",
+    "affixTabOrderDesc": "Order of the affixed tab",
+    "ignoreAccessDesc": "Ignore permission check, directly accessible",
+    "hideInBreadcrumbDesc": "Hide in breadcrumb",
+    "hideChildrenInMenuDesc": "Hide children in menu",
+    "hideInMenuDesc": "Hide in menu",
+    "hideInTabDesc": "Hide in tabs",
+    "iframeSrcDesc": "Embedded iframe address",
+    "linkDesc": "External link path"
   }
 }

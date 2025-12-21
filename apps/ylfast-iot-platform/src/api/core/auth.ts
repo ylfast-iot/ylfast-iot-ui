@@ -1,5 +1,8 @@
 import type { Authentication } from '#/adapter/hsweb/auth';
 
+import { preferences } from '@vben/preferences';
+import { useAccessStore } from '@vben/stores';
+
 import { adaptToPermissionCode } from '#/adapter/hsweb/auth';
 import { baseRequestClient, requestClient } from '#/api/request';
 
@@ -46,8 +49,16 @@ export async function refreshTokenApi(token?: null | string) {
  * 退出登录
  */
 export async function logoutApi() {
-  return requestClient.get('/user-token/reset', {
+  return baseRequestClient.get('/user-token/reset', {
     withCredentials: true,
+    transformRequest: (data, headers) => {
+      const accessStore = useAccessStore();
+      headers.Authorization = accessStore.accessToken
+        ? `Bearer ${accessStore.accessToken}`
+        : null;
+      headers['Accept-Language'] = preferences.app.locale;
+      return data;
+    },
   });
 }
 

@@ -156,6 +156,8 @@ export function adaptHswebMenu(
       component = '';
     }
 
+    const meta = menu.options || {};
+
     const vbenMenu: RouteRecordStringComponent = {
       path: menu.url,
       name: menu.path, // 使用 ID 作为路由名称，确保唯一
@@ -164,7 +166,7 @@ export function adaptHswebMenu(
         title: menu.i18nName || menu.name,
         icon: menu.icon,
         order: menu.sortIndex,
-        // 可以在这里添加更多 meta 字段
+        ...meta,
       },
     };
 
