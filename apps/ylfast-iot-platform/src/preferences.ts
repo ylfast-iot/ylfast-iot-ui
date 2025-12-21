@@ -10,6 +10,13 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     loginExpiredMode: 'modal',
     accessMode: 'mixed',
+    layout: 'mixed-nav',
     name: import.meta.env.VITE_APP_TITLE,
+  },
+  sidebar: {
+    autoActivateChild: true,
+  },
+  theme: {
+    mode: 'auto',
   },
 });

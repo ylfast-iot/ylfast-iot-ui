@@ -317,7 +317,6 @@ export const modalFormSchemas: VbenFormSchema[] = [
         },
       ],
     },
-
   },
   {
     component: 'Textarea',
