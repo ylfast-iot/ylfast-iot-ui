@@ -1,0 +1,33 @@
+{
+  "chart": {
+    "shortcuts": {
+      "1h": "Last 1 Hour",
+      "24h": "Last 24 Hours",
+      "7d": "Last 7 Days",
+      "1m": "Last 1 Month"
+    }
+  },
+  "systemMonitor": {
+    "title": "System Monitor",
+    "description": "Real-time system resource monitoring",
+    "cpu": {
+      "title": "CPU Usage",
+      "jvmCpu": "JVM CPU",
+      "trendTitle": "CPU Usage Trend"
+    },
+    "jvm": {
+      "title": "JVM Memory",
+      "total": "Total JVM Memory",
+      "trendTitle": "JVM Memory Usage Trend",
+      "usageRate": "JVM Memory Usage Rate"
+    },
+    "disk": {
+      "title": "Disk Usage",
+      "total": "Total Disk Size"
+    },
+    "memory": {
+      "title": "System Memory",
+      "total": "System Memory"
+    }
+  }
+}

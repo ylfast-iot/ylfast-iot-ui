@@ -10,9 +10,13 @@ export namespace SystemUserApi {
   export type User = UserDetail;
   export type SaveUserUserDetailRequest = {
     avatar?: string;
+    birthday?: number;
+    company?: string;
     description?: string;
     email?: string;
+    idNumber?: string;
     name?: string;
+    realName?: string;
     telephone?: string;
   };
 
@@ -133,8 +137,8 @@ export const updateLoginUserInfo = async (data: SystemUserApi.UserEntity) => {
 
 /**
  * 重置用户密码
- * @param password 密碼
  * @param userId 用戶
+ * @param password 密碼
  */
 export const resetPassword = async (userId: string, password: string) => {
   return requestClient.post<SystemUserApi.ChangePasswordRequest>(

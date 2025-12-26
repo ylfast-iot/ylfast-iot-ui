@@ -1,0 +1,33 @@
+{
+  "chart": {
+    "shortcuts": {
+      "1h": "最近1小时",
+      "24h": "最近24小时",
+      "7d": "近一周",
+      "1m": "近一月"
+    }
+  },
+  "systemMonitor": {
+    "title": "系统监控",
+    "description": "实时监控系统资源使用情况",
+    "cpu": {
+      "title": "CPU使用率",
+      "jvmCpu": "JVM CPU",
+      "trendTitle": "CPU使用率趋势"
+    },
+    "jvm": {
+      "title": "JVM内存",
+      "total": "总JVM内存",
+      "trendTitle": "JVM内存使用率趋势",
+      "usageRate": "JVM内存使用率"
+    },
+    "disk": {
+      "title": "磁盘占用",
+      "total": "总磁盘大小"
+    },
+    "memory": {
+      "title": "系统内存",
+      "total": "系统内存"
+    }
+  }
+}

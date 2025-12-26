@@ -11,6 +11,12 @@ export default defineConfig(async () => {
             rewrite: (path) => path.replace(/^\/api/, ''),
             // 真实后端服务地址
             target: 'http://localhost:8090',
+          },
+          '/socket': {
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/socket/, ''),
+            // 真实后端服务地址
+            target: 'http://localhost:8090',
             ws: true,
           },
         },

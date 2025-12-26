@@ -93,6 +93,14 @@ const routes: RouteRecordRaw[] = [
         path: '/demos/vben-editable-table',
         component: () => import('#/views/demos/components/VbenTableDemo.vue'),
       },
+      {
+        meta: {
+          title: '看板组件演示',
+        },
+        name: 'DashboardComponentsDemo',
+        path: '/demos/dashboard-components',
+        component: () => import('#/views/demos/components/dashboard/index.vue'),
+      },
     ],
   },
 ];

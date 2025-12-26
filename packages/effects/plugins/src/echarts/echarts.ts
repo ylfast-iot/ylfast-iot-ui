@@ -5,6 +5,7 @@ import type {
 } from 'echarts/charts';
 import type {
   DatasetComponentOption,
+  DataZoomComponentOption,
   GridComponentOption,
   // 组件类型的定义后缀都为 ComponentOption
   TitleComponentOption,
@@ -12,10 +13,17 @@ import type {
 } from 'echarts/components';
 import type { ComposeOption } from 'echarts/core';
 
-import { BarChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
+import {
+  BarChart,
+  GaugeChart,
+  LineChart,
+  PieChart,
+  RadarChart,
+} from 'echarts/charts';
 import {
   // 数据集组件
   DatasetComponent,
+  DataZoomComponent,
   GridComponent,
   LegendComponent,
   TitleComponent,
@@ -32,6 +40,7 @@ import { CanvasRenderer } from 'echarts/renderers';
 export type ECOption = ComposeOption<
   | BarSeriesOption
   | DatasetComponentOption
+  | DataZoomComponentOption
   | GridComponentOption
   | LineSeriesOption
   | TitleComponentOption
@@ -43,9 +52,11 @@ echarts.use([
   TitleComponent,
   PieChart,
   RadarChart,
+  GaugeChart,
   TooltipComponent,
   GridComponent,
   DatasetComponent,
+  DataZoomComponent,
   TransformComponent,
   BarChart,
   LineChart,
