@@ -349,13 +349,14 @@ setupVbenVxeTable({
       renderTableEdit(renderOpts, renderParams) {
         const { props } = renderOpts;
         const { column, row } = renderParams;
+        // 支持嵌套字段，如 translations.zh_CN
         return h(Input, {
           style: {
             width: '100%',
           },
-          value: row[column.field],
+          value: getValue(column.field as string, row),
           'onUpdate:value': (value: any) => {
-            row[column.field] = value;
+            setValue(column.field as string, value, row);
           },
           ...props,
         });

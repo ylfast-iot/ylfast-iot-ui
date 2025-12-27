@@ -101,6 +101,15 @@ const routes: RouteRecordRaw[] = [
         path: '/demos/dashboard-components',
         component: () => import('#/views/demos/components/dashboard/index.vue'),
       },
+      {
+        meta: {
+          title: 'YlI18nMessages 演示',
+        },
+        name: 'YlI18nMessagesDemo',
+        path: '/demos/yl-i18n-messages',
+        component: () =>
+          import('#/views/demos/components/yl-i18n-messages/index.vue'),
+      },
     ],
   },
 ];

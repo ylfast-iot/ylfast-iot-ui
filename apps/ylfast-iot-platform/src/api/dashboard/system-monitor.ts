@@ -181,7 +181,7 @@ export namespace DashboardSystemMonitor {
   // 定义 params 的对象类型
   export interface MetricParams {
     /** 起始时间戳（必选） */
-    form: number;
+    from: number;
     format?: string;
     /** 结束时间戳（必选） */
     to: number;

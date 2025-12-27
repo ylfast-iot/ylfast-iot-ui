@@ -1,0 +1,36 @@
+{
+  "title": "I18n Messages Configuration",
+  "key": "Key",
+  "language": "Language",
+  "addKey": "Add Key",
+  "addLanguage": "Add Language",
+  "import": "Import",
+  "export": "Export",
+  "deleteKey": "Delete Key",
+  "deleteLanguage": "Delete Language",
+  "emptyText": "No data, click 'Add Key' to start configuration",
+  "placeholder": {
+    "key": "Enter key name (nested keys like user.name are not supported)",
+    "value": "Enter translation content",
+    "language": "Enter language code (e.g. ja_JP, ko_KR)",
+    "importJson": "Paste JSON format i18n data"
+  },
+  "confirm": {
+    "deleteKey": "Are you sure to delete this key?",
+    "deleteLanguage": "Are you sure to delete this language column? All translations for this language will be removed."
+  },
+  "success": {
+    "keyAdded": "Key added successfully",
+    "keyDeleted": "Key deleted successfully",
+    "languageAdded": "Language added successfully",
+    "languageDeleted": "Language deleted successfully",
+    "imported": "Data imported successfully",
+    "exported": "Data exported successfully"
+  },
+  "error": {
+    "invalidKey": "Invalid key: cannot be empty or contain dots",
+    "keyExists": "Key already exists",
+    "languageExists": "Language already exists",
+    "importFailed": "Import failed"
+  }
+}

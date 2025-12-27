@@ -107,6 +107,17 @@ export const modalFormSchemas: VbenFormSchema[] = [
     formItemClass: 'col-span-2',
   },
   {
+    component: 'Input',
+    fieldName: 'owner',
+    label: 'owner',
+    defaultValue: 'iot',
+    dependencies: {
+      triggerFields: ['id'],
+      show: () => false,
+    },
+  },
+
+  {
     component: 'ApiTreeSelect',
     fieldName: 'parentId',
     label: $t('menu.parent'),
@@ -256,7 +267,7 @@ export const modalFormSchemas: VbenFormSchema[] = [
           value: false,
           description: $t('menu.option.keepAliveDesc'),
         },
-        { key: 'appName', type: 'string' },
+        { key: 'appName', type: 'string', description: $t('menu.option.appNameDesc') },
         {
           key: 'openInNewWindow',
           type: 'boolean',

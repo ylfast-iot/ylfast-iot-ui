@@ -1,0 +1,36 @@
+{
+  "title": "国际化消息配置",
+  "key": "键名",
+  "language": "语言",
+  "addKey": "添加键",
+  "addLanguage": "添加语言",
+  "import": "导入",
+  "export": "导出",
+  "deleteKey": "删除键",
+  "deleteLanguage": "删除语言",
+  "emptyText": "暂无数据，点击\"添加键\"开始配置",
+  "placeholder": {
+    "key": "请输入键名（不支持嵌套键，如 user.name）",
+    "value": "请输入翻译内容",
+    "language": "请输入语言代码（如 ja_JP, ko_KR）",
+    "importJson": "请粘贴 JSON 格式的国际化数据"
+  },
+  "confirm": {
+    "deleteKey": "确定删除该键吗？",
+    "deleteLanguage": "确定删除该语言列吗？所有该语言的翻译将被删除。"
+  },
+  "success": {
+    "keyAdded": "键添加成功",
+    "keyDeleted": "键删除成功",
+    "languageAdded": "语言添加成功",
+    "languageDeleted": "语言删除成功",
+    "imported": "数据导入成功",
+    "exported": "数据导出成功"
+  },
+  "error": {
+    "invalidKey": "无效的键名：不能为空，不能包含点号",
+    "keyExists": "该键已存在",
+    "languageExists": "该语言已存在",
+    "importFailed": "导入失败"
+  }
+}

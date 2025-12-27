@@ -16,6 +16,7 @@ import {
   getAllMenuTree,
   saveMenu,
 } from '#/api/system/menu';
+import { YlI18nMessages } from '#/components/yl-i18n-messages';
 import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 
 import ButtonManagement from './components/ButtonManagement.vue';
@@ -28,6 +29,7 @@ const activeTab = ref('basic');
 // Data for tabs
 const permissions = ref<any[]>([]);
 const buttons = ref<SystemMenuApi.ButtonInfo[]>([]);
+const i18nMessages = ref<any>({});
 
 // Form
 const [Form, formApi] = useVbenForm({
@@ -56,11 +58,11 @@ const [Drawer, drawerApi] = useVbenDrawer({
       }
       const values = await formApi.getValues();
       drawerApi.setState({ confirmLoading: true });
-
       const menuData: SystemMenuApi.Menu = {
         ...values,
         permissions: permissions.value,
         buttons: buttons.value,
+        i18nMessages: i18nMessages.value,
       } as SystemMenuApi.Menu;
 
       if (formType.value === 'add') {
@@ -202,6 +204,7 @@ function handleAdd() {
   activeTab.value = 'basic';
   permissions.value = [];
   buttons.value = [];
+  i18nMessages.value = {};
   drawerApi.setState({ title: $t('menu.add') });
   formApi.resetForm();
   drawerApi.open();
@@ -212,6 +215,7 @@ function handleAddSub(row: Recordable<any>) {
   activeTab.value = 'basic';
   permissions.value = [];
   buttons.value = [];
+  i18nMessages.value = {};
   drawerApi.setState({ title: $t('menu.add') });
   formApi.resetForm();
   formApi.setValues({ parentId: row.id });
@@ -223,6 +227,17 @@ function handleEdit(row: Recordable<any>) {
   activeTab.value = 'basic';
   permissions.value = row.permissions || [];
   buttons.value = row.buttons || [];
+
+  let i18nVal = row.i18nMessages || {};
+  if (typeof i18nVal === 'string') {
+    try {
+      i18nVal = JSON.parse(i18nVal);
+    } catch {
+      i18nVal = {};
+    }
+  }
+  i18nMessages.value = i18nVal;
+
   drawerApi.setState({ title: $t('menu.edit') });
   formApi.resetForm();
   formApi.setValues(row);
@@ -291,6 +306,11 @@ async function handleDelete(row: Recordable<any>) {
           <Tabs.TabPane key="buttons" :tab="$t('menu.tab.buttons')">
             <div class="h-full p-4">
               <ButtonManagement v-model:value="buttons" />
+            </div>
+          </Tabs.TabPane>
+          <Tabs.TabPane key="i18nMessages" :tab="$t('menu.tab.i18nMessages')">
+            <div class="h-full p-4">
+              <YlI18nMessages v-model="i18nMessages" />
             </div>
           </Tabs.TabPane>
         </Tabs>

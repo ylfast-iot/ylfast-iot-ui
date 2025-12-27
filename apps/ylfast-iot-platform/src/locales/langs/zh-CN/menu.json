@@ -31,23 +31,18 @@
   "tab": {
     "basicInfo": "基本信息",
     "permissions": "权限配置",
-    "buttons": "按钮管理"
+    "buttons": "按钮管理",
+    "i18nMessages": "国际化"
   },
   "button": {
     "add": "新增按钮",
     "edit": "编辑按钮",
-    "code": "编码",
-    "codePlaceholder": "请输入编码",
-    "name": "名称",
-    "namePlaceholder": "请输入名称",
+    "code": "按钮编码",
+    "codePlaceholder": "请输入按钮编码 (如: query, add)",
+    "name": "按钮名称",
+    "namePlaceholder": "请输入按钮名称",
     "description": "说明",
     "associatedPermissions": "关联权限"
-  },
-  "dataType": {
-    "string": "字符串",
-    "number": "数字",
-    "boolean": "布尔值",
-    "json": "JSON"
   },
   "option": {
     "showDesc": "是否在菜单栏中显示",
@@ -62,6 +57,7 @@
     "hideInMenuDesc": "在菜单中隐藏",
     "hideInTabDesc": "在标签页中隐藏",
     "iframeSrcDesc": "内嵌 iframe 地址",
-    "linkDesc": "外链跳转路径"
+    "linkDesc": "外链跳转路径",
+    "appNameDesc": "所属应用名称"
   }
 }

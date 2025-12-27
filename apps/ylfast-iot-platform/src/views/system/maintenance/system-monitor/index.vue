@@ -43,15 +43,30 @@ const formatBytes = (mb: number) => {
   return `${mb.toFixed(1)} M`;
 };
 
-const formatBytesValue = (mb: number) => {
-  if (mb > 1024) {
+const formatBytesValue = (mb: number, total?: number) => {
+  if ((total && total > 1024) || mb > 1024) {
     return (mb / 1024).toFixed(1);
   }
   return mb.toFixed(1);
 };
 
-const formatBytesUnit = (mb: number) => {
-  return mb > 1024 ? 'G' : 'M';
+const formatBytesUnit = (mb: number, total?: number) => {
+  return (total && total > 1024) || mb > 1024 ? 'G' : 'M';
+};
+
+const getChartMax = (total: number) => {
+  if (!total) return 100;
+  return total > 1024
+    ? Number((total / 1024).toFixed(1))
+    : Number(total.toFixed(1));
+};
+
+const getChartValue = (used: number, total: number) => {
+  const safeUsed = Math.max(0, used);
+  if (!total) return 0;
+  return total > 1024
+    ? Number((safeUsed / 1024).toFixed(1))
+    : Number(safeUsed.toFixed(1));
 };
 
 // --- Lifecycle ---
@@ -89,7 +104,9 @@ const generateTrendOption = (
     | ((data: DashboardSystemMonitor.SystemFlatInfo) => any)
     | keyof DashboardSystemMonitor.SystemFlatInfo,
 ) => {
-  const _data = data.map((item) => item.data);
+  const _data = data
+    .map((item) => item.data)
+    .sort((a, b) => a.timestamp - b.timestamp);
   const list = Array.isArray(_data) ? _data : [];
 
   const xAxisData = list.map((item) => item.timeString);
@@ -157,7 +174,7 @@ const getCpuTrend = async ({
   startTime: number;
 }) => {
   return await getSystemMonitorHistoryMeasurementValue('cpu', {
-    form: startTime,
+    from: startTime,
     to: endTime,
   });
 };
@@ -181,7 +198,7 @@ const getJvmTrend = async ({
   startTime: number;
 }) => {
   return await getSystemMonitorHistoryMeasurementValue('jvm', {
-    form: startTime,
+    from: startTime,
     to: endTime,
   });
 };
@@ -228,15 +245,24 @@ const jvmOptionGenerator = (
         :value="
           formatBytesValue(
             systemInfo.memory.jvmHeapTotal - systemInfo.memory.jvmHeapFree,
+            systemInfo.memory.jvmHeapTotal,
           )
         "
         :unit="
           formatBytesUnit(
             systemInfo.memory.jvmHeapTotal - systemInfo.memory.jvmHeapFree,
+            systemInfo.memory.jvmHeapTotal,
           )
         "
+        :max="getChartMax(systemInfo.memory.jvmHeapTotal)"
         :chart-data="[
-          { value: systemInfo.memory.jvmHeapUsage || 0, name: 'JVM' },
+          {
+            value: getChartValue(
+              systemInfo.memory.jvmHeapTotal - systemInfo.memory.jvmHeapFree,
+              systemInfo.memory.jvmHeapTotal,
+            ),
+            name: 'JVM',
+          },
         ]"
         :thresholds="gaugeThresholds"
         :loading="loading"
@@ -247,9 +273,28 @@ const jvmOptionGenerator = (
       <!-- Disk Usage -->
       <YlStatisticCard
         :title="$t('dashboard.systemMonitor.disk.title')"
-        :value="formatBytesValue(systemInfo.disk.total - systemInfo.disk.free)"
-        :unit="formatBytesUnit(systemInfo.disk.total - systemInfo.disk.free)"
-        :chart-data="[{ value: systemInfo.disk.usage || 0, name: 'Disk' }]"
+        :value="
+          formatBytesValue(
+            systemInfo.disk.total - systemInfo.disk.free,
+            systemInfo.disk.total,
+          )
+        "
+        :unit="
+          formatBytesUnit(
+            systemInfo.disk.total - systemInfo.disk.free,
+            systemInfo.disk.total,
+          )
+        "
+        :max="getChartMax(systemInfo.disk.total)"
+        :chart-data="[
+          {
+            value: getChartValue(
+              systemInfo.disk.total - systemInfo.disk.free,
+              systemInfo.disk.total,
+            ),
+            name: 'Disk',
+          },
+        ]"
         :thresholds="gaugeThresholds"
         :loading="loading"
         :footer-label="$t('dashboard.systemMonitor.disk.total')"
@@ -262,15 +307,24 @@ const jvmOptionGenerator = (
         :value="
           formatBytesValue(
             systemInfo.memory.systemTotal - systemInfo.memory.systemFree,
+            systemInfo.memory.systemTotal,
           )
         "
         :unit="
           formatBytesUnit(
             systemInfo.memory.systemTotal - systemInfo.memory.systemFree,
+            systemInfo.memory.systemTotal,
           )
         "
+        :max="getChartMax(systemInfo.memory.systemTotal)"
         :chart-data="[
-          { value: systemInfo.memory.systemUsage || 0, name: 'Mem' },
+          {
+            value: getChartValue(
+              systemInfo.memory.systemTotal - systemInfo.memory.systemFree,
+              systemInfo.memory.systemTotal,
+            ),
+            name: 'Mem',
+          },
         ]"
         :thresholds="gaugeThresholds"
         :loading="loading"

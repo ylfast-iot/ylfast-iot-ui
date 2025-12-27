@@ -31,15 +31,16 @@
   "tab": {
     "basicInfo": "Basic Info",
     "permissions": "Permissions",
-    "buttons": "Buttons"
+    "buttons": "Buttons",
+    "i18nMessages": "Internationalization"
   },
   "button": {
     "add": "Add Button",
     "edit": "Edit Button",
-    "code": "Code",
-    "codePlaceholder": "Please enter code",
-    "name": "Name",
-    "namePlaceholder": "Please enter name",
+    "code": "Button Code",
+    "codePlaceholder": "Input button code (e.g. query, add)",
+    "name": "Button Name",
+    "namePlaceholder": "Input button name",
     "description": "Description",
     "associatedPermissions": "Associated Permissions"
   },
@@ -62,6 +63,7 @@
     "hideInMenuDesc": "Hide in menu",
     "hideInTabDesc": "Hide in tabs",
     "iframeSrcDesc": "Embedded iframe address",
-    "linkDesc": "External link path"
+    "linkDesc": "External link path",
+    "appNameDesc": "Application Name"
   }
 }
