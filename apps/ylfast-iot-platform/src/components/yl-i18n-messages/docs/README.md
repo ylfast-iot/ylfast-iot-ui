@@ -33,7 +33,10 @@ const i18nData = ref<I18nMessagesData>({
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useYlI18nMessages, YlI18nMessages } from '#/components/yl-i18n-messages';
+import {
+  useYlI18nMessages,
+  YlI18nMessages,
+} from '#/components/yl-i18n-messages';
 import type { I18nMessagesData } from '#/components/yl-i18n-messages';
 
 const [register, { getValue, addKey, exportData }] = useYlI18nMessages();
@@ -59,7 +62,7 @@ async function handleAddCustomKey() {
       <a-button @click="handleExport">导出数据</a-button>
       <a-button @click="handleAddCustomKey">添加自定义键</a-button>
     </a-space>
-    
+
     <YlI18nMessages v-model="i18nData" @register="register" />
   </div>
 </template>
@@ -70,7 +73,7 @@ async function handleAddCustomKey() {
 ### Props
 
 | 属性 | 类型 | 默认值 | 说明 |
-|------|------|--------|------|
+| --- | --- | --- | --- |
 | `modelValue / value` | `I18nMessagesData` | `{}` | 双向绑定的国际化数据 |
 | `languages` | `string[]` | `['zh_CN', 'en_US', 'en']` | 支持的语言列表 |
 | `size` | `'large' \| 'middle' \| 'small'` | `'middle'` | 组件大小 |
@@ -82,7 +85,7 @@ async function handleAddCustomKey() {
 ### Events
 
 | 事件名 | 参数 | 说明 |
-|--------|------|------|
+| --- | --- | --- |
 | `register` | `(action: YlI18nMessagesActionType) => void` | 注册组件实例 |
 | `change` | `(value: I18nMessagesData) => void` | 数据变化时触发 |
 | `update:modelValue` | `(value: I18nMessagesData) => void` | v-model 更新事件 |
@@ -90,7 +93,7 @@ async function handleAddCustomKey() {
 ### Methods (通过 Hook 或 ref 调用)
 
 | 方法名 | 参数 | 返回值 | 说明 |
-|--------|------|--------|------|
+| --- | --- | --- | --- |
 | `getValue` | - | `I18nMessagesData` | 获取当前值 |
 | `setValue` | `value: I18nMessagesData` | `Promise<void>` | 设置值 |
 | `addKey` | `key: string, translations?: I18nMessage` | `Promise<void>` | 添加新键 |
@@ -153,9 +156,9 @@ type I18nMessage = Record<string, string>;
 初始化时指定特定的语言列表。
 
 ```vue
-<YlI18nMessages 
-  v-model="i18nData" 
-  :languages="['zh_CN', 'en_US', 'ja_JP', 'ko_KR']" 
+<YlI18nMessages
+  v-model="i18nData"
+  :languages="['zh_CN', 'en_US', 'ja_JP', 'ko_KR']"
 />
 ```
 
@@ -188,8 +191,8 @@ async function handleImport() {
 function handleExport() {
   const data = exportData();
   // 下载为 JSON 文件
-  const blob = new Blob([JSON.stringify(data, null, 2)], { 
-    type: 'application/json' 
+  const blob = new Blob([JSON.stringify(data, null, 2)], {
+    type: 'application/json',
   });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');

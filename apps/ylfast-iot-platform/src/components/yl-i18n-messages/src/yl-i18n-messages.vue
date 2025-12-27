@@ -606,9 +606,9 @@ defineExpose(action);
 
 .key-header {
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
   width: 100%;
 }
 
@@ -618,8 +618,8 @@ defineExpose(action);
 
 .header-actions {
   display: flex;
-  align-items: center;
   gap: 4px;
+  align-items: center;
 }
 
 .icon-btn {
@@ -628,11 +628,11 @@ defineExpose(action);
   justify-content: center;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s;
   color: hsl(var(--foreground));
+  cursor: pointer;
   background: hsl(var(--muted));
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 
 .icon-btn:hover {
@@ -640,12 +640,12 @@ defineExpose(action);
 }
 
 .icon-btn-primary {
-  background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
+  background: hsl(var(--primary));
 }
 
 .icon-btn-primary:hover {
-  background: hsl(var(--primary) / 0.8);
+  background: hsl(var(--primary) / 80%);
 }
 
 .icon-btn-danger {
@@ -653,7 +653,7 @@ defineExpose(action);
 }
 
 .icon-btn-danger:hover {
-  background: hsl(var(--destructive) / 0.1);
   color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 10%);
 }
 </style>

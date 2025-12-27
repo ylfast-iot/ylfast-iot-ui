@@ -267,7 +267,11 @@ export const modalFormSchemas: VbenFormSchema[] = [
           value: false,
           description: $t('menu.option.keepAliveDesc'),
         },
-        { key: 'appName', type: 'string', description: $t('menu.option.appNameDesc') },
+        {
+          key: 'appName',
+          type: 'string',
+          description: $t('menu.option.appNameDesc'),
+        },
         {
           key: 'openInNewWindow',
           type: 'boolean',

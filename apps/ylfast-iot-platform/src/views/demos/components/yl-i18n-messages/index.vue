@@ -356,9 +356,9 @@ const mockData: I18nMessagesData = {
 
 .demo-description code {
   padding: 2px 6px;
+  font-size: 0.9em;
   background: hsl(var(--muted));
   border-radius: 4px;
-  font-size: 0.9em;
 }
 
 .demo-actions {
@@ -366,21 +366,21 @@ const mockData: I18nMessagesData = {
 }
 
 .demo-output {
-  margin-top: 16px;
   padding: 16px;
+  margin-top: 16px;
   background: hsl(var(--muted));
   border-radius: 6px;
 }
 
 .demo-output pre {
   margin: 0;
-  font-size: 12px;
   overflow-x: auto;
+  font-size: 12px;
 }
 
 .api-list {
-  margin: 0;
   padding-left: 20px;
+  margin: 0;
 }
 
 .api-list li {
@@ -390,8 +390,8 @@ const mockData: I18nMessagesData = {
 
 .api-list code {
   padding: 2px 6px;
+  font-size: 0.9em;
   background: hsl(var(--muted));
   border-radius: 4px;
-  font-size: 0.9em;
 }
 </style>
