@@ -1,0 +1,40 @@
+{
+  "instance": {
+    "name": "Device Name",
+    "sn": "Serial Number",
+    "id": "Device ID",
+    "status": "Status",
+    "product": "Product",
+    "type": "Device Type",
+    "createTime": "Register Time",
+    "description": "Description",
+    "cover": "Cover Image",
+    "enable": "Enable",
+    "disable": "Disable",
+    "action": {
+      "add": "Add Device",
+      "batch": "Batch Operations",
+      "batchAdd": "Batch Add",
+      "batchDelete": "Batch Delete",
+      "confirmDisable": "Are you sure you want to disable this device?",
+      "confirmEnable": "Are you sure you want to enable this device?"
+    },
+    "placeholder": {
+      "coverUrl": "Please enter image URL"
+    },
+    "tips": {
+      "batchAddNotImplemented": "Batch add feature pending implementation"
+    }
+  },
+  "state": {
+    "online": "Online",
+    "offline": "Offline",
+    "unActive": "Inactive",
+    "other": "Other"
+  },
+  "types": {
+    "DIRECT": "Direct",
+    "GATEWAY": "Gateway",
+    "GATEWAY_CHILD": "Sub-Device"
+  }
+}

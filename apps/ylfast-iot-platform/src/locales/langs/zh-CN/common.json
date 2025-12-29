@@ -10,6 +10,7 @@
     "more": "更多",
     "confirm": "确认",
     "cancel": "取消",
+    "confirmDelete": "确认删除吗？",
     "unbind": "解绑",
     "batchUnbind": "批量解绑"
   },
@@ -32,6 +33,11 @@
   "confirmDeleteMsg": "确认删除该记录吗？此操作不可恢复。",
   "comingSoon": "敬请期待",
   "noData": "暂无数据",
+  "noDescription": "暂无描述",
+  "placeholder": {
+    "input": "请输入",
+    "select": "请选择"
+  },
   "select": "请选择",
   "pleaseSelect": "请选择数据",
   "add": "新增",
@@ -43,5 +49,8 @@
   "value": "值",
   "text": "文本",
   "error": "错误",
-  "disabled": "已禁用"
+  "disabled": "已禁用",
+  "tips": {
+    "selectData": "请选择数据"
+  }
 }

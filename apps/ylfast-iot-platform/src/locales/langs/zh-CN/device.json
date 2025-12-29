@@ -1,0 +1,40 @@
+{
+  "instance": {
+    "name": "设备名称",
+    "sn": "设备序列号",
+    "id": "设备ID",
+    "status": "状态",
+    "product": "所属产品",
+    "type": "设备类型",
+    "createTime": "注册时间",
+    "description": "说明",
+    "cover": "封面图",
+    "enable": "启用",
+    "disable": "禁用",
+    "action": {
+      "add": "新增设备",
+      "batch": "批量操作",
+      "batchAdd": "批量新增",
+      "batchDelete": "批量删除",
+      "confirmDisable": "确定要禁用此设备吗？",
+      "confirmEnable": "确定要启用此设备吗？"
+    },
+    "placeholder": {
+      "coverUrl": "请输入图片URL"
+    },
+    "tips": {
+      "batchAddNotImplemented": "批量新增功能待实现"
+    }
+  },
+  "state": {
+    "online": "在线",
+    "offline": "离线",
+    "unActive": "未激活",
+    "other": "其他"
+  },
+  "types": {
+    "DIRECT": "直连设备",
+    "GATEWAY": "网关设备",
+    "GATEWAY_CHILD": "网关子设备"
+  }
+}

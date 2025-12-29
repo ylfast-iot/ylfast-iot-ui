@@ -7,8 +7,27 @@ import { Page } from '@vben/common-ui';
 
 import { Card, message } from 'ant-design-vue';
 
+import { IotDeviceProductApi } from '#/api';
 import { useYlDcForm } from '#/components/yl-dc-form';
+import { COMMON_STATE } from '#/enums';
 
+const fetchProductOptions = () =>
+  IotDeviceProductApi.basicCrudApis
+    .postQueryNoPaging({
+      terms: [
+        {
+          column: 'state',
+          termType: 'eq',
+          value: COMMON_STATE.ENABLE.value,
+        },
+      ],
+    })
+    .then((res) =>
+      res.map((item) => ({
+        label: item.productName,
+        value: item.id,
+      })),
+    );
 // 1. 定义 Schema
 const schemas: YlDcFormSchema[] = [
   {
@@ -28,6 +47,15 @@ const schemas: YlDcFormSchema[] = [
         { label: '传感器', value: 'sensor' },
         { label: '控制器', value: 'controller' },
       ],
+    },
+    termTypes: ['eq'],
+  },
+  {
+    field: 'productId',
+    label: '产品',
+    component: 'ApiSelect',
+    componentProps: {
+      api: fetchProductOptions,
     },
     termTypes: ['eq'],
   },

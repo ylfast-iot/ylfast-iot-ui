@@ -10,6 +10,7 @@
     "more": "More",
     "confirm": "Confirm",
     "cancel": "Cancel",
+    "confirmDelete": "Are you sure you want to delete?",
     "unbind": "Unbind",
     "batchUnbind": "Batch Unbind"
   },
@@ -32,6 +33,11 @@
   "confirmDeleteMsg": "Are you sure you want to delete this record? This action cannot be undone.",
   "comingSoon": "Coming Soon",
   "noData": "No Data",
+  "noDescription": "No Description",
+  "placeholder": {
+    "input": "Please enter",
+    "select": "Please select"
+  },
   "select": "Please Select",
   "pleaseSelect": "Please select data",
   "add": "Add",
@@ -43,5 +49,8 @@
   "value": "Value",
   "text": "Text",
   "error": "Error",
-  "disabled": "Disabled"
+  "disabled": "Disabled",
+  "tips": {
+    "selectData": "Please select data"
+  }
 }

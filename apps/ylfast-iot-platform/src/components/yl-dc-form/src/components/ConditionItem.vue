@@ -141,7 +141,7 @@ watch(
       const schema = props.schemas.find((s) => s.field === newColumn);
 
       conditionVM.value.value =
-        schema?.defaultValue === undefined ? '' : schema.defaultValue;
+        schema?.defaultValue === undefined ? undefined : schema.defaultValue;
 
       // Reset termType if not valid for new column
       if (
@@ -197,8 +197,11 @@ watch(
       <!-- Dynamic Component -->
       <component
         :is="valueComponent"
-        v-model:value="conditionVM.value"
         v-bind="valueComponentProps"
+        :model-value="conditionVM.value"
+        :value="conditionVM.value"
+        @update:model-value="(val: any) => (conditionVM.value = val)"
+        @update:value="(val: any) => (conditionVM.value = val)"
       />
     </div>
 

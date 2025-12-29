@@ -1,7 +1,7 @@
 import type { Recordable } from '@vben/types';
 
 import type { HswebMenu, QueryParamEntity } from '#/adapter';
-import type { I18nSupport, TreeSortSupport } from '#/api/basic.d';
+import type { I18nSupport, TreeSortSupport } from '#/api/basic';
 
 import { requestClient } from '#/api/request';
 
