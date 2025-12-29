@@ -18,5 +18,5 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   theme: {
     mode: 'auto',
-  },
+  }
 });

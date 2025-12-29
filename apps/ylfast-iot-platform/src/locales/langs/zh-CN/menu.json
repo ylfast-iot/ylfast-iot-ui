@@ -44,6 +44,12 @@
     "description": "说明",
     "associatedPermissions": "关联权限"
   },
+  "dataType": {
+    "string": "字符串",
+    "number": "数字",
+    "boolean": "布尔值",
+    "json": "JSON"
+  },
   "option": {
     "showDesc": "是否在菜单栏中显示",
     "keepAliveDesc": "是否开启页面缓存",
