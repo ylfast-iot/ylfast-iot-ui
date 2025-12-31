@@ -162,7 +162,7 @@ export function renderConfigMetadataDescItems(props: RenderProps) {
                         <div class="h-1 w-1 rounded-full bg-primary/50"></div>
                         <div class="flex items-center gap-1.5">
                           <span class="text-sm font-medium text-muted-foreground">
-                            {group.name}
+                            {group.name || group.description}
                           </span>
                           {group.description && (
                             <Tooltip title={group.description}>
@@ -195,7 +195,7 @@ export function renderConfigMetadataDescItems(props: RenderProps) {
                         <div class="h-5 w-1 rounded-sm bg-primary"></div>
                         <div class="flex items-center gap-2">
                           <span class="text-lg font-bold text-foreground">
-                            {group.name}
+                            {group.name || group.description}
                           </span>
                           {group.description && (
                             <Tooltip title={group.description}>

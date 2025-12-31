@@ -44,6 +44,9 @@ export function useYlConfigMetadataDesc(props?: YlConfigMetadataDescProps) {
   }
 
   const methods: YlConfigMetadataDescActionType = {
+    submit: () => {
+      return getInstance().submit();
+    },
     setProps: (newProps: Partial<YlConfigMetadataDescProps>) => {
       getInstance().setProps(newProps);
     },

@@ -218,8 +218,35 @@ function handleCancel() {
   emit('cancel');
 }
 
+const getProps = computed(() => {
+  return {
+    ...props,
+    ...innerProps.value,
+  };
+});
+
+/**
+ * 验证表单
+ */
+async function validate() {
+  // 验证所有子组件
+  const childrenValidations = Object.values(childRefs.value).map((child) => {
+    if (child && typeof child.validate === 'function') return child.validate();
+    return Promise.resolve();
+  });
+
+  await Promise.all(childrenValidations);
+  return formModel;
+}
+
 // Action 接口
 const action: YlConfigMetadataDescActionType = {
+  submit: async () => {
+    const values = await validate();
+    return {
+      ...values,
+    };
+  },
   setProps: (newProps) => {
     innerProps.value = { ...innerProps.value, ...newProps };
 
@@ -235,17 +262,7 @@ const action: YlConfigMetadataDescActionType = {
   },
   toggleEditMode,
   setEditMode,
-  validate: async () => {
-    // 验证所有子组件
-    const childrenValidations = Object.values(childRefs.value).map((child) => {
-      if (child && typeof child.validate === 'function')
-        return child.validate();
-      return Promise.resolve();
-    });
-
-    await Promise.all(childrenValidations);
-    return formModel;
-  },
+  validate,
   resetFields: async () => {
     Object.values(childRefs.value).forEach((child) => {
       if (child && typeof child.resetFields === 'function') child.resetFields();
@@ -288,18 +305,21 @@ defineExpose(action);
 <template>
   <div class="yl-config-metadata-desc w-full">
     <!-- 操作按钮 -->
-    <div v-if="!isNested && showEditButton" class="mb-4 flex justify-end gap-2">
+    <div
+      v-if="!isNested && getProps.showEditButton"
+      class="mb-4 flex justify-end gap-2"
+    >
       <template v-if="!internalEditMode">
         <Button type="primary" @click="toggleEditMode">
-          {{ editButtonText || $t('ylConfigMetadataDesc.edit') }}
+          {{ getProps.editButtonText || $t('ylConfigMetadataDesc.edit') }}
         </Button>
       </template>
       <template v-else>
         <Button @click="handleCancel">
-          {{ cancelButtonText || $t('ylConfigMetadataDesc.cancel') }}
+          {{ getProps.cancelButtonText || $t('ylConfigMetadataDesc.cancel') }}
         </Button>
         <Button type="primary" @click="handleSave">
-          {{ saveButtonText || $t('ylConfigMetadataDesc.save') }}
+          {{ getProps.saveButtonText || $t('ylConfigMetadataDesc.save') }}
         </Button>
       </template>
     </div>
@@ -307,9 +327,9 @@ defineExpose(action);
     <!-- 描述列表 -->
     <ConfigItemsRenderer
       :edit-mode="internalEditMode"
-      :hide-nested-header="props.hideNestedHeader"
-      :hide-root-header="props.hideRootHeader"
-      :is-nested="props.isNested"
+      :hide-nested-header="getProps.hideNestedHeader"
+      :hide-root-header="getProps.hideRootHeader"
+      :is-nested="getProps.isNested"
       :metadata="groups"
       :model="formModel"
     />

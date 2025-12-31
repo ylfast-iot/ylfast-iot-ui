@@ -6,6 +6,11 @@ import type { Recordable } from '#/types/data-type';
  */
 export interface YlConfigMetadataDescActionType {
   /**
+   * 手动提交数据
+   */
+  submit: () => Promise<Recordable>;
+
+  /**
    * 设置组件属性
    */
   setProps: (props: Partial<YlConfigMetadataDescProps>) => void;
