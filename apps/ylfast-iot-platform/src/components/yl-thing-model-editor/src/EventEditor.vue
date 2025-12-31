@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import type {
+  BeforeChangeContext,
+  BeforeChangeFn,
+  ThingModelChangeAction,
+} from './types';
+
 import type { VxeGridProps, VxeTableDefines } from '#/adapter/vxe-table';
 import type { DataType, DataTypeDef } from '#/types/data-type';
 import type { DeviceEventMetadata, DeviceMetadata } from '#/types/metadata';
@@ -11,7 +17,15 @@ import { $t } from '@vben/locales';
 import { cloneDeep } from '@vben/utils';
 
 import { useClipboard, useElementSize } from '@vueuse/core';
-import { Button, Input, message, Select, Tag, Tooltip } from 'ant-design-vue';
+import {
+  Button,
+  Input,
+  message,
+  Modal,
+  Select,
+  Tag,
+  Tooltip,
+} from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition';
@@ -22,12 +36,41 @@ import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 import EventTypeConfig from './components/EventTypeConfig.vue';
 import { createBaseGridOptions } from './helper';
 
-const props = defineProps<{
-  disabled?: boolean;
-  value: DeviceMetadata;
-}>();
+const props = withDefaults(
+  defineProps<{
+    beforeChange?: BeforeChangeFn;
+    disabled?: boolean;
+    value: DeviceMetadata;
+  }>(),
+  {
+    beforeChange: undefined,
+  },
+);
 
 const emit = defineEmits(['update:value', 'change']);
+
+// ...
+
+async function runBeforeChange(
+  action: ThingModelChangeAction,
+  records?: any,
+  val?: any,
+  type: 'events' = 'events',
+) {
+  if (!props.beforeChange) return true;
+  const context: BeforeChangeContext = {
+    type,
+    action,
+    records,
+    value: val,
+  };
+  try {
+    return await props.beforeChange(context);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
 
 const PlusOutlined = createIconifyIcon('ant-design:plus-outlined');
 const SettingOutlined = createIconifyIcon('ant-design:setting-outlined'); // Re-add for config button
@@ -36,6 +79,7 @@ const SearchOutlined = createIconifyIcon('ant-design:search-outlined');
 const EyeOutlined = createIconifyIcon('ant-design:eye-outlined');
 const CopyOutlined = createIconifyIcon('ant-design:copy-outlined');
 const CodeOutlined = createIconifyIcon('ant-design:code-outlined');
+const DeleteOutlined = createIconifyIcon('ant-design:delete-outlined');
 
 const rootEl = ref<HTMLDivElement | null>(null);
 
@@ -49,13 +93,15 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
   title: $t('thingModel.common.editJson'),
   draggable: true,
   class: 'w-3/5 h-[600px] flex flex-col',
-  onConfirm: () => {
+  onConfirm: async () => {
     try {
       const newEvents = JSON.parse(jsonEditorValue.value);
       if (!Array.isArray(newEvents)) {
         message.error($t('thingModel.common.jsonArrayError'));
         return;
       }
+      if (!(await runBeforeChange('import', undefined, newEvents))) return;
+
       emit('update:value', { ...props.value, events: newEvents });
       emit('change', 'events', { ...props.value, events: newEvents });
       message.success($t('thingModel.common.success'));
@@ -201,6 +247,7 @@ const gridOptions = computed<VxeGridProps<DeviceEventMetadata>>(() => {
       output: [{ required: true, content: $t('thingModel.common.required') }], // Output is now DataTypeDef, so required check makes sense
     },
     columns: [
+      { type: 'checkbox', width: 50, fixed: 'left' },
       {
         field: 'id',
         title: $t('thingModel.common.id'),
@@ -291,6 +338,7 @@ watch(
 
 // Actions
 async function addRow() {
+  if (!(await runBeforeChange('add'))) return;
   const newRow: Partial<DeviceEventMetadata> = {
     id: `event_${Date.now()}`,
     name: '',
@@ -306,8 +354,16 @@ async function addRow() {
 }
 
 function removeRow(row: DeviceEventMetadata) {
-  gridApi.grid.remove(row);
-  syncData(); // Immediate sync on delete
+  Modal.confirm({
+    title: $t('common.confirmDelete'),
+    content: $t('common.confirmDeleteMsg'),
+    onOk: async () => {
+      if (!(await runBeforeChange('delete', row))) return;
+      gridApi.grid.remove(row);
+      syncData(); // Immediate sync on delete
+      message.success($t('common.deleteSuccess'));
+    },
+  });
 }
 
 function copyRow(row: DeviceEventMetadata) {
@@ -324,9 +380,12 @@ function copyRow(row: DeviceEventMetadata) {
     targetRow = fullData[idx + 1];
   }
 
-  gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
-    gridApi.grid.setEditRow(insertedRow);
-    checkChanges();
+  runBeforeChange('copy', row).then((res) => {
+    if (!res) return;
+    gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
+      gridApi.grid.setEditRow(insertedRow);
+      checkChanges();
+    });
   });
 }
 
@@ -345,6 +404,7 @@ function editRowEvent(row: DeviceEventMetadata) {
 async function saveRowEvent(row: DeviceEventMetadata) {
   const err = await gridApi.grid.validate(row);
   if (err) return;
+  if (!(await runBeforeChange('update', row))) return;
   gridApi.grid.clearEdit();
   syncData(); // Immediate sync on row save
   message.success(
@@ -358,6 +418,25 @@ function cancelRowEvent(row: DeviceEventMetadata) {
   checkChanges();
 }
 
+// Batch Delete
+function handleBatchDelete() {
+  const records = gridApi.grid?.getCheckboxRecords();
+  if (!records || records.length === 0) {
+    message.warning($t('common.tips.selectData'));
+    return;
+  }
+  Modal.confirm({
+    title: $t('common.confirmDelete'),
+    content: $t('common.confirmDeleteMsg'),
+    onOk: async () => {
+      if (!(await runBeforeChange('batch-delete', records))) return;
+      gridApi.grid.remove(records);
+      syncData();
+      message.success($t('common.deleteSuccess'));
+    },
+  });
+}
+
 // Global Save
 async function handleGlobalSave() {
   const err = await gridApi.grid.validate(true);
@@ -365,6 +444,12 @@ async function handleGlobalSave() {
     message.error($t('thingModel.common.validationFailed'));
     return;
   }
+  const { insertRecords, removeRecords, updateRecords } =
+    gridApi.grid.getRecordset();
+  const allChanges = [...insertRecords, ...removeRecords, ...updateRecords];
+  if (allChanges.length > 0 && !(await runBeforeChange('update', allChanges)))
+    return;
+
   syncData();
   message.success(
     `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
@@ -494,6 +579,15 @@ function syncData() {
                   @click="!disabled && addRow()"
                 >
                   <PlusOutlined />
+                </div>
+              </Tooltip>
+              <Tooltip :title="$t('common.action.batchDelete')">
+                <div
+                  class="flex size-7 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white transition-colors hover:bg-red-500"
+                  :class="{ 'pointer-events-none opacity-50': disabled }"
+                  @click="!disabled && handleBatchDelete()"
+                >
+                  <DeleteOutlined />
                 </div>
               </Tooltip>
               <Tooltip :title="$t('thingModel.common.save')">

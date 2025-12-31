@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { BeforeChangeFn } from './src/types';
+
 import type { DeviceMetadata, DeviceMetadataType } from '#/types/metadata';
 
 import { ref } from 'vue';
@@ -19,12 +21,14 @@ import PropertyEditor from './src/PropertyEditor.vue';
 
 const props = withDefaults(
   defineProps<{
+    beforeChange?: BeforeChangeFn;
     disabled?: boolean;
     height?: number | string;
     value: DeviceMetadata;
   }>(),
   {
     height: '100%',
+    beforeChange: undefined,
   },
 );
 
@@ -224,6 +228,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           class="h-full"
           :value="value"
           :disabled="disabled"
+          :before-change="beforeChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />
@@ -233,6 +238,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           class="h-full"
           :value="value"
           :disabled="disabled"
+          :before-change="beforeChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />
@@ -242,6 +248,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           class="h-full"
           :value="value"
           :disabled="disabled"
+          :before-change="beforeChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />

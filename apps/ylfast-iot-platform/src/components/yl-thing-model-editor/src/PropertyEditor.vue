@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import type {
+  BeforeChangeContext,
+  BeforeChangeFn,
+  ThingModelChangeAction,
+} from './types';
+
 import type { VxeGridProps, VxeTableDefines } from '#/adapter/vxe-table';
 import type { DataType, DataTypeDef } from '#/types/data-type';
 import type { DeviceMetadata, DevicePropertyMetadata } from '#/types/metadata';
@@ -11,7 +17,7 @@ import { $t } from '@vben/locales';
 import { cloneDeep } from '@vben/utils';
 
 import { useClipboard, useElementSize } from '@vueuse/core';
-import { Button, Input, message, Select, Tooltip } from 'ant-design-vue';
+import { Button, Input, message, Modal, Select, Tooltip } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition';
@@ -23,12 +29,41 @@ import PropertyExpandConfig from './components/PropertyExpandConfig.vue';
 import SourceConfig from './components/SourceConfig.vue';
 import { createBaseGridOptions } from './helper';
 
-const props = defineProps<{
-  disabled?: boolean;
-  value: DeviceMetadata;
-}>();
+const props = withDefaults(
+  defineProps<{
+    beforeChange?: BeforeChangeFn;
+    disabled?: boolean;
+    value: DeviceMetadata;
+  }>(),
+  {
+    beforeChange: undefined,
+  },
+);
 
 const emit = defineEmits(['update:value', 'change']);
+
+// ...
+
+async function runBeforeChange(
+  action: ThingModelChangeAction,
+  records?: any,
+  val?: any,
+  type: 'expands' | 'properties' = 'properties',
+) {
+  if (!props.beforeChange) return true;
+  const context: BeforeChangeContext = {
+    type,
+    action,
+    records,
+    value: val,
+  };
+  try {
+    return await props.beforeChange(context);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
 
 const PlusOutlined = createIconifyIcon('ant-design:plus-outlined');
 const SettingOutlined = createIconifyIcon('ant-design:setting-outlined');
@@ -37,6 +72,7 @@ const SearchOutlined = createIconifyIcon('ant-design:search-outlined');
 const EyeOutlined = createIconifyIcon('ant-design:eye-outlined');
 const CopyOutlined = createIconifyIcon('ant-design:copy-outlined');
 const CodeOutlined = createIconifyIcon('ant-design:code-outlined');
+const DeleteOutlined = createIconifyIcon('ant-design:delete-outlined');
 
 const rootEl = ref<HTMLDivElement | null>(null);
 const tabsEl = ref<HTMLDivElement | null>(null);
@@ -47,13 +83,23 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
   title: $t('thingModel.common.editJson'),
   draggable: true,
   class: 'w-3/5 h-[600px] flex flex-col',
-  onConfirm: () => {
+  onConfirm: async () => {
     try {
       const newProperties = JSON.parse(jsonEditorValue.value);
       if (!Array.isArray(newProperties)) {
         message.error($t('thingModel.common.jsonArrayError'));
         return;
       }
+      if (
+        !(await runBeforeChange(
+          'import',
+          undefined,
+          newProperties,
+          'properties',
+        ))
+      )
+        return;
+
       emit('update:value', { ...props.value, properties: newProperties });
       emit('change', 'properties', {
         ...props.value,
@@ -160,17 +206,20 @@ function checkChanges() {
 }
 
 // Group Data Helpers
-const propertyGroups = computed({
-  get: () => props.value.expands?.propertyGroups || [],
-  set: (groups) => {
-    const newVal = {
-      ...props.value,
-      expands: { ...props.value.expands, propertyGroups: groups },
-    };
-    emit('update:value', newVal);
-    emit('change', 'expands', newVal);
-  },
-});
+const propertyGroups = computed(
+  () => props.value.expands?.propertyGroups || [],
+);
+
+async function handleGroupsUpdate(groups: any[]) {
+  if (!(await runBeforeChange('update', undefined, undefined, 'expands')))
+    return;
+  const newVal = {
+    ...props.value,
+    expands: { ...props.value.expands, propertyGroups: groups },
+  };
+  emit('update:value', newVal);
+  emit('change', 'expands', newVal);
+}
 
 // Config Modal Logic
 const [ConfigModal, modalApi] = useVbenModal({
@@ -259,6 +308,7 @@ const gridOptions = computed(() => {
       ],
     },
     columns: [
+      { type: 'checkbox', width: 50, fixed: 'left' },
       {
         field: 'id',
         title: $t('thingModel.common.id'),
@@ -372,6 +422,7 @@ watch(
 
 // Actions
 async function addRow() {
+  if (!(await runBeforeChange('add'))) return;
   const newRow: Partial<DevicePropertyMetadata> = {
     id: undefined,
     name: undefined,
@@ -391,8 +442,16 @@ async function addRow() {
 }
 
 function removeRow(row: DevicePropertyMetadata) {
-  gridApi.grid.remove(row);
-  syncData(); // Immediate sync on delete (ObjectDefinition style)
+  Modal.confirm({
+    title: $t('common.confirmDelete'),
+    content: $t('common.confirmDeleteMsg'),
+    onOk: async () => {
+      if (!(await runBeforeChange('delete', row))) return;
+      gridApi.grid.remove(row);
+      syncData(); // Immediate sync on delete (ObjectDefinition style)
+      message.success($t('common.deleteSuccess'));
+    },
+  });
 }
 
 function copyRow(row: DevicePropertyMetadata) {
@@ -413,9 +472,12 @@ function copyRow(row: DevicePropertyMetadata) {
     targetRow = fullData[idx + 1];
   }
 
-  gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
-    gridApi.grid.setEditRow(insertedRow);
-    checkChanges();
+  runBeforeChange('copy', row).then((res) => {
+    if (!res) return;
+    gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
+      gridApi.grid.setEditRow(insertedRow);
+      checkChanges();
+    });
   });
 }
 
@@ -434,6 +496,7 @@ function editRowEvent(row: DevicePropertyMetadata) {
 async function saveRowEvent(row: DevicePropertyMetadata) {
   const err = await gridApi.grid.validate(row);
   if (err) return;
+  if (!(await runBeforeChange('update', row))) return;
   gridApi.grid.clearEdit();
   syncData(); // Immediate sync on row save
   message.success(
@@ -447,6 +510,25 @@ function cancelRowEvent(row: DevicePropertyMetadata) {
   checkChanges();
 }
 
+// Batch Delete
+function handleBatchDelete() {
+  const records = gridApi.grid?.getCheckboxRecords();
+  if (!records || records.length === 0) {
+    message.warning($t('common.tips.selectData'));
+    return;
+  }
+  Modal.confirm({
+    title: $t('common.confirmDelete'),
+    content: $t('common.confirmDeleteMsg'),
+    onOk: async () => {
+      if (!(await runBeforeChange('batch-delete', records))) return;
+      gridApi.grid.remove(records);
+      syncData();
+      message.success($t('common.deleteSuccess'));
+    },
+  });
+}
+
 // Global Save
 async function handleGlobalSave() {
   const err = await gridApi.grid.validate(true);
@@ -454,6 +536,12 @@ async function handleGlobalSave() {
     message.error($t('thingModel.common.validationFailed'));
     return;
   }
+  const { insertRecords, removeRecords, updateRecords } =
+    gridApi.grid.getRecordset();
+  const allChanges = [...insertRecords, ...removeRecords, ...updateRecords];
+  if (allChanges.length > 0 && !(await runBeforeChange('update', allChanges)))
+    return;
+
   syncData();
   message.success(
     `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
@@ -461,7 +549,7 @@ async function handleGlobalSave() {
   hasTableChanges.value = false;
 }
 
-function handleGroupIdChange({
+async function handleGroupIdChange({
   newGroups,
   newId,
   oldId,
@@ -470,6 +558,9 @@ function handleGroupIdChange({
   newId: string;
   oldId: string;
 }) {
+  if (!(await runBeforeChange('update', undefined, undefined, 'expands')))
+    return;
+
   const newProperties = (props.value.properties || []).map((p) => {
     if (p.expands?.groupId === oldId) {
       return { ...p, expands: { ...p.expands, groupId: newId } };
@@ -628,6 +719,15 @@ function syncData() {
                   <PlusOutlined />
                 </div>
               </Tooltip>
+              <Tooltip :title="$t('common.action.batchDelete')">
+                <div
+                  class="flex size-7 cursor-pointer items-center justify-center rounded-full bg-red-600 text-white transition-colors hover:bg-red-500"
+                  :class="{ 'pointer-events-none opacity-50': disabled }"
+                  @click="!disabled && handleBatchDelete()"
+                >
+                  <DeleteOutlined />
+                </div>
+              </Tooltip>
               <Tooltip :title="$t('thingModel.common.save')">
                 <div
                   class="flex size-7 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
@@ -745,8 +845,9 @@ function syncData() {
     <div ref="tabsEl" class="mt-2 shrink-0">
       <GroupTabs
         v-model:active-group="activeGroup"
-        v-model:groups="propertyGroups"
+        :groups="propertyGroups"
         :disabled="disabled"
+        @update:groups="handleGroupsUpdate"
         @group-id-change="handleGroupIdChange"
       />
     </div>
