@@ -70,6 +70,12 @@ export function formatValue(value: any, prop: ConfigPropertyMetadata): string {
 
   // 布尔类型
   if (prop.type.type === 'BOOLEAN') {
+    if (typeof value === 'boolean') {
+      return value ? '是' : '否';
+    }
+    if (typeof value === 'string') {
+      return value === 'true' ? '是' : '否';
+    }
     return value ? '是' : '否';
   }
 

@@ -465,6 +465,7 @@ const gridQuery = async (_params: any, ...args: any[]) => {
 在 `apps/ylfast-iot-platform/src/enums/` 目录下创建或修改对应的枚举文件。
 
 **推荐结构**:
+
 1.  **类型定义**: 定义 String Literal Types (`type DeviceType = 'A' | 'B'`).
 2.  **枚举字典接口**: 继承 `EnumDict`，并扩展 UI 相关的字段（如 `color`, `icon`, `statusColor`）。
 3.  **配置对象**: 创建一个 Key-Value 对象，Key 为枚举值，Value 为配置详情。
@@ -487,17 +488,23 @@ export interface DeviceTypeEnumDict extends EnumDict<DeviceType> {
 export const DEVICE_TYPE_ENUMS: { [key in DeviceType]: DeviceTypeEnumDict } = {
   DIRECT: {
     value: 'DIRECT',
-    get label() { return $t('device.types.DIRECT'); },
+    get label() {
+      return $t('device.types.DIRECT');
+    },
     color: 'blue',
   },
   GATEWAY: {
     value: 'GATEWAY',
-    get label() { return $t('device.types.GATEWAY'); },
+    get label() {
+      return $t('device.types.GATEWAY');
+    },
     color: 'purple',
   },
   GATEWAY_CHILD: {
     value: 'GATEWAY_CHILD',
-    get label() { return $t('device.types.GATEWAY_CHILD'); },
+    get label() {
+      return $t('device.types.GATEWAY_CHILD');
+    },
     color: 'cyan',
   },
 };
@@ -508,6 +515,7 @@ export const DEVICE_TYPE_ENUMS: { [key in DeviceType]: DeviceTypeEnumDict } = {
 在 Vue 组件中，**禁止**写 `switch-case` 或 `if-else` 来判断颜色或标签。**必须**直接引用枚举配置。
 
 **错误示范**:
+
 ```html
 <Tag :color="row.type === 'GATEWAY' ? 'purple' : 'blue'">
   {{ row.type === 'GATEWAY' ? '网关' : '直连' }}
@@ -515,9 +523,10 @@ export const DEVICE_TYPE_ENUMS: { [key in DeviceType]: DeviceTypeEnumDict } = {
 ```
 
 **正确示范**:
+
 ```html
 <script setup lang="ts">
-import { DEVICE_TYPE_ENUMS } from '#/enums/device';
+  import { DEVICE_TYPE_ENUMS } from '#/enums/device';
 </script>
 
 <template>
