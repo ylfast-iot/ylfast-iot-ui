@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DeviceMetadata } from '#/types/metadata';
+import type { DeviceMetadata, DeviceMetadataType } from '#/types/metadata';
 
 import { ref } from 'vue';
 
@@ -105,7 +105,9 @@ async function handleImport(file: File) {
 
 function handleUpdate(val: DeviceMetadata) {
   emit('update:value', val);
-  emit('change', val);
+}
+function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
+  emit('change', type, val);
 }
 </script>
 
@@ -214,6 +216,7 @@ function handleUpdate(val: DeviceMetadata) {
               <CodeOutlined />
             </div>
           </Tooltip>
+          <slot name="rightExtra"></slot>
         </div>
       </template>
       <TabPane key="property" :tab="$t('thingModel.tabs.property')">
@@ -222,7 +225,7 @@ function handleUpdate(val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           @update:value="handleUpdate"
-          @change="handleUpdate"
+          @change="handleChange"
         />
       </TabPane>
       <TabPane key="function" :tab="$t('thingModel.tabs.function')">
@@ -231,7 +234,7 @@ function handleUpdate(val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           @update:value="handleUpdate"
-          @change="handleUpdate"
+          @change="handleChange"
         />
       </TabPane>
       <TabPane key="event" :tab="$t('thingModel.tabs.event')">
@@ -240,7 +243,7 @@ function handleUpdate(val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           @update:value="handleUpdate"
-          @change="handleUpdate"
+          @change="handleChange"
         />
       </TabPane>
     </Tabs>

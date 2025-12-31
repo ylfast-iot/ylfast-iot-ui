@@ -64,7 +64,7 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
         return;
       }
       emit('update:value', { ...props.value, functions: newFunctions });
-      emit('change', { ...props.value, functions: newFunctions });
+      emit('change', 'functions', { ...props.value, functions: newFunctions });
       message.success($t('thingModel.common.success'));
       jsonEditModalApi.close();
     } catch {
@@ -458,7 +458,7 @@ function syncData() {
   }
 
   emit('update:value', { ...props.value, functions: newFunctions });
-  emit('change', { ...props.value, functions: newFunctions });
+  emit('change', 'functions', { ...props.value, functions: newFunctions });
   checkChanges(); // Explicitly re-check changes and update duplicate status
 }
 

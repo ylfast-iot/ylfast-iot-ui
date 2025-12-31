@@ -41,8 +41,6 @@ const CodeOutlined = createIconifyIcon('ant-design:code-outlined');
 const rootEl = ref<HTMLDivElement | null>(null);
 const tabsEl = ref<HTMLDivElement | null>(null);
 
-// ...
-
 // JSON Edit Modal
 const jsonEditorValue = ref('');
 const [JsonEditModal, jsonEditModalApi] = useVbenModal({
@@ -57,7 +55,10 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
         return;
       }
       emit('update:value', { ...props.value, properties: newProperties });
-      emit('change', { ...props.value, properties: newProperties });
+      emit('change', 'properties', {
+        ...props.value,
+        properties: newProperties,
+      });
       message.success($t('thingModel.common.success'));
       jsonEditModalApi.close();
     } catch {
@@ -167,7 +168,7 @@ const propertyGroups = computed({
       expands: { ...props.value.expands, propertyGroups: groups },
     };
     emit('update:value', newVal);
-    emit('change', newVal);
+    emit('change', 'expands', newVal);
   },
 });
 
@@ -238,7 +239,7 @@ function updateDuplicateStatus() {
 }
 
 // Grid Options
-const gridOptions = computed<VxeGridProps<DevicePropertyMetadata>>(() => {
+const gridOptions = computed(() => {
   return {
     ...createBaseGridOptions(props),
     cellClassName: ({ row, column }) => {
@@ -311,7 +312,7 @@ const gridOptions = computed<VxeGridProps<DevicePropertyMetadata>>(() => {
     ],
     // Initial data is filtered by group + search
     data: filterData(),
-  };
+  } as VxeGridProps<DevicePropertyMetadata>;
 });
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -322,7 +323,20 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 function filterData() {
-  let data = props.value.properties || [];
+  const rawData = props.value.properties || [];
+
+  let data = rawData.map((property) => {
+    // 适配旧版本数据
+    if (!property.valueType && property.propertyValueType) {
+      property.valueType = property.propertyValueType;
+      const { propertyValueType: _propertyValueType, ...rest } = property;
+      return {
+        ...rest,
+      };
+    }
+    return property;
+  });
+
   // Filter by Group
   if (activeGroup.value !== 'all') {
     data = data.filter((item) => item.expands?.groupId === activeGroup.value);
@@ -476,7 +490,7 @@ function handleGroupIdChange({
   }
 
   emit('update:value', newValue);
-  emit('change', newValue);
+  emit('change', 'properties', newValue);
   checkChanges();
 }
 
@@ -522,7 +536,7 @@ function syncData() {
   }
 
   emit('update:value', { ...props.value, properties: newProperties });
-  emit('change', { ...props.value, properties: newProperties });
+  emit('change', 'properties', { ...props.value, properties: newProperties });
   checkChanges(); // Explicitly re-check changes and update duplicate status
 }
 </script>
