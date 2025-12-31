@@ -18,7 +18,10 @@ const emit = defineEmits(['update:value', 'change']);
 const typeDef = computed(() => props.prop.type as BooleanTypeDef);
 
 const innerValue = computed({
-  get: () => props.value,
+  get: () =>
+    typeof props.value === 'boolean'
+      ? JSON.stringify(props.value)
+      : props.value,
   set: (val) => {
     emit('update:value', val);
     emit('change', val);
