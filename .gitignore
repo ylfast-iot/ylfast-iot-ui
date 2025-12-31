@@ -17,6 +17,7 @@ coverage
 .turbo
 .temp
 .qoder
+.gemini
 dev-dist
 .stylelintcache
 yarn.lock
