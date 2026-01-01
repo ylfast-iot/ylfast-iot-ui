@@ -60,7 +60,10 @@ export interface BooleanTypeDef extends DataTypeDef {
   falseValue?: string; // 为false时的值，默认 ‘false’
   valueType?: 'BOOLEAN' | 'NUMBER' | 'STRING'; // 值类型
 
-  // 旧版本定义方式（兼容）
+  /**
+   * 旧版本定义方式（兼容）
+   * @deprecated
+   */
   boolMap?: {
     [key in 'false' | 'true']: {
       name: string; // 文本名称

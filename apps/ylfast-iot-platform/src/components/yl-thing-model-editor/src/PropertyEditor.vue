@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type {
+  AfterChangeContext,
+  AfterChangeFn,
   BeforeChangeContext,
   BeforeChangeFn,
   ThingModelChangeAction,
@@ -27,15 +29,17 @@ import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 import GroupTabs from './components/GroupTabs.vue';
 import PropertyExpandConfig from './components/PropertyExpandConfig.vue';
 import SourceConfig from './components/SourceConfig.vue';
-import { createBaseGridOptions } from './helper';
+import { createBaseGridOptions, isInherited } from './helper';
 
 const props = withDefaults(
   defineProps<{
+    afterChange?: AfterChangeFn;
     beforeChange?: BeforeChangeFn;
     disabled?: boolean;
     value: DeviceMetadata;
   }>(),
   {
+    afterChange: undefined,
     beforeChange: undefined,
   },
 );
@@ -59,6 +63,33 @@ async function runBeforeChange(
   };
   try {
     return await props.beforeChange(context);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function runAfterChange(
+  action: ThingModelChangeAction,
+  oldMetadata: DeviceMetadata,
+  newMetadata: DeviceMetadata,
+  records?: any,
+  val?: any,
+  type: 'expands' | 'properties' = 'properties',
+) {
+  if (!props.afterChange) return true;
+  const context: AfterChangeContext = {
+    type,
+    action,
+    records,
+    value: val,
+    oldMetadata,
+    newMetadata,
+  };
+  try {
+    const result = await props.afterChange(context);
+    // If explicitly returns false, treat as failure
+    return result !== false;
   } catch (error) {
     console.error(error);
     return false;
@@ -90,6 +121,7 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
         message.error($t('thingModel.common.jsonArrayError'));
         return;
       }
+      const oldMetadata = cloneDeep(props.value);
       if (
         !(await runBeforeChange(
           'import',
@@ -100,13 +132,26 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
       )
         return;
 
-      emit('update:value', { ...props.value, properties: newProperties });
-      emit('change', 'properties', {
-        ...props.value,
-        properties: newProperties,
-      });
-      message.success($t('thingModel.common.success'));
-      jsonEditModalApi.close();
+      const newMetadata = { ...props.value, properties: newProperties };
+      emit('update:value', newMetadata);
+      emit('change', 'properties', newMetadata);
+
+      if (
+        await runAfterChange(
+          'import',
+          oldMetadata,
+          newMetadata,
+          undefined,
+          newProperties,
+          'properties',
+        )
+      ) {
+        message.success($t('thingModel.common.success'));
+        jsonEditModalApi.close();
+      } else {
+        emit('update:value', oldMetadata);
+        emit('change', 'properties', oldMetadata);
+      }
     } catch {
       message.error($t('thingModel.common.jsonParseError'));
     }
@@ -211,6 +256,7 @@ const propertyGroups = computed(
 );
 
 async function handleGroupsUpdate(groups: any[]) {
+  const oldMetadata = cloneDeep(props.value);
   if (!(await runBeforeChange('update', undefined, undefined, 'expands')))
     return;
   const newVal = {
@@ -219,6 +265,20 @@ async function handleGroupsUpdate(groups: any[]) {
   };
   emit('update:value', newVal);
   emit('change', 'expands', newVal);
+
+  if (
+    !(await runAfterChange(
+      'update',
+      oldMetadata,
+      newVal,
+      undefined,
+      undefined,
+      'expands',
+    ))
+  ) {
+    emit('update:value', oldMetadata);
+    emit('change', 'expands', oldMetadata);
+  }
 }
 
 // Config Modal Logic
@@ -422,6 +482,7 @@ watch(
 
 // Actions
 async function addRow() {
+  const oldMetadata = cloneDeep(props.value);
   if (!(await runBeforeChange('add'))) return;
   const newRow: Partial<DevicePropertyMetadata> = {
     id: undefined,
@@ -439,6 +500,17 @@ async function addRow() {
     gridApi.grid.setEditRow(row);
   }
   checkChanges();
+
+  const { fullData } = gridApi.grid.getTableData();
+  const newMetadata = { ...props.value, properties: fullData };
+
+  if (
+    !(await runAfterChange('add', oldMetadata, newMetadata)) && // Revert grid
+    row
+  ) {
+    gridApi.grid.remove(row);
+    checkChanges();
+  }
 }
 
 function removeRow(row: DevicePropertyMetadata) {
@@ -446,10 +518,18 @@ function removeRow(row: DevicePropertyMetadata) {
     title: $t('common.confirmDelete'),
     content: $t('common.confirmDeleteMsg'),
     onOk: async () => {
+      const oldMetadata = cloneDeep(props.value);
       if (!(await runBeforeChange('delete', row))) return;
       gridApi.grid.remove(row);
-      syncData(); // Immediate sync on delete (ObjectDefinition style)
-      message.success($t('common.deleteSuccess'));
+      const newMetadata = syncData();
+
+      if (await runAfterChange('delete', oldMetadata, newMetadata, row)) {
+        message.success($t('common.deleteSuccess'));
+      } else {
+        // Revert: emit old value (Grid will reload via watch)
+        emit('update:value', oldMetadata);
+        emit('change', 'properties', oldMetadata);
+      }
     },
   });
 }
@@ -459,6 +539,11 @@ function copyRow(row: DevicePropertyMetadata) {
   newRow.id = `${newRow.id}_copy`;
   // newRow._ROW_KEY = undefined;
   newRow._X_ROW_KEY = undefined;
+
+  // Clear inheritance on copy
+  if (newRow.expands) {
+    newRow.expands.inheritedProduct = undefined;
+  }
 
   const { fullData } = gridApi.grid.getTableData();
   const idx = fullData.indexOf(row);
@@ -474,10 +559,21 @@ function copyRow(row: DevicePropertyMetadata) {
 
   runBeforeChange('copy', row).then((res) => {
     if (!res) return;
-    gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
-      gridApi.grid.setEditRow(insertedRow);
-      checkChanges();
-    });
+    const oldMetadata = cloneDeep(props.value);
+    gridApi.grid
+      .insertAt(newRow, targetRow)
+      .then(async ({ row: insertedRow }) => {
+        gridApi.grid.setEditRow(insertedRow);
+        checkChanges();
+
+        const { fullData } = gridApi.grid.getTableData();
+        const newMetadata = { ...props.value, properties: fullData };
+
+        if (!(await runAfterChange('copy', oldMetadata, newMetadata, row))) {
+          gridApi.grid.remove(insertedRow);
+          checkChanges();
+        }
+      });
   });
 }
 
@@ -494,14 +590,21 @@ function editRowEvent(row: DevicePropertyMetadata) {
 }
 
 async function saveRowEvent(row: DevicePropertyMetadata) {
+  const oldMetadata = cloneDeep(props.value);
   const err = await gridApi.grid.validate(row);
   if (err) return;
   if (!(await runBeforeChange('update', row))) return;
   gridApi.grid.clearEdit();
-  syncData(); // Immediate sync on row save
-  message.success(
-    `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
-  );
+  const newMetadata = syncData();
+
+  if (await runAfterChange('update', oldMetadata, newMetadata, row)) {
+    message.success(
+      `${$t('thingModel.common.save')}${$t('thingModel.common.success')}`,
+    );
+  } else {
+    emit('update:value', oldMetadata);
+    emit('change', 'properties', oldMetadata);
+  }
 }
 
 function cancelRowEvent(row: DevicePropertyMetadata) {
@@ -521,16 +624,26 @@ function handleBatchDelete() {
     title: $t('common.confirmDelete'),
     content: $t('common.confirmDeleteMsg'),
     onOk: async () => {
+      const oldMetadata = cloneDeep(props.value);
       if (!(await runBeforeChange('batch-delete', records))) return;
       gridApi.grid.remove(records);
-      syncData();
-      message.success($t('common.deleteSuccess'));
+      const newMetadata = syncData();
+
+      if (
+        await runAfterChange('batch-delete', oldMetadata, newMetadata, records)
+      ) {
+        message.success($t('common.deleteSuccess'));
+      } else {
+        emit('update:value', oldMetadata);
+        emit('change', 'properties', oldMetadata);
+      }
     },
   });
 }
 
 // Global Save
 async function handleGlobalSave() {
+  const oldMetadata = cloneDeep(props.value);
   const err = await gridApi.grid.validate(true);
   if (err) {
     message.error($t('thingModel.common.validationFailed'));
@@ -542,11 +655,20 @@ async function handleGlobalSave() {
   if (allChanges.length > 0 && !(await runBeforeChange('update', allChanges)))
     return;
 
-  syncData();
-  message.success(
-    `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
-  );
-  hasTableChanges.value = false;
+  const newMetadata = syncData();
+
+  if (
+    allChanges.length > 0 &&
+    !(await runAfterChange('update', oldMetadata, newMetadata, allChanges))
+  ) {
+    emit('update:value', oldMetadata);
+    emit('change', 'properties', oldMetadata);
+  } else {
+    message.success(
+      `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
+    );
+    hasTableChanges.value = false;
+  }
 }
 
 async function handleGroupIdChange({
@@ -626,9 +748,11 @@ function syncData() {
     });
   }
 
-  emit('update:value', { ...props.value, properties: newProperties });
-  emit('change', 'properties', { ...props.value, properties: newProperties });
-  checkChanges(); // Explicitly re-check changes and update duplicate status
+  const newMetadata = { ...props.value, properties: newProperties };
+  emit('update:value', newMetadata);
+  emit('change', 'properties', newMetadata);
+  checkChanges();
+  return newMetadata;
 }
 </script>
 
@@ -789,7 +913,11 @@ function syncData() {
 
         <!-- Expands -->
         <template #expands_default="{ row }">
-          <Button size="small" @click="openExpandConfig(row)">
+          <Button
+            size="small"
+            @click="openExpandConfig(row)"
+            :disabled="isInherited(row)"
+          >
             <template #icon><SettingOutlined /></template>
             {{ $t('thingModel.common.config') }}
           </Button>
@@ -815,7 +943,7 @@ function syncData() {
               type="link"
               size="small"
               @click="editRowEvent(row)"
-              :disabled="disabled"
+              :disabled="disabled || isInherited(row)"
             >
               {{ $t('thingModel.common.edit') }}
             </Button>
@@ -832,7 +960,7 @@ function syncData() {
               danger
               size="small"
               @click="removeRow(row)"
-              :disabled="disabled"
+              :disabled="disabled || isInherited(row)"
             >
               {{ $t('thingModel.common.delete') }}
             </Button>

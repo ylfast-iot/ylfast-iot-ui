@@ -5,6 +5,7 @@ import type { QueryParamEntity } from '#/adapter';
 import type { IotDeviceInstanceApi } from '#/api/iot/device/instance';
 
 import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import { Page, useVbenForm, useVbenModal } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
@@ -38,7 +39,9 @@ const PlusIcon = createIconifyIcon('lucide:plus');
 const MoreHorizontalIcon = createIconifyIcon('lucide:more-horizontal');
 const CheckIcon = createIconifyIcon('lucide:check-circle');
 const BanIcon = createIconifyIcon('lucide:ban');
+const EyeIcon = createIconifyIcon('lucide:eye');
 
+const router = useRouter();
 const formType = ref<'add' | 'edit'>('add');
 const currentId = ref<string>('');
 
@@ -275,9 +278,11 @@ function handleBatchOperation(key: string) {
   }
 }
 
-function handleCardClick(_row: any) {
-  // Navigate to detail page (Placeholder)
-  // console.log('Navigate to detail:', row.id);
+function handleCardClick(row: any) {
+  router.push({
+    path: 'instance/detail',
+    query: { id: row.id },
+  });
 }
 </script>
 
@@ -313,7 +318,15 @@ function handleCardClick(_row: any) {
 
       <!-- Table Action Column -->
       <template #action="{ row }">
-        <div class="flex gap-2">
+        <div class="flex-center flex gap-2">
+          <Button
+            :title="$t('device.instance.detail')"
+            size="small"
+            type="link"
+            @click.stop="handleCardClick(row)"
+          >
+            <template #icon><EyeIcon class="size-4" /></template>
+          </Button>
           <Button
             :title="$t('common.edit')"
             size="small"

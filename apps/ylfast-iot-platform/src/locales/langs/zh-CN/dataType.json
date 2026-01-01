@@ -102,13 +102,18 @@
         "precision": "请输入精度 (小数位数)"
       }
     },
-    "string": {
-      "maxLength": "最大长度",
-      "placeholders": {
-        "maxLength": "请输入最大长度"
-      }
-    },
+        "string": {
+          "maxLength": "最大长度",
+          "placeholders": {
+            "maxLength": "请输入最大长度"
+          }
+        },
+        "array": {
+          "add": "添加项",
+          "empty": "列表为空"
+        },
         "object": {
+    
           "properties": "属性列表",
           "addProperty": "添加属性",
           "id": "标识 (ID)",

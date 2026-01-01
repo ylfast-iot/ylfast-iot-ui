@@ -93,11 +93,6 @@ const gridQuery = async (_params: any, ...args: any[]) => {
 
   const defaultTerms = [
     {
-      value: '%show":false%',
-      termType: 'nlike',
-      column: 'options',
-    },
-    {
       terms: [
         {
           terms: [

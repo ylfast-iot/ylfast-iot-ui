@@ -7,6 +7,7 @@ import { $t } from '@vben/locales';
 import { Popconfirm, Tag, Tooltip } from 'ant-design-vue';
 
 import { IotDeviceInstanceApi } from '#/api/iot/device/instance';
+import { DEVICE_TYPE_ENUMS } from '#/enums/device';
 
 const props = defineProps<{
   row: IotDeviceInstanceApi.DeviceInstance;
@@ -108,32 +109,15 @@ const statusStyle = computed(() => {
   }
 });
 
-const deviceTypeLabel = computed(() => {
-  if (!props.row.deviceType) return $t('common.unknown');
-  return $t(`device.types.${props.row.deviceType}`);
-});
-
-const deviceTypeColor = computed(() => {
-  switch (props.row.deviceType) {
-    case 'DIRECT': {
-      return 'cyan';
-    }
-    case 'GATEWAY': {
-      return 'purple';
-    }
-    case 'GATEWAY_CHILD': {
-      return 'blue';
-    }
-    default: {
-      return 'default';
-    }
-  }
+const deviceTypeConfig = computed(() => {
+  if (!props.row.deviceType) return null;
+  return DEVICE_TYPE_ENUMS[props.row.deviceType];
 });
 </script>
 
 <template>
   <div
-    class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white bg-gradient-to-br shadow-sm transition-all duration-300 hover:shadow-md dark:border-gray-800 dark:bg-[#151515]"
+    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white bg-gradient-to-br shadow-sm transition-all duration-300 hover:shadow-md dark:border-gray-800 dark:bg-[#151515]"
     :class="statusStyle.cardBg"
     @click="emit('click', row)"
   >
@@ -213,8 +197,11 @@ const deviceTypeColor = computed(() => {
               row.productName || $t('common.unknown')
             }}</span>
           </div>
-          <Tag :color="deviceTypeColor" class="mr-0 origin-right scale-90">
-            {{ deviceTypeLabel }}
+          <Tag
+            :color="deviceTypeConfig?.color || 'blue'"
+            class="mr-0 origin-right scale-90"
+          >
+            {{ deviceTypeConfig?.label || $t('common.unknown') }}
           </Tag>
         </div>
 
@@ -246,20 +233,18 @@ const deviceTypeColor = computed(() => {
       </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer (Refined) -->
     <div
-      class="flex h-9 items-center justify-around border-t border-black/[0.03] bg-white/20 px-2 backdrop-blur-sm dark:border-white/[0.03] dark:bg-black/20"
+      class="flex h-10 items-center justify-between border-t border-black/[0.03] bg-white/40 px-4 backdrop-blur-sm dark:border-white/[0.03] dark:bg-black/20"
     >
       <Tooltip :title="$t('common.edit')">
         <div
-          class="flex flex-1 cursor-pointer items-center justify-center p-1 text-gray-500 transition-colors hover:text-primary"
+          class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
           @click.stop="emit('edit', row)"
         >
-          <EditIcon class="size-3.5" />
+          <EditIcon class="size-4" />
         </div>
       </Tooltip>
-
-      <div class="h-3 w-[1px] bg-black/[0.05] dark:bg-white/[0.05]"></div>
 
       <Tooltip :title="isEnabled ? $t('common.disable') : $t('common.enable')">
         <Popconfirm
@@ -272,19 +257,17 @@ const deviceTypeColor = computed(() => {
           @confirm.stop="emit('toggleStatus', row)"
         >
           <div
+            class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
             :class="[
               isEnabled
-                ? 'text-green-500 hover:text-green-600'
-                : 'text-gray-400 hover:text-gray-500',
+                ? 'text-green-600 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-500/20'
+                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700/50',
             ]"
-            class="flex flex-1 cursor-pointer items-center justify-center p-1 transition-colors"
           >
-            <PowerIcon class="size-3.5" />
+            <PowerIcon class="size-4" />
           </div>
         </Popconfirm>
       </Tooltip>
-
-      <div class="h-3 w-[1px] bg-black/[0.05] dark:bg-white/[0.05]"></div>
 
       <Tooltip :title="$t('common.delete')">
         <Popconfirm
@@ -293,9 +276,9 @@ const deviceTypeColor = computed(() => {
           @confirm.stop="emit('delete', row)"
         >
           <div
-            class="flex flex-1 cursor-pointer items-center justify-center p-1 text-gray-500 transition-colors hover:text-red-500"
+            class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20 dark:hover:text-red-400"
           >
-            <TrashIcon class="size-3.5" />
+            <TrashIcon class="size-4" />
           </div>
         </Popconfirm>
       </Tooltip>

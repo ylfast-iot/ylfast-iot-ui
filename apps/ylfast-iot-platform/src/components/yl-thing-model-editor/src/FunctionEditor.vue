@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type {
+  AfterChangeContext,
+  AfterChangeFn,
   BeforeChangeContext,
   BeforeChangeFn,
   ThingModelChangeAction,
@@ -33,15 +35,17 @@ import ObjectDefinition from '#/components/yl-data-type-strategies/type-definiti
 import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type'; // Re-adding for DataType options
 
-import { createBaseGridOptions } from './helper';
+import { createBaseGridOptions, isInherited } from './helper';
 
 const props = withDefaults(
   defineProps<{
+    afterChange?: AfterChangeFn;
     beforeChange?: BeforeChangeFn;
     disabled?: boolean;
     value: DeviceMetadata;
   }>(),
   {
+    afterChange: undefined,
     beforeChange: undefined,
   },
 );
@@ -65,6 +69,32 @@ async function runBeforeChange(
   };
   try {
     return await props.beforeChange(context);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
+
+async function runAfterChange(
+  action: ThingModelChangeAction,
+  oldMetadata: DeviceMetadata,
+  newMetadata: DeviceMetadata,
+  records?: any,
+  val?: any,
+  type: 'functions' = 'functions',
+) {
+  if (!props.afterChange) return true;
+  const context: AfterChangeContext = {
+    type,
+    action,
+    records,
+    value: val,
+    oldMetadata,
+    newMetadata,
+  };
+  try {
+    const result = await props.afterChange(context);
+    return result !== false;
   } catch (error) {
     console.error(error);
     return false;
@@ -100,12 +130,29 @@ const [JsonEditModal, jsonEditModalApi] = useVbenModal({
         message.error($t('thingModel.common.jsonArrayError'));
         return;
       }
+      const oldMetadata = cloneDeep(props.value);
       if (!(await runBeforeChange('import', undefined, newFunctions))) return;
 
-      emit('update:value', { ...props.value, functions: newFunctions });
-      emit('change', 'functions', { ...props.value, functions: newFunctions });
-      message.success($t('thingModel.common.success'));
-      jsonEditModalApi.close();
+      const newMetadata = { ...props.value, functions: newFunctions };
+      emit('update:value', newMetadata);
+      emit('change', 'functions', newMetadata);
+
+      if (
+        await runAfterChange(
+          'import',
+          oldMetadata,
+          newMetadata,
+          undefined,
+          newFunctions,
+          'functions',
+        )
+      ) {
+        message.success($t('thingModel.common.success'));
+        jsonEditModalApi.close();
+      } else {
+        emit('update:value', oldMetadata);
+        emit('change', 'functions', oldMetadata);
+      }
     } catch {
       message.error($t('thingModel.common.jsonParseError'));
     }
@@ -377,6 +424,7 @@ watch(
 
 // Actions
 async function addRow() {
+  const oldMetadata = cloneDeep(props.value);
   if (!(await runBeforeChange('add'))) return;
   const newRow: Partial<FunctionMetadata> = {
     id: ``,
@@ -391,6 +439,14 @@ async function addRow() {
     gridApi.grid.setEditRow(row);
   }
   checkChanges();
+
+  const { fullData } = gridApi.grid.getTableData();
+  const newMetadata = { ...props.value, functions: fullData };
+
+  if (!(await runAfterChange('add', oldMetadata, newMetadata)) && row) {
+    gridApi.grid.remove(row);
+    checkChanges();
+  }
 }
 
 function removeRow(row: FunctionMetadata) {
@@ -398,10 +454,17 @@ function removeRow(row: FunctionMetadata) {
     title: $t('common.confirmDelete'),
     content: $t('common.confirmDeleteMsg'),
     onOk: async () => {
+      const oldMetadata = cloneDeep(props.value);
       if (!(await runBeforeChange('delete', row))) return;
       gridApi.grid.remove(row);
-      syncData(); // Immediate sync on delete
-      message.success($t('common.deleteSuccess'));
+      const newMetadata = syncData();
+
+      if (await runAfterChange('delete', oldMetadata, newMetadata, row)) {
+        message.success($t('common.deleteSuccess'));
+      } else {
+        emit('update:value', oldMetadata);
+        emit('change', 'functions', oldMetadata);
+      }
     },
   });
 }
@@ -412,6 +475,11 @@ function copyRow(row: FunctionMetadata) {
   newRow._ROW_KEY = undefined;
   newRow._X_ROW_KEY = undefined;
 
+  // Clear inheritance on copy
+  if (newRow.expands) {
+    newRow.expands.inheritedProduct = undefined;
+  }
+
   const { fullData } = gridApi.grid.getTableData();
   const idx = fullData.indexOf(row);
 
@@ -420,12 +488,20 @@ function copyRow(row: FunctionMetadata) {
     targetRow = fullData[idx + 1];
   }
 
-  runBeforeChange('copy', row).then((res) => {
+  runBeforeChange('copy', row).then(async (res) => {
+    const oldMetadata = cloneDeep(props.value);
     if (!res) return;
-    gridApi.grid.insertAt(newRow, targetRow).then(({ row: insertedRow }) => {
-      gridApi.grid.setEditRow(insertedRow);
+    const { row: insertedRow } = await gridApi.grid.insertAt(newRow, targetRow);
+    gridApi.grid.setEditRow(insertedRow);
+    checkChanges();
+
+    const { fullData } = gridApi.grid.getTableData();
+    const newMetadata = { ...props.value, functions: fullData };
+
+    if (!(await runAfterChange('copy', oldMetadata, newMetadata, row))) {
+      gridApi.grid.remove(insertedRow);
       checkChanges();
-    });
+    }
   });
 }
 
@@ -442,14 +518,21 @@ function editRowEvent(row: FunctionMetadata) {
 }
 
 async function saveRowEvent(row: FunctionMetadata) {
+  const oldMetadata = cloneDeep(props.value);
   const err = await gridApi.grid.validate(row);
   if (err) return;
   if (!(await runBeforeChange('update', row))) return;
   gridApi.grid.clearEdit();
-  syncData(); // Immediate sync on row save
-  message.success(
-    `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
-  );
+  const newMetadata = syncData();
+
+  if (await runAfterChange('update', oldMetadata, newMetadata, row)) {
+    message.success(
+      `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
+    );
+  } else {
+    emit('update:value', oldMetadata);
+    emit('change', 'functions', oldMetadata);
+  }
 }
 
 function cancelRowEvent(row: FunctionMetadata) {
@@ -469,16 +552,26 @@ function handleBatchDelete() {
     title: $t('common.confirmDelete'),
     content: $t('common.confirmDeleteMsg'),
     onOk: async () => {
+      const oldMetadata = cloneDeep(props.value);
       if (!(await runBeforeChange('batch-delete', records))) return;
       gridApi.grid.remove(records);
-      syncData();
-      message.success($t('common.deleteSuccess'));
+      const newMetadata = syncData();
+
+      if (
+        await runAfterChange('batch-delete', oldMetadata, newMetadata, records)
+      ) {
+        message.success($t('common.deleteSuccess'));
+      } else {
+        emit('update:value', oldMetadata);
+        emit('change', 'functions', oldMetadata);
+      }
     },
   });
 }
 
 // Global Save
 async function handleGlobalSave() {
+  const oldMetadata = cloneDeep(props.value);
   const err = await gridApi.grid.validate(true);
   if (err) {
     message.error($t('thingModel.common.validationFailed'));
@@ -490,11 +583,20 @@ async function handleGlobalSave() {
   if (allChanges.length > 0 && !(await runBeforeChange('update', allChanges)))
     return;
 
-  syncData();
-  message.success(
-    `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
-  );
-  hasTableChanges.value = false;
+  const newMetadata = syncData();
+
+  if (
+    allChanges.length > 0 &&
+    !(await runAfterChange('update', oldMetadata, newMetadata, allChanges))
+  ) {
+    emit('update:value', oldMetadata);
+    emit('change', 'functions', oldMetadata);
+  } else {
+    message.success(
+      `${$t('thingModel.common.save')} ${$t('thingModel.common.success')}`,
+    );
+    hasTableChanges.value = false;
+  }
 }
 
 function syncData() {
@@ -535,9 +637,11 @@ function syncData() {
     newFunctions = fullData as FunctionMetadata[];
   }
 
-  emit('update:value', { ...props.value, functions: newFunctions });
-  emit('change', 'functions', { ...props.value, functions: newFunctions });
+  const newMetadata = { ...props.value, functions: newFunctions };
+  emit('update:value', newMetadata);
+  emit('change', 'functions', newMetadata);
   checkChanges(); // Explicitly re-check changes and update duplicate status
+  return newMetadata;
 }
 
 // Formatter for input parameters display
@@ -742,7 +846,7 @@ function formatInputParams({ row }: { row: FunctionMetadata }) {
               type="link"
               size="small"
               @click="editRowEvent(row)"
-              :disabled="disabled"
+              :disabled="disabled || isInherited(row)"
             >
               {{ $t('thingModel.common.edit') }}
             </Button>
@@ -759,7 +863,7 @@ function formatInputParams({ row }: { row: FunctionMetadata }) {
               danger
               size="small"
               @click="removeRow(row)"
-              :disabled="disabled"
+              :disabled="disabled || isInherited(row)"
             >
               {{ $t('thingModel.common.delete') }}
             </Button>

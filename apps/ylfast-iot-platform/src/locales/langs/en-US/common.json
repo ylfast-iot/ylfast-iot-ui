@@ -12,9 +12,11 @@
     "cancel": "Cancel",
     "confirmDelete": "Are you sure you want to delete?",
     "unbind": "Unbind",
-    "batchUnbind": "Batch Unbind"
+    "batchUnbind": "Batch Unbind",
+    "batchDelete": "Batch Delete"
   },
   "autoGenerate": "Auto Generate",
+  "basicInfo": "Basic Information",
   "name": "Name",
   "username": "Username",
   "status": "Status",
@@ -25,6 +27,7 @@
   "sort": "Sort",
   "deleteSuccess": "Delete Success",
   "saveSuccess": "Save Success",
+  "copySuccess": "Copied to clipboard",
   "success": "Success",
   "createSuccess": "Create Success",
   "updateSuccess": "Update Success",

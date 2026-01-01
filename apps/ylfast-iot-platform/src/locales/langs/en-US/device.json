@@ -11,7 +11,40 @@
     "cover": "Cover Image",
     "enable": "Enable",
     "disable": "Disable",
+    "detail": "Device Detail",
+    "protocol": "Protocol",
+    "transport": "Transport",
+    "gateway": "Gateway",
+    "registerTime": "Register Time",
+    "onlineTime": "Last Online Time",
+    "offlineTime": "Last Offline Time",
+    "copyId": "Copy ID",
+    "config": "Device Configuration",
+    "configUpdateSuccess": "Configuration updated successfully",
+    "confirmTitle": {
+      "modify": "Confirm Modification",
+      "override": "Confirm Override",
+      "overrideMetadata": "Confirm Override Metadata"
+    },
+    "confirmContent": {
+      "modify": "Are you sure you want to modify the device configuration?",
+      "override": "The current configuration is inherited from the product. Modifying it will break the inheritance. Future product updates will no longer apply to this device. Are you sure?",
+      "overrideMetadata": "The current device metadata is inherited from the product. Modifying it will make it an independent metadata. Future product metadata updates will no longer apply to this device. Are you sure?"
+    },
+    "tab": {
+      "info": "Device Information",
+      "monitor": "Monitor",
+      "thingModel": "Thing Model",
+      "history": "History Data",
+      "attrMapping": "Attr Mapping",
+      "functions": "Functions",
+      "dataMapping": "Data Mapping",
+      "subDevice": "Sub Devices",
+      "passthrough": "Passthrough"
+    },
     "action": {
+      "activate": "Activate",
+      "refresh": "Refresh",
       "add": "Add Device",
       "batch": "Batch Operations",
       "batchAdd": "Batch Add",

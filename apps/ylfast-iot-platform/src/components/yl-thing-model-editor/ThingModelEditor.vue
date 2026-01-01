@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BeforeChangeFn } from './src/types';
+import type { AfterChangeFn, BeforeChangeFn } from './src/types';
 
 import type { DeviceMetadata, DeviceMetadataType } from '#/types/metadata';
 
@@ -21,6 +21,7 @@ import PropertyEditor from './src/PropertyEditor.vue';
 
 const props = withDefaults(
   defineProps<{
+    afterChange?: AfterChangeFn;
     beforeChange?: BeforeChangeFn;
     disabled?: boolean;
     height?: number | string;
@@ -28,11 +29,12 @@ const props = withDefaults(
   }>(),
   {
     height: '100%',
+    afterChange: undefined,
     beforeChange: undefined,
   },
 );
 
-const emit = defineEmits(['update:value', 'change']);
+const emit = defineEmits(['update:value', 'change', 'save']);
 
 const activeTab = ref('property');
 
@@ -74,6 +76,8 @@ function handleSaveSourceCode() {
       throw new TypeError($t('thingModel.common.invalidJson'));
     }
     handleUpdate(data);
+    handleChange('all', data);
+    emit('save', data);
     message.success($t('thingModel.common.success'));
     // Optional: Switch back to preview or stay in edit
     // isSourceEditMode.value = false;
@@ -97,7 +101,6 @@ async function handleImport(file: File) {
     if (typeof data !== 'object') {
       throw new TypeError($t('thingModel.common.invalidJson'));
     }
-    handleUpdate(data);
     sourceCodeValue.value = JSON.stringify(data, null, 2); // Update editor content
     isSourceEditMode.value = true; // Switch to edit mode
     message.success($t('thingModel.common.success'));
@@ -110,7 +113,7 @@ async function handleImport(file: File) {
 function handleUpdate(val: DeviceMetadata) {
   emit('update:value', val);
 }
-function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
+function handleChange(type: 'all' | DeviceMetadataType, val: DeviceMetadata) {
   emit('change', type, val);
 }
 </script>
@@ -229,6 +232,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           :before-change="beforeChange"
+          :after-change="afterChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />
@@ -239,6 +243,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           :before-change="beforeChange"
+          :after-change="afterChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />
@@ -249,6 +254,7 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
           :value="value"
           :disabled="disabled"
           :before-change="beforeChange"
+          :after-change="afterChange"
           @update:value="handleUpdate"
           @change="handleChange"
         />
@@ -277,5 +283,9 @@ function handleChange(type: DeviceMetadataType, val: DeviceMetadata) {
 
 .yl-thing-model-editor :deep(.ant-tabs-content) {
   height: 100%;
+}
+
+.yl-thing-model-editor :deep(.inherited-row) {
+  @apply bg-gray-50 text-gray-500 dark:bg-gray-800/50;
 }
 </style>

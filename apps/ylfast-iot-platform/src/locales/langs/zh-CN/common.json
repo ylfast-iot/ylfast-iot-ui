@@ -12,9 +12,11 @@
     "cancel": "取消",
     "confirmDelete": "确认删除吗？",
     "unbind": "解绑",
-    "batchUnbind": "批量解绑"
+    "batchUnbind": "批量解绑",
+    "batchDelete": "批量删除"
   },
   "autoGenerate": "自动生成",
+  "basicInfo": "基本信息",
   "name": "名称",
   "username": "用户名",
   "status": "状态",
@@ -25,6 +27,7 @@
   "sort": "排序",
   "deleteSuccess": "删除成功",
   "saveSuccess": "保存成功",
+  "copySuccess": "已复制到剪贴板",
   "success": "成功",
   "createSuccess": "创建成功",
   "updateSuccess": "更新成功",

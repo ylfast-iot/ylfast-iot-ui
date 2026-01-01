@@ -1,5 +1,9 @@
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
+export function isInherited(row: any): boolean {
+  return !!row.expands?.inheritedProduct;
+}
+
 export function createBaseGridOptions(props: {
   disabled?: boolean;
 }): VxeGridProps {
@@ -21,6 +25,12 @@ export function createBaseGridOptions(props: {
       custom: true,
       slots: { buttons: 'toolbar_buttons' },
     },
+    checkboxConfig: {
+      checkMethod: ({ row }) => !isInherited(row),
+    },
+    rowClassName: ({ row }) => {
+      return isInherited(row) ? 'inherited-row' : '';
+    },
     editConfig: {
       trigger: 'click',
       mode: 'row',
@@ -29,6 +39,9 @@ export function createBaseGridOptions(props: {
       autoFocus: true,
       autoClear: false,
       enabled: !props.disabled,
+      beforeEditMethod: ({ row }) => {
+        return !props.disabled && !isInherited(row);
+      },
     },
   };
 }

@@ -33,7 +33,9 @@ const innerValue = computed({
 });
 
 const arrayDef = computed(() => props.prop.type as ArrayDef);
-const elementType = computed(() => arrayDef.value.elementType);
+const elementType = computed(
+  () => arrayDef.value.elementType || arrayDef.value.array, // arrayDef.value.array适配之前老的配置
+);
 
 function addItem() {
   // TODO: Add default value based on type (e.g. empty object for OBJECT)
@@ -107,7 +109,7 @@ function getChildProp(): ConfigPropertyMetadata {
       </div>
     </div>
     <div v-else class="py-2 text-center text-sm text-muted-foreground">
-      Empty list
+      {{ $t('dataType.strategies.array.empty') }}
     </div>
 
     <Button
@@ -118,7 +120,7 @@ function getChildProp(): ConfigPropertyMetadata {
       :disabled="disabled || isDisabled(prop)"
     >
       <template #icon><PlusOutlined /></template>
-      {{ $t('dataType.strategies.enum.add') }}
+      {{ $t('dataType.strategies.array.add') }}
     </Button>
   </div>
 </template>

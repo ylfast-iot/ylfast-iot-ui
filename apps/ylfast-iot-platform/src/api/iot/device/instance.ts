@@ -4,8 +4,21 @@ import type { QueryParamEntity, Recordable } from '#/adapter';
 import type { IotDeviceProductApi } from '#/api';
 import type { BasicModel, PagerResult } from '#/api/basic';
 import type { DeviceState, DeviceType } from '#/enums/device';
+import type { ConfigMetadata } from '#/types/config-metadata';
+import type { Unit } from '#/types/data-type';
+import type {
+  InvokeFunctionMessage,
+  InvokeFunctionReplyMessage,
+  ReadPropertiesMessage,
+  ReadPropertiesReplyMessage,
+  SubDeviceMessage,
+  SubDeviceMessageReply,
+  WritePropertiesMessage,
+  WritePropertiesReplyMessage,
+} from '#/types/device';
 
 import { buildBasicCrudApis } from '#/api/basic';
+import { IotProtocolApi } from '#/api/iot/protocol';
 import { requestClient } from '#/api/request';
 import { parseTemplate } from '#/utils';
 
@@ -110,7 +123,7 @@ export namespace IotDeviceInstanceApi {
     /** 设备名称 */
     deviceName: string;
     /** TSL 物模型JSON */
-    tsl: string;
+    tsl?: string;
     /** 产品物模型 */
     productTsl: string;
     /** 产品ID */
@@ -132,7 +145,7 @@ export namespace IotDeviceInstanceApi {
     /** 设备描述 */
     description?: string;
     /** 设备配置信息（数据库中），默认空对象 */
-    configuration?: Record<string, any>;
+    configuration: Record<string, any>;
     /** 设备配置信息（缓存中），默认空对象 */
     cachedConfiguration?: Record<string, any>;
     /** 产品名称 */
@@ -171,6 +184,9 @@ export namespace IotDeviceInstanceApi {
     storeStrategyMode?: string;
     /** 固件信息 */
     firmwareInfo?: Record<string, any>;
+
+    /** 协议详情（非后端获取，由接口后续填充） */
+    protocolDetail: IotProtocolApi.ProtocolDetail;
   }
 
   /**
@@ -245,6 +261,25 @@ export namespace IotDeviceInstanceApi {
     detailsList: `${BASE_URL}/details/list`,
     updateSimpleInfo: `${BASE_URL}/update/simpleInfo`,
     batchImport: `${BASE_URL}/batch/import`,
+
+    // 设备操作相关
+    readProperties: `${BASE_URL}/operation/properties/read`,
+    subDeviceReadProperties: `${BASE_URL}/operation/sub-device/properties/read`,
+    writeProperties: `${BASE_URL}/operation/properties/write`,
+    invokeFunction: `${BASE_URL}/operation/function/invoke`,
+    checkState: `${BASE_URL}/operation/checkState/{deviceId}`,
+    disconnect: `${BASE_URL}/operation/{deviceId}/disconnect`,
+    register: `${BASE_URL}/operation/{deviceId}/register`,
+    sendMessage: `${BASE_URL}/operation/{deviceId}/message`,
+
+    // 设备metadata相关
+    getDeviceConfigMetadataApi: `${BASE_URL}/config/metadata/device/{deviceId}`,
+    getDeviceConfigMetadataByProductIdApi: `${BASE_URL}/config/metadata/device/byProductId`,
+    getDeviceConfigMetadataPropertiesApi: `${BASE_URL}/config/metadata/device/properties/{deviceId}`,
+    getProductConfigMetadataApi: `${BASE_URL}/config/metadata/product/{productId}`,
+    getProductConfigMetadataByAccessIdApi: `${BASE_URL}/config/metadata/product/byAccessId`,
+    getProductConfigMetadataPropertiesApi: `${BASE_URL}/config/metadata/product/properties/{productId}`,
+    getUnitsApi: `${BASE_URL}/config/metadata/allUnits`,
   };
 
   // 继承基础增删改查接口
@@ -369,3 +404,174 @@ export function batchImport(
     batchImportDeviceVo,
   );
 }
+
+/**
+ * @description:  读取子设备属性
+ * @param message
+ * @return SubDeviceMessageReply<ReadPropertiesReplyMessage>
+ */
+export const readSubDeviceProperties = (
+  message: SubDeviceMessage<ReadPropertiesMessage>,
+) =>
+  requestClient.post<SubDeviceMessageReply<ReadPropertiesReplyMessage>>(
+    IotDeviceInstanceApi.Apis.subDeviceReadProperties,
+    message,
+  );
+
+/**
+ * @description:  读设备属性
+ * @param message ReadPropertiesReplyMessage
+ * @returns ReadPropertiesReplyMessage
+ */
+export const readDeviceProperties = (message: ReadPropertiesMessage) =>
+  requestClient.post<ReadPropertiesReplyMessage>(
+    IotDeviceInstanceApi.Apis.readProperties,
+    message,
+  );
+
+/**
+ * @description:  写设备属性
+ * @param message
+ * @returns WritePropertiesReplyMessage
+ */
+export const writeDeviceProperties = (message: WritePropertiesMessage) =>
+  requestClient.post<WritePropertiesReplyMessage>(
+    IotDeviceInstanceApi.Apis.writeProperties,
+    message,
+  );
+
+/**
+ * @description:  设备功能调用
+ * @param message
+ * @returns InvokeFunctionReplyMessage
+ */
+export const invokeDeviceFunction = (message: InvokeFunctionMessage) =>
+  requestClient.post<InvokeFunctionReplyMessage>(
+    IotDeviceInstanceApi.Apis.invokeFunction,
+    message,
+  );
+
+/**
+ * @description:  设备功能调用
+ * @param deviceId 设备id
+ * @returns InvokeFunctionReplyMessage
+ */
+export const disconnect = (deviceId: string) =>
+  requestClient.post<InvokeFunctionReplyMessage>(
+    parseTemplate(IotDeviceInstanceApi.Apis.disconnect, {
+      deviceId,
+    }),
+  );
+
+/**
+ * @description:  设备注册（注册到注册中心）
+ * @param deviceId 设备id
+ * @returns Boolean 注册结果
+ */
+export const register = (deviceId: string) =>
+  requestClient.post<boolean>(
+    parseTemplate(IotDeviceInstanceApi.Apis.register, {
+      deviceId,
+    }),
+  );
+
+/**
+ * @description:  检查设备状态
+ * @param deviceId 设备id
+ * @returns number 1在线 其他离线
+ */
+export const checkState = (deviceId: string) =>
+  requestClient.get<DeviceState>(
+    parseTemplate(IotDeviceInstanceApi.Apis.checkState, {
+      deviceId,
+    }),
+  );
+
+/**
+ * 根据设备id获取设备配置定义
+ * @param deviceId
+ */
+export const getDeviceConfigMetadata = (deviceId: string) =>
+  requestClient.get<ConfigMetadata[]>(
+    parseTemplate(IotDeviceInstanceApi.Apis.getDeviceConfigMetadataApi, {
+      deviceId,
+    }),
+  );
+
+/**
+ * 根据产品id获取设备配置定义
+ * @param productId
+ */
+export const getDeviceConfigMetadataByProductId = (productId: string) =>
+  requestClient.get<ConfigMetadata[]>(
+    IotDeviceInstanceApi.Apis.getDeviceConfigMetadataByProductIdApi,
+    {
+      params: {
+        productId,
+      },
+    },
+  );
+
+/**
+ * 根据设备id获取设备配置属性列表
+ * @param deviceId
+ */
+export const getDeviceConfigMetadataProperties = (deviceId: string) =>
+  requestClient.get<ConfigMetadata[]>(
+    parseTemplate(
+      IotDeviceInstanceApi.Apis.getDeviceConfigMetadataPropertiesApi,
+      {
+        deviceId,
+      },
+    ),
+  );
+
+/**
+ * 根据产品id获取产品配置定义
+ * @param productId
+ */
+export const getProductConfigMetadata = (productId: string) =>
+  requestClient.get<ConfigMetadata[]>(
+    parseTemplate(IotDeviceInstanceApi.Apis.getProductConfigMetadataApi, {
+      productId,
+    }),
+  );
+
+/**
+ * 根据接入网关id获取产品配置定义
+ * @param productId 产品id
+ * @param accessId 接入网关id
+ */
+export const getProductConfigMetadataByAccessId = (
+  productId: string,
+  accessId: string,
+) =>
+  requestClient.get<ConfigMetadata[]>(
+    IotDeviceInstanceApi.Apis.getProductConfigMetadataByAccessIdApi,
+    {
+      params: {
+        accessId,
+        productId,
+      },
+    },
+  );
+
+/**
+ * 根据产品id获取产品配置属性列表
+ * @param productId
+ */
+export const getProductConfigMetadataProperties = (productId: string) =>
+  requestClient.get<ConfigMetadata[]>(
+    parseTemplate(
+      IotDeviceInstanceApi.Apis.getProductConfigMetadataPropertiesApi,
+      {
+        productId,
+      },
+    ),
+  );
+
+/**
+ * 获取所有单位
+ */
+export const getAllUnits = () =>
+  requestClient.get<Unit[]>(IotDeviceInstanceApi.Apis.getUnitsApi);

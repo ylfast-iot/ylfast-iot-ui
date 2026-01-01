@@ -5,6 +5,10 @@ import { $t } from '@vben/locales';
 export type DeviceType = 'DIRECT' | 'GATEWAY' | 'GATEWAY_CHILD';
 export type DeviceState = 'offline' | 'online' | 'other' | 'unActive';
 
+export interface DeviceTypeEnumDict extends EnumDict<DeviceType> {
+  color?: string;
+}
+
 export const DEVICE_TYPE: { [key in DeviceType]: DeviceType } = {
   DIRECT: 'DIRECT',
   GATEWAY: 'GATEWAY',
@@ -70,9 +74,8 @@ export const DEVICE_STATE_TYPES: DeviceStateEnumDict[] = [
   },
 ];
 
-// 设备类型
-export const DEVICE_TYPES: EnumDict<DeviceType>[] = [
-  {
+export const DEVICE_TYPE_ENUMS: { [key in DeviceType]: DeviceTypeEnumDict } = {
+  DIRECT: {
     value: 'DIRECT',
     get label() {
       return $t('device.types.DIRECT');
@@ -80,8 +83,9 @@ export const DEVICE_TYPES: EnumDict<DeviceType>[] = [
     get text() {
       return $t('device.types.DIRECT');
     },
+    color: 'blue',
   },
-  {
+  GATEWAY: {
     value: 'GATEWAY',
     get label() {
       return $t('device.types.GATEWAY');
@@ -89,8 +93,9 @@ export const DEVICE_TYPES: EnumDict<DeviceType>[] = [
     get text() {
       return $t('device.types.GATEWAY');
     },
+    color: 'purple',
   },
-  {
+  GATEWAY_CHILD: {
     value: 'GATEWAY_CHILD',
     get label() {
       return $t('device.types.GATEWAY_CHILD');
@@ -98,5 +103,10 @@ export const DEVICE_TYPES: EnumDict<DeviceType>[] = [
     get text() {
       return $t('device.types.GATEWAY_CHILD');
     },
+    color: 'cyan',
   },
-];
+};
+
+// 设备类型
+export const DEVICE_TYPES: DeviceTypeEnumDict[] =
+  Object.values(DEVICE_TYPE_ENUMS);

@@ -11,7 +11,40 @@
     "cover": "封面图",
     "enable": "启用",
     "disable": "禁用",
+    "detail": "设备详情",
+    "protocol": "使用协议",
+    "transport": "传输协议",
+    "gateway": "消息网关",
+    "registerTime": "注册时间",
+    "onlineTime": "最近上线时间",
+    "offlineTime": "最近离线时间",
+    "copyId": "复制 ID",
+    "config": "设备配置",
+    "configUpdateSuccess": "配置更新成功",
+    "confirmTitle": {
+      "modify": "修改配置确认",
+      "override": "覆盖继承配置确认",
+      "overrideMetadata": "覆盖继承物模型确认"
+    },
+    "confirmContent": {
+      "modify": "确定要修改设备的配置信息吗？",
+      "override": "当前设备配置继承自产品，修改将覆盖继承关系。一旦覆盖，后续产品配置的更新将不再自动应用到此设备。确定要继续吗？",
+      "overrideMetadata": "当前设备物模型继承产品，修改后将成为独立的物模型，后续产品修改公共的物模型将无法应用到当前设备。确定要继续吗？"
+    },
+    "tab": {
+      "info": "设备信息",
+      "monitor": "设备监控",
+      "thingModel": "物模型",
+      "history": "历史数据",
+      "attrMapping": "属性映射",
+      "functions": "设备功能",
+      "dataMapping": "数采映射",
+      "subDevice": "子设备",
+      "passthrough": "透传解析"
+    },
     "action": {
+      "activate": "激活",
+      "refresh": "刷新",
       "add": "新增设备",
       "batch": "批量操作",
       "batchAdd": "批量新增",

@@ -102,13 +102,18 @@
         "precision": "Enter precision (decimal places)"
       }
     },
-    "string": {
-      "maxLength": "Max Length",
-      "placeholders": {
-        "maxLength": "Enter max length"
-      }
-    },
+        "string": {
+          "maxLength": "Max Length",
+          "placeholders": {
+            "maxLength": "Enter max length"
+          }
+        },
+        "array": {
+          "add": "Add Item",
+          "empty": "Empty List"
+        },
         "object": {
+    
           "properties": "Properties",
           "addProperty": "Add Property",
           "id": "ID",

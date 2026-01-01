@@ -3,8 +3,12 @@ import type { EnumDict } from '#/types/global';
 
 import { $t } from '@vben/locales';
 
-export const DATA_TYPES: EnumDict<DataType>[] = [
-  {
+type DataTypeEnum = {
+  [key in DataType]: EnumDict<DataType>;
+};
+
+export const DATA_TYPE_ENUM: DataTypeEnum = {
+  STRING: {
     value: 'STRING',
     get label() {
       return $t('dataType.types.STRING');
@@ -13,7 +17,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.STRING');
     },
   },
-  {
+  PASSWORD: {
     value: 'PASSWORD',
     get label() {
       return $t('dataType.types.PASSWORD');
@@ -22,7 +26,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.PASSWORD');
     },
   },
-  {
+  INTEGER: {
     value: 'INTEGER',
     get label() {
       return $t('dataType.types.INTEGER');
@@ -31,7 +35,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.INTEGER');
     },
   },
-  {
+  LONG: {
     value: 'LONG',
     get label() {
       return $t('dataType.types.LONG');
@@ -40,7 +44,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.LONG');
     },
   },
-  {
+  SHORT: {
     value: 'SHORT',
     get label() {
       return $t('dataType.types.SHORT');
@@ -49,7 +53,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.SHORT');
     },
   },
-  {
+  DOUBLE: {
     value: 'DOUBLE',
     get label() {
       return $t('dataType.types.DOUBLE');
@@ -58,7 +62,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.DOUBLE');
     },
   },
-  {
+  FLOAT: {
     value: 'FLOAT',
     get label() {
       return $t('dataType.types.FLOAT');
@@ -67,7 +71,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.FLOAT');
     },
   },
-  {
+  BOOLEAN: {
     value: 'BOOLEAN',
     get label() {
       return $t('dataType.types.BOOLEAN');
@@ -76,7 +80,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.BOOLEAN');
     },
   },
-  {
+  DATE: {
     value: 'DATE',
     get label() {
       return $t('dataType.types.DATE');
@@ -85,7 +89,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.DATE');
     },
   },
-  {
+  ENUM: {
     value: 'ENUM',
     get label() {
       return $t('dataType.types.ENUM');
@@ -94,7 +98,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.ENUM');
     },
   },
-  {
+  OBJECT: {
     value: 'OBJECT',
     get label() {
       return $t('dataType.types.OBJECT');
@@ -103,7 +107,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.OBJECT');
     },
   },
-  {
+  ARRAY: {
     value: 'ARRAY',
     get label() {
       return $t('dataType.types.ARRAY');
@@ -112,7 +116,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.ARRAY');
     },
   },
-  {
+  GEO: {
     value: 'GEO',
     get label() {
       return $t('dataType.types.GEO');
@@ -121,7 +125,7 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.GEO');
     },
   },
-  {
+  FILE: {
     value: 'FILE',
     get label() {
       return $t('dataType.types.FILE');
@@ -130,6 +134,6 @@ export const DATA_TYPES: EnumDict<DataType>[] = [
       return $t('dataType.types.FILE');
     },
   },
-];
+};
 
-export const DATA_TYPE_OPTIONS = DATA_TYPES;
+export const DATA_TYPE_OPTIONS = Object.values(DATA_TYPE_ENUM);
