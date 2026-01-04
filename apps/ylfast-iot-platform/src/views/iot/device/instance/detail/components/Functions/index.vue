@@ -397,7 +397,7 @@ async function handleInvoke(func: any) {
                   <TerminalIcon class="size-12 opacity-5" />
                   <span
                     class="text-[10px] font-bold uppercase tracking-[0.3em] opacity-20"
-                    >
+                  >
                     {{ $t('device.instance.function.waiting') }}
                   </span>
                 </div>

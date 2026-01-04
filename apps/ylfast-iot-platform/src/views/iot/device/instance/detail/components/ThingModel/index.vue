@@ -11,35 +11,34 @@ import { message, Modal } from 'ant-design-vue';
 
 import { updateDeviceMetadata as updateDeviceMetadataApi } from '#/api/iot/device/instance';
 import { ThingModelEditor } from '#/components/yl-thing-model-editor';
+import { parseMetadata } from '#/views/iot/device/instance/detail/helper';
 
 const props = defineProps<{
   device: IotDeviceInstanceApi.DeviceDetail;
 }>();
 
+const emit = defineEmits(['update:device']);
+
 watch(
   () => props.device,
-  () => {
-    metadata.value = toJson();
+  (device) => {
+    metadata.value = parseMetadata(device.tsl);
   },
 );
 
-const metadata = ref<DeviceMetadata>(toJson());
-
-function toJson() {
-  try {
-    return JSON.parse(props.device.tsl || '{}');
-  } catch (error) {
-    console.warn(error);
-    return {} as DeviceMetadata;
-  }
-}
+const metadata = ref<DeviceMetadata>(parseMetadata(props.device.tsl));
 
 async function updateMetadataApi(newMetadata: DeviceMetadata) {
   try {
+    const tsl = JSON.stringify(newMetadata);
     await updateDeviceMetadataApi({
       id: props.device.id,
-      tsl: JSON.stringify(newMetadata),
+      tsl,
     });
+    emit('update:device', {
+      ...props.device,
+      tsl,
+    } as IotDeviceInstanceApi.DeviceDetail);
   } catch (error) {
     console.error(error);
   }
@@ -63,7 +62,7 @@ async function updateMetadata(newMetadata: any) {
         content: $t('device.instance.confirmContent.overrideMetadata'),
         okType: 'danger',
         onOk: () => {
-          updateMetadata(newMetadata);
+          updateMetadataApi(newMetadata);
           resolve(true);
         },
         // 如果取消，可能需要重置 metadata 的值，但 ThingModelEditor 是非受控的或很难回滚
