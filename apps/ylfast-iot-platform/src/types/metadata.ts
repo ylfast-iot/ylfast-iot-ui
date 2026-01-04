@@ -17,13 +17,6 @@ export interface PropertyMetadata extends Metadata {
    * 值类型定义
    */
   valueType: DataTypeDef;
-
-  /**
-   * 已经废弃
-   * @deprecated
-   * @see valueType
-   */
-  propertyValueType: DataTypeDef;
 }
 
 export interface FunctionMetadata extends Metadata {

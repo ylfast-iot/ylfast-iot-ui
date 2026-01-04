@@ -47,7 +47,7 @@ function getChildProp(property: any): ConfigPropertyMetadata {
   >
     <!-- Table Header -->
     <div
-      v-if="typeDef.object && typeDef.object.length > 0"
+      v-if="typeDef.properties && typeDef.properties.length > 0"
       class="flex border-b border-border bg-muted/50 text-xs font-semibold text-muted-foreground"
     >
       <div class="w-1/3 border-r border-border px-3 py-2">
@@ -63,11 +63,11 @@ function getChildProp(property: any): ConfigPropertyMetadata {
 
     <!-- Table Body -->
     <div
-      v-if="typeDef.object && typeDef.object.length > 0"
+      v-if="typeDef.properties && typeDef.properties.length > 0"
       class="flex flex-col bg-background"
     >
       <div
-        v-for="property in typeDef.object"
+        v-for="property in typeDef.properties"
         :key="property.id"
         class="flex min-h-[40px] items-stretch border-b border-border last:border-b-0"
       >
@@ -76,7 +76,7 @@ function getChildProp(property: any): ConfigPropertyMetadata {
           class="flex w-1/3 flex-col justify-center border-r border-border px-3 py-2 text-sm"
         >
           <div class="flex items-center">
-            <template v-if="property.required">
+            <template v-if="property.expands?.required">
               <span class="mr-1 text-destructive">* </span>
             </template>
             <span class="font-medium">{{ property.name || property.id }}</span>

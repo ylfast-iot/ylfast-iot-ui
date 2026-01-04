@@ -127,7 +127,7 @@ export namespace IotDeviceInstanceApi {
     /** 产品物模型 */
     productTsl: string;
     /** 产品ID */
-    productId?: string;
+    productId: string;
     /** 设备状态 1启用 0禁用 */
     enableStatus?: number; // Byte → number
     /** 协议id */

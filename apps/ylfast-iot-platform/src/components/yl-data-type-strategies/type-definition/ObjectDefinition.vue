@@ -21,10 +21,12 @@ import {
   Input,
   message,
   Select,
+  Switch,
   Tooltip,
 } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import { isInherited } from '#/components/yl-thing-model-editor/src/helper';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 
 import { getTypeDefinitionComponent } from './registry';
@@ -112,7 +114,7 @@ const validUniqueId: VxeTableDefines.ValidatorRule<ObjectProperty>['validator'] 
     }
   };
 
-const gridOptions = computed<VxeGridProps<ObjectProperty>>(() => {
+const gridOptions = computed(() => {
   return {
     border: true,
     keepSource: true,
@@ -120,7 +122,7 @@ const gridOptions = computed<VxeGridProps<ObjectProperty>>(() => {
     align: 'center',
     height: 'auto',
     maxHeight: 400,
-    cellClassName: ({ row, column }) => {
+    cellClassName: ({ row, column }: any) => {
       if (column.field === 'id' && duplicateIds.value.has(row.id)) {
         return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
       }
@@ -153,24 +155,16 @@ const gridOptions = computed<VxeGridProps<ObjectProperty>>(() => {
       {
         field: 'id',
         title: $t('dataType.strategies.object.id'),
-        editRender: {
-          name: 'AInput',
-          props: {
-            placeholder: $t('dataType.strategies.object.placeholders.id'),
-          },
-        },
+        editRender: {},
+        slots: { edit: 'id_edit', default: 'id_default' },
         minWidth: 150,
       },
       {
         field: 'name',
         minWidth: 160,
         title: $t('dataType.strategies.object.name'),
-        editRender: {
-          name: 'AInput',
-          props: {
-            placeholder: $t('dataType.strategies.object.placeholders.name'),
-          },
-        },
+        editRender: {},
+        slots: { edit: 'name_edit', default: 'name_default' },
       },
       {
         field: 'valueType',
@@ -180,16 +174,10 @@ const gridOptions = computed<VxeGridProps<ObjectProperty>>(() => {
         minWidth: 160,
       },
       {
-        field: 'required',
+        field: 'expands.required',
         title: $t('dataType.strategies.object.required'),
-        editRender: {
-          name: 'ASwitch',
-          props: {
-            checkedChildren: $t('dataType.strategies.boolean.defaultYes'),
-            unCheckedChildren: $t('dataType.strategies.boolean.defaultNo'),
-          },
-        },
-        slots: { default: ({ row }) => (row.required ? '是' : '否') },
+        editRender: {},
+        slots: { edit: 'required_edit', default: 'required_default' },
         minWidth: 100,
       },
       {
@@ -198,9 +186,23 @@ const gridOptions = computed<VxeGridProps<ObjectProperty>>(() => {
         slots: { default: 'action' },
       },
     ],
-    data: props.value?.object || [],
-  };
+    data: filterData(),
+  } as VxeGridProps<ObjectProperty>;
 });
+
+function filterData() {
+  return (props.value?.properties || []).map((property) => {
+    // 适配旧版本数据
+    if (!property.valueType && property.propertyValueType) {
+      property.valueType = property.propertyValueType;
+      const { propertyValueType: _propertyValueType, ...rest } = property;
+      return {
+        ...rest,
+      };
+    }
+    return property;
+  });
+}
 
 const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: gridOptions.value,
@@ -225,8 +227,8 @@ async function handleGlobalSave() {
 watch(
   [() => props.value, searchText],
   ([val, text], [oldVal]) => {
-    if (val && val.object) {
-      let data = val.object;
+    if (val && val.properties) {
+      let data = val.properties;
       if (text) {
         const lowerText = text.toLowerCase();
         data = data.filter(
@@ -247,16 +249,13 @@ watch(
 
 async function addProperty() {
   const newRow: ObjectProperty = {
-    id: ``,
+    id: '',
     name: '',
     description: '',
-    expands: {},
-    required: false,
+    expands: { required: false },
     valueType: {
       type: 'STRING',
     },
-    // @ts-ignore
-    propertyValueType: { type: 'STRING' },
   };
   const { row } = await gridApi.grid.insertAt(newRow, -1);
   if (row) {
@@ -272,7 +271,6 @@ function removeRow(row: any) {
 function copyRow(row: ObjectProperty) {
   const newRow = {
     ...cloneDeep(row),
-    _ROW_KEY: undefined,
     _X_ROW_KEY: undefined,
     id: `${row.id}_copy`,
   };
@@ -345,14 +343,14 @@ function syncData() {
 
   // If no search text, fullData is the complete list
   if (!searchText.value) {
-    const newValue = { ...props.value, object: fullData };
+    const newValue = { ...props.value, properties: fullData };
     emit('update:value', newValue);
     emit('change', newValue);
     return;
   }
 
   // Merging logic for search mode
-  const originData = props.value?.object || [];
+  const originData = props.value?.properties || [];
   const lowerSearch = searchText.value.toLowerCase();
   const fullDataMap = new Map(fullData.map((i) => [i.id, i]));
   const newObjectList: ObjectProperty[] = [];
@@ -382,7 +380,7 @@ function syncData() {
     }
   });
 
-  const newValue = { ...props.value, object: newObjectList };
+  const newValue = { ...props.value, properties: newObjectList };
   emit('update:value', newValue);
   emit('change', newValue);
 }
@@ -397,6 +395,7 @@ function syncData() {
         <component
           :is="getTypeDefinitionComponent(currentConfigType)"
           v-model:value="tempConfigValue"
+          :disabled="disabled"
         />
       </div>
     </ConfigModal>
@@ -448,12 +447,36 @@ function syncData() {
                 </div>
               </div>
             </template>
+            <!-- ID Edit -->
+            <template #id_edit="{ row }">
+              <Input
+                v-model:value="row.id"
+                :placeholder="`${$t('dataType.strategies.object.placeholders.id')}`"
+                :disabled="disabled || isInherited(row)"
+              />
+            </template>
+            <template #id_default="{ row }">
+              {{ row.id }}
+            </template>
+
+            <!-- Name Edit -->
+            <template #name_edit="{ row }">
+              <Input
+                v-model:value="row.name"
+                :placeholder="`${$t('dataType.strategies.object.placeholders.name')}`"
+                :disabled="disabled || isInherited(row)"
+              />
+            </template>
+            <template #name_default="{ row }">
+              {{ row.name }}
+            </template>
 
             <template #type_edit="{ row, column }">
               <div class="flex items-center gap-1">
                 <Select
                   v-model:value="row.valueType.type"
                   :options="DATA_TYPE_OPTIONS"
+                  :disabled="disabled"
                   class="!h-8 flex-1"
                 />
                 <div
@@ -470,6 +493,32 @@ function syncData() {
 
             <template #type_default="{ row }">
               {{ $t(`dataType.types.${row.valueType.type}`) }}
+            </template>
+
+            <template #required_edit="{ row }">
+              <Switch
+                v-if="row.expands?.required !== undefined"
+                v-model:checked="row.expands.required"
+                :disabled="disabled"
+                :checked-children="$t('dataType.strategies.boolean.defaultYes')"
+                :un-checked-children="
+                  $t('dataType.strategies.boolean.defaultNo')
+                "
+                @change="
+                  () => {
+                    if (!row.expands) row.expands = {};
+                    checkChanges();
+                  }
+                "
+              />
+            </template>
+
+            <template #required_default="{ row }">
+              {{
+                row.expands?.required
+                  ? $t('dataType.strategies.boolean.defaultYes')
+                  : $t('dataType.strategies.boolean.defaultNo')
+              }}
             </template>
 
             <template #action="{ row }">

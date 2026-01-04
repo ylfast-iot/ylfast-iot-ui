@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { Subscription } from 'rxjs';
+
 import type { IotDeviceInstanceApi } from '#/api/iot/device/instance';
 
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Correct import
 
 import { Page } from '@vben/common-ui';
@@ -18,6 +20,7 @@ import {
   Tabs,
 } from 'ant-design-vue';
 
+import { subscribeDeviceStateMonitor } from '#/api/iot/device/device-monitor';
 import {
   changeEnableStatus,
   getDeviceDetail,
@@ -25,15 +28,15 @@ import {
 } from '#/api/iot/device/instance';
 import { getProtocolDetail } from '#/api/iot/protocol';
 
-import AttrMapping from './components/AttrMapping.vue';
-import DataMapping from './components/DataMapping.vue';
-import Functions from './components/Functions.vue';
-import History from './components/History.vue';
-import Info from './components/Info.vue';
-import Monitor from './components/Monitor.vue';
-import Passthrough from './components/Passthrough.vue';
-import SubDevice from './components/SubDevice.vue';
-import ThingModel from './components/ThingModel.vue';
+import AttrMapping from './components/AttrMapping/index.vue';
+import DataMapping from './components/DataMapping/index.vue';
+import Functions from './components/Functions/index.vue';
+import History from './components/History/index.vue';
+import Info from './components/Info/index.vue';
+import Monitor from './components/Monitor/index.vue';
+import Passthrough from './components/Passthrough/index.vue';
+import SubDevice from './components/SubDevice/index.vue';
+import ThingModel from './components/ThingModel/index.vue';
 
 interface TabConfig {
   component: any;
@@ -165,6 +168,8 @@ const visibleTabs = computed(() => {
   return tabConfigs.filter((tab) => !tab.show || tab.show(device.value!));
 });
 
+let sub: null | Subscription = null;
+
 async function fetchInfo() {
   if (!deviceId) return;
   if (device.value) {
@@ -179,6 +184,19 @@ async function fetchInfo() {
       data.protocolDetail = await getProtocolDetail(data.protocolId);
     }
     device.value = data;
+
+    if (sub) {
+      sub.unsubscribe();
+      sub = null;
+    }
+    // 订阅状态
+    sub = subscribeDeviceStateMonitor(data.id, data.productId, (data) => {
+      const stateMsg = data.payload.value;
+      if (stateMsg.deviceId === device.value?.id) {
+        device.value.deviceState = stateMsg.type;
+        message.success($t(`device.instance.stateMessage.${stateMsg.type}`));
+      }
+    });
   } catch (error) {
     console.error(error);
   } finally {
@@ -215,6 +233,12 @@ function handleBack() {
 }
 
 onMounted(fetchInfo);
+onUnmounted(() => {
+  if (sub) {
+    sub.unsubscribe();
+    sub = null;
+  }
+});
 </script>
 
 <template>
@@ -379,7 +403,7 @@ onMounted(fetchInfo);
                 class="h-full"
               >
                 <div class="h-full overflow-y-auto">
-                  <component :is="tab.component" :device="device" />
+                  <component :is="tab.component" v-model:device="device" />
                 </div>
               </TabPane>
             </Tabs>

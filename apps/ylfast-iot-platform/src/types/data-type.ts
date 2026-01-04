@@ -83,25 +83,23 @@ export interface DateTypeDef extends DataTypeDef {
 }
 
 // 对象类型
-export type ObjectProperty = {
+export type ObjectProperty = PropertyMetadata & {
   [key: string]: any;
-  // 是否必填 默认false
-  required?: boolean;
-} & PropertyMetadata;
+  expands?: {
+    [key: string]: any;
+    required?: boolean;
+  };
+};
+
 export interface ObjectDef extends DataTypeDef {
-  // 对象的属性定义列表
-  object: ObjectProperty[];
+  /**
+   * 对象的属性定义列表
+   */
+  properties: ObjectProperty[];
 }
 
 // 数组类型
 export interface ArrayDef extends DataTypeDef {
-  /**
-   * 数组元素类型 (兼容之前的版本)
-   * @deprecated
-   * @see elementType
-   */
-  array: DataTypeDef;
-
   /**
    * 元素类型
    */

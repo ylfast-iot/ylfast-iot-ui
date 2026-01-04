@@ -34,11 +34,17 @@
     "in": "在...之中",
     "nin": "不在...之中",
     "empty": "为空",
-    "nempty": "不为空"
+    "nempty": "不为空",
+    "btw": "在...之间",
+    "nbtw": "不在...之间",
+    "isnull": "为Null",
+    "notnull": "不为Null"
   },
   "placeholder": {
     "selectField": "选择字段",
-    "input": "请输入"
+    "input": "请输入",
+    "inputStartDate": "开始日期",
+    "inputEndDate": "结束日期"
   },
   "conditionManagement": {
     "save": "保存条件",

@@ -6,10 +6,10 @@ import type { TrendChartEmits, TrendChartProps } from './types';
 import { computed, onMounted, ref, unref } from 'vue';
 
 import { useElementSize } from '@vueuse/core';
-import { DatePicker, Radio, Skeleton } from 'ant-design-vue';
+import { Skeleton } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
-import { $t } from '#/locales';
+import { YlDateRangePicker } from '#/components/yl-date-range-picker';
 
 import Chart from './Chart.vue';
 
@@ -21,10 +21,6 @@ const props = withDefaults(defineProps<TrendChartProps>(), {
 
 const emit = defineEmits<TrendChartEmits>();
 
-const RangePicker = DatePicker.RangePicker;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-
 // Layout handling
 const containerRef = ref<HTMLDivElement>();
 const { width } = useElementSize(containerRef);
@@ -32,56 +28,6 @@ const isWide = computed(() => width.value > 720);
 
 // Date range state
 const rangeValue = ref<[Dayjs, Dayjs]>([dayjs().subtract(1, 'hour'), dayjs()]);
-const activeShortcut = ref<string>('1h');
-
-// Shortcuts definition
-const shortcuts = computed(() => [
-  { label: $t('dashboard.chart.shortcuts.1h'), value: '1h' },
-  { label: $t('dashboard.chart.shortcuts.24h'), value: '24h' },
-  { label: $t('dashboard.chart.shortcuts.7d'), value: '7d' },
-  { label: $t('dashboard.chart.shortcuts.1m'), value: '1m' },
-]);
-
-function handleShortcutChange(e: any) {
-  const value = e.target.value;
-  activeShortcut.value = value;
-  const end = dayjs();
-  let start = dayjs();
-
-  switch (value) {
-    case '1h': {
-      start = end.subtract(1, 'hour');
-      break;
-    }
-    case '1m': {
-      start = end.subtract(1, 'month');
-      break;
-    }
-    case '7d': {
-      start = end.subtract(7, 'day');
-      break;
-    }
-    case '24h': {
-      start = end.subtract(24, 'hour');
-      break;
-    }
-  }
-  rangeValue.value = [start, end];
-  triggerFetch();
-}
-
-function handleFooterShortcut(value: string) {
-  // Simulate radio change event object for reuse
-  handleShortcutChange({ target: { value } });
-}
-
-function handleRangeChange(dates: any) {
-  if (dates) {
-    rangeValue.value = dates;
-    activeShortcut.value = ''; // Clear shortcut selection on manual change
-    triggerFetch();
-  }
-}
 
 // Data fetching
 const internalLoading = ref(false);
@@ -152,47 +98,12 @@ const isLoading = computed(() => props.loading || internalLoading.value);
         class="flex items-center gap-2"
         :class="{ 'w-full': !isWide, 'justify-end': isWide }"
       >
-        <!-- Wide Mode: Shortcuts beside Picker -->
-        <RadioGroup
-          v-if="isWide && showDateShortcuts"
-          v-model:value="activeShortcut"
-          button-style="solid"
-          @change="handleShortcutChange"
-        >
-          <RadioButton
-            v-for="item in shortcuts"
-            :key="item.value"
-            :value="item.value"
-          >
-            {{ item.label }}
-          </RadioButton>
-        </RadioGroup>
-
-        <!-- Date Picker -->
-        <RangePicker
+        <YlDateRangePicker
           v-model:value="rangeValue"
-          show-time
+          :show-shortcuts="showDateShortcuts"
           class="w-full sm:w-auto"
-          @change="handleRangeChange"
-        >
-          <!-- Narrow Mode: Shortcuts in Footer -->
-          <template v-if="!isWide && showDateShortcuts" #renderExtraFooter>
-            <div class="flex flex-wrap gap-2 p-2">
-              <a
-                v-for="item in shortcuts"
-                :key="item.value"
-                class="rounded bg-accent px-3 py-1 text-sm transition-colors hover:bg-primary hover:text-primary-foreground"
-                :class="{
-                  'bg-primary text-primary-foreground':
-                    activeShortcut === item.value,
-                }"
-                @click="handleFooterShortcut(item.value)"
-              >
-                {{ item.label }}
-              </a>
-            </div>
-          </template>
-        </RangePicker>
+          @change="triggerFetch"
+        />
       </div>
     </div>
 

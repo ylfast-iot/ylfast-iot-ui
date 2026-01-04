@@ -60,6 +60,7 @@ const popoverOpen = ref(false);
           </div>
           <Select
             v-model:value="localValue.alarmLevel"
+            :disabled="disabled"
             class="w-full"
             :placeholder="$t('thingModel.event.level')"
             :options="ALARM_LEVELS"
@@ -76,7 +77,6 @@ const popoverOpen = ref(false);
       </template>
       <div
         class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-        :class="{ 'pointer-events-none opacity-50': disabled }"
         @click.stop
       >
         <SettingOutlined />

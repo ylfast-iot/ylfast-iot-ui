@@ -1,9 +1,12 @@
 import type { Recordable } from '#/adapter';
 import type { ConfigMetadata } from '#/types/config-metadata';
 import type { DataType } from '#/types/data-type';
+import type { WebSocketMessage } from '#/utils/websoket';
 
 import { requestClient } from '#/api/request';
+import { SubscribeType } from '#/enums/subscribe-topics';
 import { parseTemplate } from '#/utils';
+import { getWebSocket } from '#/utils/websoket';
 
 export namespace DashboardApi {
   export interface DashboardMeasurementResponse<T = any> {
@@ -35,7 +38,7 @@ export namespace DashboardApi {
     /**
      * 分组
      */
-    group: string;
+    group?: string;
 
     /**
      * 仪表盘,如: device
@@ -58,7 +61,7 @@ export namespace DashboardApi {
     dimension: string;
 
     /**
-     * 阐述
+     * 参数
      */
     params: Recordable;
   }
@@ -104,9 +107,9 @@ export function getMeasurementDefinitions(dashboard: string, object: string) {
  * @param onMessage
  * @param onEnd
  */
-export function getMeasurementValue(
+export function getMeasurementValue<T = Recordable>(
   params: DashboardApi.DashboardMeasurementRequest,
-  onMessage: (arg: Recordable) => any,
+  onMessage: (arg: T) => any,
   onEnd: () => void,
 ) {
   return requestClient.requestSSE(
@@ -119,7 +122,7 @@ export function getMeasurementValue(
     params.params,
     {
       onMessage(data) {
-        onMessage(JSON.parse(data));
+        onMessage(JSON.parse(data) as T);
       },
       onEnd,
     },
@@ -161,4 +164,27 @@ export function getMultiMeasurementValueSse(
       onEnd,
     },
   );
+}
+
+/**
+ * ws订阅Dashboard
+ * @param subscribeId 订阅ud
+ * @param request 订阅请求
+ * @param onMessage
+ */
+export function subscribeMeasurementValue<T>(
+  subscribeId: string,
+  request: DashboardApi.DashboardMeasurementRequest,
+  onMessage?: (message: WebSocketMessage<T>) => void,
+) {
+  const topic = SubscribeType.DASHBOARD.formatTopicValue(request);
+  return getWebSocket<T>(subscribeId, topic, request.params, {
+    urlSuffix: '/messaging',
+  }).subscribe((message) => {
+    try {
+      onMessage && onMessage(message);
+    } catch {
+      console.error('出现异常：', message);
+    }
+  });
 }

@@ -8,6 +8,7 @@ import type {
 } from './types';
 
 import type { VxeGridProps, VxeTableDefines } from '#/adapter/vxe-table';
+import type { AlarmLevel } from '#/enums/alarm-level';
 import type { DataType, DataTypeDef } from '#/types/data-type';
 import type { DeviceEventMetadata, DeviceMetadata } from '#/types/metadata';
 
@@ -33,6 +34,7 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition';
 // import ObjectDefinition from '#/components/yl-data-type-strategies/type-definition/ObjectDefinition.vue'; // No longer needed
 import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import { ALARM_LEVEL_ENUMS } from '#/enums/alarm-level';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 
 import EventTypeConfig from './components/EventTypeConfig.vue';
@@ -246,21 +248,69 @@ function hasConfig(type: string) {
   return !!getTypeDefinitionComponent(type as DataType);
 }
 
+/**
+ * Get a snapshot of all data (visible + hidden) to perform global validation
+ */
+function getFullDataSnapshot(): DeviceEventMetadata[] {
+  if (!gridApi.grid) return props.value.events || [];
+
+  const { fullData } = gridApi.grid.getTableData();
+  const allEvents = [...(props.value.events || [])];
+
+  // If no search text, fullData is the complete list
+  if (!searchText.value) {
+    return fullData as DeviceEventMetadata[];
+  }
+
+  const lowerSearch = searchText.value.toLowerCase();
+  const processedIds = new Set<string>();
+  const fullDataMap = new Map(fullData.map((i) => [i.id, i]));
+  const result: DeviceEventMetadata[] = [];
+
+  allEvents.forEach((originalItem) => {
+    const matchesSearch =
+      !searchText.value ||
+      originalItem.name?.toLowerCase().includes(lowerSearch) ||
+      originalItem.id?.toLowerCase().includes(lowerSearch);
+
+    if (matchesSearch) {
+      if (fullDataMap.has(originalItem.id)) {
+        result.push(fullDataMap.get(originalItem.id) as DeviceEventMetadata);
+        processedIds.add(originalItem.id);
+      }
+    } else {
+      // Hidden items are kept as-is
+      result.push(originalItem);
+    }
+  });
+
+  // Add new items from grid
+  fullData.forEach((item) => {
+    if (!processedIds.has(item.id)) {
+      result.push(item as DeviceEventMetadata);
+    }
+  });
+
+  return result;
+}
+
 // Validator (remains the same)
 const validUniqueId: VxeTableDefines.ValidatorRule<DeviceEventMetadata>['validator'] =
-  ({ cellValue }) => {
-    const { fullData } = gridApi.grid.getTableData();
-    const count = fullData.filter((item) => item.id === cellValue).length;
-    if (count > 1) {
+  ({ cellValue, row }) => {
+    const allData = getFullDataSnapshot();
+    const count = allData.filter(
+      (item) => item.id === cellValue && item !== row,
+    ).length;
+    if (count > 0) {
       return new Error($t('thingModel.common.uniqueIdError'));
     }
   };
 
 function updateDuplicateStatus() {
-  const { fullData } = gridApi.grid.getTableData();
+  const allData = getFullDataSnapshot();
   const idCounts = new Map<string, number>();
 
-  fullData.forEach((row) => {
+  allData.forEach((row) => {
     if (row.id) {
       idCounts.set(row.id, (idCounts.get(row.id) || 0) + 1);
     }
@@ -299,25 +349,15 @@ const gridOptions = computed<VxeGridProps<DeviceEventMetadata>>(() => {
       {
         field: 'id',
         title: $t('thingModel.common.id'),
-        editRender: {
-          name: 'AInput',
-          props: {
-            placeholder: `${$t('thingModel.common.pleaseEnter')}${$t('thingModel.common.id')}`,
-            disabled: props.disabled,
-          },
-        },
+        editRender: {},
+        slots: { edit: 'id_edit', default: 'id_default' },
         minWidth: 150,
       },
       {
         field: 'name',
         title: $t('thingModel.common.name'),
-        editRender: {
-          name: 'AInput',
-          props: {
-            placeholder: `${$t('thingModel.common.pleaseEnter')}${$t('thingModel.common.name')}`,
-            disabled: props.disabled,
-          },
-        },
+        editRender: {},
+        slots: { edit: 'name_edit', default: 'name_default' },
         minWidth: 160,
       },
       {
@@ -354,11 +394,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
 });
 
 function filterData() {
-  let data = props.value.events || [];
+  const data = props.value.events || [];
+
   // Filter by Search
   if (searchText.value) {
     const lower = searchText.value.toLowerCase();
-    data = data.filter(
+    return data.filter(
       (item) =>
         item.name?.toLowerCase().includes(lower) ||
         item.id?.toLowerCase().includes(lower),
@@ -389,9 +430,9 @@ async function addRow() {
   const oldMetadata = cloneDeep(props.value);
   if (!(await runBeforeChange('add'))) return;
   const newRow: Partial<DeviceEventMetadata> = {
-    id: `event_${Date.now()}`,
-    name: '',
-    output: { type: 'STRING' }, // Initialize as basic DataTypeDef
+    id: undefined,
+    name: undefined,
+    output: { type: 'STRING' },
     eventType: { type: 'SIMPLE' },
     expands: {},
   };
@@ -433,9 +474,10 @@ function removeRow(row: DeviceEventMetadata) {
 function copyRow(row: DeviceEventMetadata) {
   const newRow = cloneDeep(row);
   newRow.id = `${newRow.id}_copy`;
-  newRow._ROW_KEY = undefined;
-  newRow._X_ROW_KEY = undefined;
 
+  if (newRow._X_ROW_KEY) {
+    delete newRow._X_ROW_KEY;
+  }
   // Clear inheritance on copy
   if (newRow.expands) {
     newRow.expands.inheritedProduct = undefined;
@@ -614,6 +656,9 @@ function syncData() {
         <component
           :is="getTypeDefinitionComponent(tempConfigValue.type)"
           v-model:value="tempConfigValue"
+          :disabled="
+            disabled || (currentConfigRow && isInherited(currentConfigRow))
+          "
         />
       </div>
     </ConfigModal>
@@ -711,9 +756,36 @@ function syncData() {
           </div>
         </template>
 
+        <!-- ID Edit -->
+        <template #id_edit="{ row }">
+          <Input
+            v-model:value="row.id"
+            :placeholder="`${$t('thingModel.common.pleaseEnter')}${$t('thingModel.common.id')}`"
+            :disabled="disabled || isInherited(row)"
+          />
+        </template>
+        <template #id_default="{ row }">
+          {{ row.id }}
+        </template>
+
+        <!-- Name Edit -->
+        <template #name_edit="{ row }">
+          <Input
+            v-model:value="row.name"
+            :placeholder="`${$t('thingModel.common.pleaseEnter')}${$t('thingModel.common.name')}`"
+            :disabled="disabled || isInherited(row)"
+          />
+        </template>
+        <template #name_default="{ row }">
+          {{ row.name }}
+        </template>
+
         <!-- Type Edit -->
         <template #type_edit="{ row }">
-          <EventTypeConfig v-model:value="row.eventType" :disabled="disabled" />
+          <EventTypeConfig
+            v-model:value="row.eventType"
+            :disabled="disabled || isInherited(row)"
+          />
         </template>
         <template #type_default="{ row }">
           <Tag v-if="row.eventType.type === 'ALARM'" color="orange">
@@ -721,9 +793,8 @@ function syncData() {
             <span v-if="row.eventType.alarmLevel">
               :
               {{
-                $t(
-                  `thingModel.event.type${row.eventType.alarmLevel.charAt(0).toUpperCase() + row.eventType.alarmLevel.slice(1)}`,
-                ) || row.eventType.alarmLevel
+                ALARM_LEVEL_ENUMS[row.eventType.alarmLevel as AlarmLevel]
+                  ?.label || row.eventType.alarmLevel
               }}
             </span>
           </Tag>
@@ -738,12 +809,11 @@ function syncData() {
               :options="DATA_TYPE_OPTIONS"
               class="!h-8 flex-1"
               :placeholder="`${$t('thingModel.common.pleaseEnter')}${$t('thingModel.event.output')}`"
-              :disabled="disabled"
+              :disabled="disabled || isInherited(row)"
             />
             <div
               v-if="hasConfig(row.output.type)"
               class="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-              :class="{ 'pointer-events-none opacity-50': disabled }"
               :title="$t('thingModel.common.config')"
               @mousedown.stop
               @click.stop="openConfig(row)"
@@ -776,7 +846,7 @@ function syncData() {
               type="link"
               size="small"
               @click="editRowEvent(row)"
-              :disabled="disabled || isInherited(row)"
+              :disabled="disabled"
             >
               {{ $t('thingModel.common.edit') }}
             </Button>

@@ -15,8 +15,8 @@ export type DeviceMessageType =
   | 'EVENT'
   | 'HEART_BEAT'
   | 'INVOKE_FUNCTION'
-  | 'OFF_LINE'
-  | 'ON_LINE'
+  | 'OFFLINE'
+  | 'ONLINE'
   | 'READ_PROPERTY'
   | 'REGISTER'
   | 'REPORT_PROPERTY'
@@ -106,13 +106,13 @@ export const DEVICE_MESSAGE_TYPE_ENUM: DeviceMessageTypeEnum = {
     label: '设备取消注册',
     text: '设备取消注册',
   },
-  OFF_LINE: {
-    value: 'OFF_LINE',
+  OFFLINE: {
+    value: 'OFFLINE',
     label: '离线',
     text: '离线',
   },
-  ON_LINE: {
-    value: 'ON_LINE',
+  ONLINE: {
+    value: 'ONLINE',
     label: '在线',
     text: '在线',
   },

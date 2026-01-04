@@ -7,7 +7,7 @@ import { $t } from '@vben/locales';
 
 import { Form, FormItem, InputNumber, Select } from 'ant-design-vue';
 
-import unitData from './unit.json';
+import { useUnit } from '#/hooks/unit/useUnit';
 
 const props = defineProps<{
   value: NumberTypeDef;
@@ -27,13 +27,7 @@ const isFloat = computed(() => {
   return ['DOUBLE', 'FLOAT'].includes(props.value.type);
 });
 
-const unitOptions = computed(() => {
-  return unitData.map((item) => ({
-    value: item.id,
-    label: `${item.name} (${item.symbol})`,
-    original: item,
-  }));
-});
+const { unitOptions } = useUnit();
 
 // Proxy for mode="tags" (array) <-> unit (string)
 const unitValueProxy = computed({

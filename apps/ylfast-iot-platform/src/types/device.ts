@@ -3,7 +3,6 @@ import type {
   DeviceMessageReplyType,
   DeviceMessageType,
 } from '#/enums/message';
-import type { PropertyValueType } from '#/types/config-metadata';
 import type { DataType } from '#/types/data-type';
 
 export interface DeviceMessage {
@@ -61,7 +60,6 @@ export type WritePropertiesReplyMessage = DeviceMessageReply & {
 
 export type invokeParam = {
   name: string; // 参数名称
-  propertyValueType: PropertyValueType; // 参数值
   value: any; // 参数值
 };
 

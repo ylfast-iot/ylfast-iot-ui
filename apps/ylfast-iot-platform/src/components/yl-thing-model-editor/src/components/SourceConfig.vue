@@ -105,7 +105,10 @@ function handleSettingClick() {
         <!-- Rule Config -->
         <Form layout="vertical" v-if="localValue.rule">
           <FormItem :label="$t('thingModel.property.ruleMode')">
-            <RadioGroup v-model:value="localValue.rule.mode">
+            <RadioGroup
+              v-model:value="localValue.rule.mode"
+              :disabled="disabled"
+            >
               <Radio value="simple">
                 {{ $t('thingModel.property.ruleSimple') }}
               </Radio>
@@ -123,6 +126,7 @@ function handleSettingClick() {
                 "
                 :rows="4"
                 placeholder="function encode(value) { ... }"
+                :disabled="disabled"
               />
             </FormItem>
             <FormItem :label="$t('thingModel.property.ruleDecode')">
@@ -132,6 +136,7 @@ function handleSettingClick() {
                 "
                 :rows="4"
                 placeholder="function decode(value) { ... }"
+                :disabled="disabled"
               />
             </FormItem>
           </template>
@@ -178,7 +183,6 @@ function handleSettingClick() {
       </template>
       <div
         class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-        :class="{ 'pointer-events-none opacity-50': disabled }"
         @click.stop
       >
         <SettingOutlined />
@@ -189,7 +193,6 @@ function handleSettingClick() {
     <div
       v-else
       class="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-      :class="{ 'pointer-events-none opacity-50': disabled }"
       @click.stop="handleSettingClick"
     >
       <SettingOutlined />

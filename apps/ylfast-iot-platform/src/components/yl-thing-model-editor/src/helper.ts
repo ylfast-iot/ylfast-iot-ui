@@ -39,8 +39,8 @@ export function createBaseGridOptions(props: {
       autoFocus: true,
       autoClear: false,
       enabled: !props.disabled,
-      beforeEditMethod: ({ row }) => {
-        return !props.disabled && !isInherited(row);
+      beforeEditMethod: () => {
+        return !props.disabled;
       },
     },
   };

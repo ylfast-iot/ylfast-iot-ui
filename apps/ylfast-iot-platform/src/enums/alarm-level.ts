@@ -12,8 +12,12 @@ export type AlarmLevel =
   | 'LEVEL6'
   | 'LEVEL7';
 
-export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
-  {
+type AlarmLevelEnum = {
+  [key in AlarmLevel]: EnumDict<AlarmLevel>;
+};
+
+export const ALARM_LEVEL_ENUMS: AlarmLevelEnum = {
+  LEVEL0: {
     value: 'LEVEL0',
     get label() {
       return $t('thingModel.event.typeInfo');
@@ -23,7 +27,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'green',
   },
-  {
+  LEVEL1: {
     value: 'LEVEL1',
     get label() {
       return $t('thingModel.event.typeWarn');
@@ -33,7 +37,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'orange',
   },
-  {
+  LEVEL2: {
     value: 'LEVEL2',
     get label() {
       return $t('thingModel.event.typeError');
@@ -43,7 +47,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'red',
   },
-  {
+  LEVEL3: {
     value: 'LEVEL3',
     get label() {
       return $t('thingModel.event.level3');
@@ -53,7 +57,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'blue',
   },
-  {
+  LEVEL4: {
     value: 'LEVEL4',
     get label() {
       return $t('thingModel.event.level4');
@@ -63,7 +67,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'purple',
   },
-  {
+  LEVEL5: {
     value: 'LEVEL5',
     get label() {
       return $t('thingModel.event.level5');
@@ -73,7 +77,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'cyan',
   },
-  {
+  LEVEL6: {
     value: 'LEVEL6',
     get label() {
       return $t('thingModel.event.level6');
@@ -83,7 +87,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'magenta',
   },
-  {
+  LEVEL7: {
     value: 'LEVEL7',
     get label() {
       return $t('thingModel.event.level7');
@@ -93,4 +97,7 @@ export const ALARM_LEVELS: EnumDict<AlarmLevel>[] = [
     },
     color: 'volcano',
   },
-];
+};
+
+export const ALARM_LEVELS: EnumDict<AlarmLevel>[] =
+  Object.values(ALARM_LEVEL_ENUMS);

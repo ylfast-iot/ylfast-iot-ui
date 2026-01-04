@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { DataType, EnumItem, EnumTypeDef } from '#/types/data-type';
+import type { EnumItem, EnumTypeDef } from '#/types/data-type';
 
 import { computed } from 'vue';
 
@@ -55,32 +55,35 @@ const dataTypes = DATA_TYPE_OPTIONS.filter((opt) =>
   ALLOWED_ENUM_TYPES.has(opt.value),
 );
 
-const columns = computed(() => [
-  {
-    title: $t('dataType.strategies.enum.label'),
-    dataIndex: 'label',
-    key: 'label',
-    width: '25%',
-  },
-  {
-    title: $t('dataType.strategies.enum.value'),
-    dataIndex: 'value',
-    key: 'value',
-    width: '25%',
-  },
-  {
-    title: $t('dataType.strategies.enum.description'),
-    dataIndex: 'description',
-    key: 'description',
-    width: '35%',
-  },
-  {
-    title: $t('dataType.strategies.enum.action'),
-    key: 'action',
-    width: '15%',
-    align: 'center',
-  },
-]);
+const columns = computed(
+  () =>
+    [
+      {
+        title: $t('dataType.strategies.enum.label'),
+        dataIndex: 'label',
+        key: 'label',
+        width: '25%',
+      },
+      {
+        title: $t('dataType.strategies.enum.value'),
+        dataIndex: 'value',
+        key: 'value',
+        width: '25%',
+      },
+      {
+        title: $t('dataType.strategies.enum.description'),
+        dataIndex: 'description',
+        key: 'description',
+        width: '35%',
+      },
+      {
+        title: $t('dataType.strategies.enum.action'),
+        key: 'action',
+        width: '15%',
+        align: 'center',
+      },
+    ] as any[],
+);
 
 function addEnumItem() {
   const newItem: EnumItem & { key: string } = {
@@ -96,12 +99,15 @@ function addEnumItem() {
 }
 
 function removeEnumItem(index: number) {
+  if (props.disabled) {
+    return;
+  }
   const newEnums = [...(innerValue.value.enums || [])];
   newEnums.splice(index, 1);
   innerValue.value = { ...innerValue.value, enums: newEnums };
 }
 
-function handleTypeChange(type: DataType) {
+function handleTypeChange(type: any) {
   // When type changes, we might need to clear values or let them be coerced.
   // For safety, we reset enums or warn. Here we define simple behavior: preserve but value might be wrong type.
   // Ideally we should cast existing values or clear them. Clearing is safer.
@@ -172,11 +178,11 @@ function handleTypeChange(type: DataType) {
                 :options="[
                   {
                     label: $t('dataType.strategies.boolean.defaultYes'),
-                    value: true,
+                    value: 'true',
                   },
                   {
                     label: $t('dataType.strategies.boolean.defaultNo'),
-                    value: false,
+                    value: 'false',
                   },
                 ]"
                 :disabled="disabled"
@@ -204,7 +210,7 @@ function handleTypeChange(type: DataType) {
                 :title="$t('dataType.strategies.enum.deleteConfirm')"
                 @confirm="removeEnumItem(index)"
               >
-                <Button type="text" danger size="small">
+                <Button type="text" danger size="small" :disabled="disabled">
                   <template #icon><DeleteOutlined /></template>
                 </Button>
               </Popconfirm>

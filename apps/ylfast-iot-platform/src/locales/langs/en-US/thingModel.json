@@ -31,7 +31,9 @@
     "export": "Export Thing Model",
     "jsonArrayError": "JSON must be an array",
     "jsonParseError": "JSON parse error",
-    "invalidJson": "Invalid JSON format"
+    "invalidJson": "Invalid JSON format",
+    "async": "Async",
+    "sync": "Sync"
   },
   "property": {
     "dataType": "Data Type",

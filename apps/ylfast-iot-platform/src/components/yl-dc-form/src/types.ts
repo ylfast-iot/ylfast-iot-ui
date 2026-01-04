@@ -20,7 +20,7 @@ export type YlDcFormCondition = {
 export type YlDcFormGroup = {
   conditions: YlDcFormCondition[];
   key: string;
-  type: 'and' | 'or';
+  type?: 'and' | 'or';
 };
 
 export type DynamicCondition = {

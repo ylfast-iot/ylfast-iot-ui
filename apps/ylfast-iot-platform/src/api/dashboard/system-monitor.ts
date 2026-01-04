@@ -3,8 +3,10 @@ import type { WebSocketMessage } from '#/utils/websoket';
 
 import { Subscription } from 'rxjs';
 
-import { getMultiMeasurementValue } from '#/api/dashboard/index';
-import { getWebSocket } from '#/utils/websoket';
+import {
+  getMultiMeasurementValue,
+  subscribeMeasurementValue,
+} from '#/api/dashboard/index';
 
 export namespace DashboardSystemMonitor {
   /**
@@ -197,18 +199,21 @@ export function subscribeSystemMonitor(
     message: WebSocketMessage<DashboardSystemMonitor.SystemMeasurementValue>,
   ) => void,
 ): Subscription {
-  return getWebSocket<DashboardSystemMonitor.SystemMeasurementValue>(
+  return subscribeMeasurementValue(
     `operations-statistics-system-info-realTime`,
-    '/dashboard/systemMonitor/stats/info/realTime',
     {
-      type: 'all',
-      interval: '1s',
-      agg: 'avg',
+      dashboard: 'systemMonitor',
+      object: 'stats',
+      measurement: 'info',
+      dimension: 'realTime',
+      params: {
+        type: 'all',
+        interval: '1s',
+        agg: 'avg',
+      },
     },
-    {
-      urlSuffix: '/messaging',
-    },
-  ).subscribe(onMessage);
+    onMessage,
+  );
 }
 
 /**

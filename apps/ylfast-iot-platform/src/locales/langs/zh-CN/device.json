@@ -19,6 +19,11 @@
     "onlineTime": "最近上线时间",
     "offlineTime": "最近离线时间",
     "copyId": "复制 ID",
+    "stateMessage": {
+      "online": "设备上线成功",
+      "offline": "设备已离线",
+      "unActive": "设备变为未激活状态"
+    },
     "config": "设备配置",
     "configUpdateSuccess": "配置更新成功",
     "confirmTitle": {
@@ -57,6 +62,22 @@
     },
     "tips": {
       "batchAddNotImplemented": "批量新增功能待实现"
+    },
+    "function": {
+      "searchPlaceholder": "搜索功能名称/ID",
+      "noMatch": "暂无匹配的功能",
+      "noDescription": "暂无描述信息",
+      "params": "参数设置",
+      "noParams": "该功能无需输入参数",
+      "result": "执行结果",
+      "executeTime": "执行时间",
+      "responseData": "响应数据",
+      "responseTime": "响应耗时",
+      "execute": "执行功能",
+      "waiting": "就绪 / 等待执行",
+      "selectTip": "请从左侧选择功能",
+      "invoked": "指令已下发",
+      "required": "是必填项"
     }
   },
   "state": {

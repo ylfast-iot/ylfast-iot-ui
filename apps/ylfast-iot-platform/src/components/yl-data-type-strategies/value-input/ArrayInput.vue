@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
-import type { ArrayDef } from '#/types/data-type';
+import type { ArrayDef, DataType } from '#/types/data-type';
 
 import { computed } from 'vue';
 
@@ -34,13 +34,52 @@ const innerValue = computed({
 
 const arrayDef = computed(() => props.prop.type as ArrayDef);
 const elementType = computed(
-  () => arrayDef.value.elementType || arrayDef.value.array, // arrayDef.value.array适配之前老的配置
+  () => arrayDef.value.elementType || (arrayDef.value as any).array, // arrayDef.value.array适配之前老的配置
 );
 
+function getDefaultValue(type: DataType): any {
+  switch (type) {
+    case 'ARRAY': {
+      return [];
+    }
+    case 'BOOLEAN': {
+      return false;
+    }
+    case 'DATE': {
+      return null;
+    }
+    case 'DOUBLE':
+    case 'FLOAT':
+    case 'INTEGER':
+    case 'LONG':
+    case 'SHORT': {
+      return 0;
+    }
+    case 'ENUM': {
+      return null;
+    }
+    case 'FILE': {
+      return '';
+    }
+    case 'GEO': {
+      return { lat: 0, lon: 0 };
+    }
+    case 'OBJECT': {
+      return {};
+    }
+    case 'STRING': {
+      return '';
+    }
+    default: {
+      return null;
+    }
+  }
+}
+
 function addItem() {
-  // TODO: Add default value based on type (e.g. empty object for OBJECT)
-  // For now adding null/undefined lets the child component handle default or start empty
-  const newItem = null;
+  const newItem = elementType.value
+    ? getDefaultValue(elementType.value.type)
+    : null;
   const newList = [...innerValue.value, newItem];
   innerValue.value = newList;
 }

@@ -115,7 +115,7 @@ const groups = ref<YlDcFormGroup[]>([
         column: '',
         key: `${Date.now().toString()}_0`,
         termType: 'eq',
-        type: 'and',
+        type: 'or',
         value: '',
       },
     ],
@@ -156,7 +156,7 @@ const findSchemaByField = (field: string): undefined | YlDcFormSchema => {
 // 根据字段获取默认值
 const getDefaultValueForField = (field: string): any => {
   const schema = findSchemaByField(field);
-  return schema?.defaultValue === undefined ? '' : schema.defaultValue;
+  return schema?.defaultValue;
 };
 
 const formatValueForField = (field: string, val: any): any => {
@@ -174,12 +174,14 @@ function initFormSchemas(
     if (schemas.value.length > 0) {
       const defaultField = schemas.value[0]?.field || '';
       const defaultValue = getDefaultValueForField(defaultField);
+      const schema = findSchemaByField(defaultField);
 
       groups.value.forEach((group) => {
         group.conditions.forEach((cond) => {
           if (!cond.column) {
             cond.column = defaultField;
             cond.value = defaultValue;
+            cond.termType = schema?.termTypes?.[0] || 'eq';
           }
         });
       });
@@ -189,6 +191,7 @@ function initFormSchemas(
     }
   }
 }
+
 initFormSchemas(getProps.value.formSchemas, true);
 
 watch(
@@ -203,14 +206,14 @@ const addGroup = () => {
   const defaultField =
     schemas.value.length > 0 ? schemas.value[0]?.field || '' : '';
   const defaultValue = getDefaultValueForField(defaultField);
-
+  const schema = findSchemaByField(defaultField);
   groups.value.push({
     conditions: [
       {
         column: defaultField,
         key: `${Date.now().toString()}_0`,
-        termType: 'eq',
-        type: 'and',
+        termType: schema?.termTypes?.[0] || 'eq',
+        type: 'or',
         value: defaultValue,
       },
     ],
@@ -236,18 +239,18 @@ const addCondition = (groupIndex: number) => {
   const defaultField =
     schemas.value.length > 0 ? schemas.value[0]?.field || '' : '';
   const defaultValue = getDefaultValueForField(defaultField);
-
+  const schema = findSchemaByField(defaultField);
   groups.value[groupIndex].conditions.push({
     column: defaultField,
     key: Date.now().toString(),
-    termType: 'eq',
+    termType: schema?.termTypes?.[0] || 'eq',
     type: 'or',
     value: defaultValue,
   });
 };
 
 function buildTerms() {
-  return cloneDeep(toRaw(groups.value))
+  const terms = cloneDeep(toRaw(groups.value))
     .map((group) => {
       const groupTerms: Term[] = group.conditions
         .filter((cond) => {
@@ -281,6 +284,13 @@ function buildTerms() {
       };
     })
     .filter((group) => group.terms.length > 0);
+
+  // 第一组type删掉
+  if (terms.length > 0) {
+    terms[0]!.type = undefined;
+  }
+
+  return terms;
 }
 
 const handleSearch = async () => {
@@ -298,14 +308,16 @@ const reset = async () => {
   const defaultField =
     schemas.value.length > 0 ? schemas.value[0]?.field || '' : '';
   const defaultValue = getDefaultValueForField(defaultField);
+  const schema = findSchemaByField(defaultField);
+
   groups.value = [
     {
       conditions: [
         {
           column: defaultField,
           key: `${Date.now().toString()}_0`,
-          termType: 'eq',
-          type: 'and',
+          termType: schema?.termTypes?.[0] || 'eq',
+          type: 'or',
           value: defaultValue,
         },
       ],
@@ -367,8 +379,8 @@ const formAction: YlDcFormActionType = {
   resetFields: reset,
   resetSchema: async (data) => {
     // Reset schema to initial props or provided data
-    if (props.formSchemas) {
-      schemas.value = [...props.formSchemas];
+    if (getProps.value.formSchemas) {
+      schemas.value = [...getProps.value.formSchemas];
     }
     if (data) {
       await formAction.updateSchema(data);
@@ -422,14 +434,15 @@ const toggleExpand = () => {
       if (groups.value.length === 0) {
         const defaultField = schemas.value[0]?.field || '';
         const defaultValue = getDefaultValueForField(defaultField);
+        const schema = findSchemaByField(defaultField);
         groups.value = [
           {
             conditions: [
               {
                 column: defaultField,
                 key: `${Date.now().toString()}_0`,
-                termType: 'eq',
-                type: 'and',
+                termType: schema?.termTypes?.[0] || 'eq',
+                type: 'or',
                 value: defaultValue,
               },
             ],
@@ -455,9 +468,9 @@ const toggleExpand = () => {
           firstGroup.conditions.push({
             column: schema.field,
             key: `${Date.now().toString()}_${schema.field}_${idx}`, // Ensure unique key
-            termType: 'eq' as any,
-            type: 'and',
-            value: schema.defaultValue === undefined ? '' : schema.defaultValue,
+            termType: schema.termTypes?.[0] || ('eq' as any),
+            type: 'or',
+            value: schema.defaultValue,
           });
         });
       }

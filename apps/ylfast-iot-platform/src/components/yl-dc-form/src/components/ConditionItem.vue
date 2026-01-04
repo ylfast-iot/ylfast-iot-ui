@@ -48,6 +48,10 @@ const termTypes = computed(() => [
   { label: $t('ylDcForm.termType.nin'), value: 'nin' },
   { label: $t('ylDcForm.termType.empty'), value: 'empty' },
   { label: $t('ylDcForm.termType.nempty'), value: 'nempty' },
+  { label: $t('ylDcForm.termType.btw'), value: 'btw' },
+  { label: $t('ylDcForm.termType.nbtw'), value: 'nbtw' },
+  { label: $t('ylDcForm.termType.isnull'), value: 'isnull' },
+  { label: $t('ylDcForm.termType.notnull'), value: 'notnull' },
 ]);
 
 const currentSchema = computed(() => {
@@ -79,7 +83,13 @@ const valueComponent = computed(() => {
 
   // 2. Check component
   if (schema.component) {
-    const comp = globalShareState.getComponents()[schema.component];
+    let componentName = schema.component;
+    // 如果组件是DatePicker 组件,且termType是btw或者nbtw，则使用RangePicker
+    if (componentName === 'DatePicker' && ['btw', 'nbtw'].includes(termType)) {
+      componentName = 'RangePicker' as any;
+    }
+    const comp = globalShareState.getComponents()[componentName];
+
     return comp || Input;
   }
 
@@ -122,7 +132,16 @@ const valueComponentProps = computed(() => {
   if (['in', 'nin'].includes(termType)) {
     propsData.mode = 'tags';
   }
-
+  // Special handling for 'btw'/'nbtw' of Date Component
+  if (
+    ['btw', 'nbtw'].includes(termType) &&
+    (schema.component === 'DatePicker' || schema.component === 'RangePicker')
+  ) {
+    propsData.placeholder = [
+      $t('ylDcForm.placeholder.inputStartDate'),
+      $t('ylDcForm.placeholder.inputEndDate'),
+    ];
+  }
   return propsData;
 });
 
@@ -139,9 +158,7 @@ watch(
     if (oldColumn && newColumn !== oldColumn) {
       // Set default value when column changes
       const schema = props.schemas.find((s) => s.field === newColumn);
-
-      conditionVM.value.value =
-        schema?.defaultValue === undefined ? undefined : schema.defaultValue;
+      conditionVM.value.value = schema?.defaultValue;
 
       // Reset termType if not valid for new column
       if (
@@ -221,118 +238,6 @@ watch(
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Medium screens and down: Allow items to wrap more gracefully */
-@media (max-width: 992px) {
-  .value-input {
-    min-width: 100%; /* Force input to new line if space is tight */
-    margin-top: 4px;
-  }
-
-  .condition-item {
-    flex-grow: 1; /* Allow selects to grow to fill space */
-  }
-
-  .responsive-select-sm,
-  .responsive-select-md,
-  .placeholder-block {
-    width: 100%;
-  }
-}
-
-/* Mobile Responsive Styles */
-@media (max-width: 576px) {
-  .condition-row {
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-    padding: 8px;
-    background-color: hsl(var(--muted) / 30%);
-    border-radius: 4px;
-  }
-
-  .condition-item {
-    width: 100%;
-  }
-
-  .condition-item :deep(.ant-select),
-  .condition-item :deep(.ant-input),
-  .condition-item :deep(.ant-picker) {
-    width: 100% !important;
-  }
-
-  .placeholder-block {
-    display: none;
-  }
-
-  .logic-select {
-    width: 100%;
-  }
-
-  .value-input {
-    min-width: 0;
-  }
-
-  .actions {
-    justify-content: flex-end;
-  }
-}
-
-.condition-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-
-.condition-item {
-  display: flex;
-  align-items: center;
-}
-
-.placeholder-block {
-  display: inline-block;
-  width: 100px; /* Match responsive-select-sm width */
-  height: 1px; /* Ensure it takes up space */
-}
-
-.value-input {
-  flex: 1;
-  min-width: 150px; /* Allow shrinking slightly */
-}
-
-.responsive-select-sm {
-  width: 100px; /* Increased slightly from 80px for better text fit */
-}
-
-.responsive-select-md {
-  width: 150px;
-}
-
-/* Action Buttons Style */
-.action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px; /* Softer corners */
-  transition: all 0.2s ease-in-out;
-}
-
-.delete-condition-btn {
-  color: hsl(var(--muted-foreground));
-  opacity: 0.6;
-}
-
-.delete-condition-btn:hover {
-  color: hsl(var(--destructive));
-  background-color: hsl(var(--destructive) / 10%);
-  opacity: 1;
-  transform: scale(1.05); /* Subtle pop effect */
-}
-
-/* Previous styles */
-</style>
 
 <style scoped>
 /* Medium screens and down: Allow items to wrap more gracefully */
