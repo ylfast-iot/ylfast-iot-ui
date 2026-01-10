@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { YlDescSchema } from '#/components/yl-desc/src/types';
 import type { DeviceType } from '#/enums/device';
+import type { EnumDict } from '#/types/global';
 
 import { h, onMounted, ref } from 'vue';
 
@@ -77,8 +78,8 @@ const basicSchemas: YlDescSchema[] = [
   {
     field: 'deviceType',
     label: $t('device.instance.type'),
-    render: (val: DeviceType) => {
-      const config = DEVICE_TYPE_ENUMS[val];
+    render: (val: EnumDict<DeviceType>) => {
+      const config = DEVICE_TYPE_ENUMS[val.value];
       return h(
         Tag,
         { color: config?.color || 'blue' },

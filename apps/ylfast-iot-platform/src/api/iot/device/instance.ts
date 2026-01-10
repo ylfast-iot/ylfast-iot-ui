@@ -3,7 +3,11 @@
 import type { QueryParamEntity, Recordable } from '#/adapter';
 import type { IotDeviceProductApi } from '#/api';
 import type { BasicModel, PagerResult } from '#/api/basic';
-import type { DeviceState, DeviceType } from '#/enums/device';
+import type {
+  DeviceState,
+  DeviceStoreStrategyMode,
+  DeviceType,
+} from '#/enums/device';
 import type { ConfigMetadata } from '#/types/config-metadata';
 import type { Unit } from '#/types/data-type';
 import type {
@@ -16,6 +20,7 @@ import type {
   WritePropertiesMessage,
   WritePropertiesReplyMessage,
 } from '#/types/device';
+import type { EnumDict } from '#/types/global';
 
 import { buildBasicCrudApis } from '#/api/basic';
 import { IotProtocolApi } from '#/api/iot/protocol';
@@ -88,9 +93,9 @@ export namespace IotDeviceInstanceApi {
 
     /**
      * 设备状态
-     * 默认值：unActive（未激活）
+     * 默认值：unActive（未激活/禁用）
      */
-    deviceState: DeviceState;
+    deviceState: EnumDict<DeviceState>;
 
     /**
      * 注册时间（毫秒级时间戳）
@@ -100,7 +105,7 @@ export namespace IotDeviceInstanceApi {
     /**
      * 设备类型
      */
-    deviceType: DeviceType;
+    deviceType: EnumDict<DeviceType>;
 
     /**
      * 产品名称
@@ -139,7 +144,7 @@ export namespace IotDeviceInstanceApi {
     /** 序列号 */
     sn?: string;
     /** 设备状态（如：unActive/active/online/offline 等） */
-    deviceState?: DeviceState;
+    deviceState?: EnumDict<DeviceState>;
     /** 设备封面图URL */
     deviceCoverUrl?: string;
     /** 设备描述 */
@@ -155,7 +160,7 @@ export namespace IotDeviceInstanceApi {
     /** 产品类型id */
     productTypeId: string;
     /** 设备类型 */
-    deviceType: DeviceType;
+    deviceType: EnumDict<DeviceType>;
     /** 是否独立物模型 */
     isSelfMetadata?: boolean;
     /** 是否独立配置 */
@@ -181,7 +186,7 @@ export namespace IotDeviceInstanceApi {
     /** 协议名称 */
     protocolName?: string;
     /** 当前存储的策略模式（ROW、COLUMN，NONE） */
-    storeStrategyMode?: string;
+    storeStrategyMode?: DeviceStoreStrategyMode;
     /** 固件信息 */
     firmwareInfo?: Record<string, any>;
 
@@ -197,6 +202,15 @@ export namespace IotDeviceInstanceApi {
     id: string;
     // 物模型JSON
     tsl: string;
+  }
+
+  export interface DeviceRegisterResult {
+    total: number;
+    success: boolean;
+    message: string;
+    sourceId: string;
+    source: any;
+    operation: string;
   }
 
   /**
@@ -253,24 +267,41 @@ export namespace IotDeviceInstanceApi {
 
   export const Apis = {
     updateTsl: `${BASE_URL}/update/metaInfo`,
+    updateMetadata: `${BASE_URL}/{deviceId}/metadata`,
+    resetMetadata: `${BASE_URL}/{deviceId}/metadata`,
     bindDevice: `${BASE_URL}/bindDevice`,
     unBindDevice: `${BASE_URL}/unBindDevice`,
     changeEnableStatus: `${BASE_URL}/change/enableStatus`,
-    detail: `${BASE_URL}/detail/{deviceId}`,
+    detail: `${BASE_URL}/{deviceId}/detail`,
     detailsPage: `${BASE_URL}/details/_page`,
     detailsList: `${BASE_URL}/details/list`,
     updateSimpleInfo: `${BASE_URL}/update/simpleInfo`,
     batchImport: `${BASE_URL}/batch/import`,
+    batchDelete: `${BASE_URL}/batch/_delete`,
 
     // 设备操作相关
     readProperties: `${BASE_URL}/operation/properties/read`,
     subDeviceReadProperties: `${BASE_URL}/operation/sub-device/properties/read`,
     writeProperties: `${BASE_URL}/operation/properties/write`,
     invokeFunction: `${BASE_URL}/operation/function/invoke`,
-    checkState: `${BASE_URL}/operation/checkState/{deviceId}`,
+    // checkState: `${BASE_URL}/operation/checkState/{deviceId}`,
     disconnect: `${BASE_URL}/operation/{deviceId}/disconnect`,
-    register: `${BASE_URL}/operation/{deviceId}/register`,
     sendMessage: `${BASE_URL}/operation/{deviceId}/message`,
+
+    // 注册指定条件的设备
+    registerByQuery: `${BASE_URL}/operation/register`,
+    // 注册设备
+    register: `${BASE_URL}/operation/{deviceId}/register`,
+    // 注销设备
+    unregister: `${BASE_URL}/operation/{deviceId}/unregister`,
+    // 批量注销设备
+    unregisterBatch: `${BASE_URL}/operation/batch/_unregister`,
+    // 批量注册设备
+    registerBatch: `${BASE_URL}/operation/batch/_register`,
+    // 同步设备状态
+    syncDeviceState: `${BASE_URL}/operation/state/_sync`,
+    // 获取指定ID设备在线状态
+    getDeviceState: `${BASE_URL}/operation/{deviceId}/state`,
 
     // 设备metadata相关
     getDeviceConfigMetadataApi: `${BASE_URL}/config/metadata/device/{deviceId}`,
@@ -291,13 +322,40 @@ export namespace IotDeviceInstanceApi {
 /**
  * 更新设备物模型
  * @param metadataConf 物模型更新配置信息
+ * @deprecated
  */
-export function updateDeviceMetadata(
+export function _updateDeviceMetadata(
   metadataConf: IotDeviceInstanceApi.TslConfVo,
 ) {
   return requestClient.post<boolean>(
     IotDeviceInstanceApi.Apis.updateTsl,
     metadataConf,
+  );
+}
+
+/**
+ * 更新设备物模型
+ * @param deviceId 设备id
+ * @param metadata 物模型
+ */
+export function updateDeviceMetadata(deviceId: string, metadata: string) {
+  return requestClient.put(
+    parseTemplate(IotDeviceInstanceApi.Apis.updateMetadata, {
+      deviceId,
+    }),
+    metadata,
+  );
+}
+
+/**
+ *  重置设备物模型
+ * @param deviceId
+ */
+export function resetDeviceMetadata(deviceId: string) {
+  return requestClient.delete(
+    parseTemplate(IotDeviceInstanceApi.Apis.resetMetadata, {
+      deviceId,
+    }),
   );
 }
 
@@ -406,6 +464,18 @@ export function batchImport(
 }
 
 /**
+ * 批量删除设备
+ * @param deviceIds 设备id列表
+ * @return number 删除数量
+ */
+export function batchDelete(deviceIds: string[]) {
+  return requestClient.put<number>(
+    IotDeviceInstanceApi.Apis.batchDelete,
+    deviceIds,
+  );
+}
+
+/**
  * @description:  读取子设备属性
  * @param message
  * @return SubDeviceMessageReply<ReadPropertiesReplyMessage>
@@ -474,15 +544,95 @@ export const register = (deviceId: string) =>
       deviceId,
     }),
   );
+/**
+ * 注销设备
+ * @param deviceId 设备id
+ */
+export const unregister = (deviceId: string) =>
+  requestClient.post<IotDeviceInstanceApi.DeviceRegisterResult>(
+    parseTemplate(IotDeviceInstanceApi.Apis.unregister, {
+      deviceId,
+    }),
+  );
+
+/**
+ * 查询并批量注册设备
+ * @param query
+ * @param onMessage
+ * @param onEnd
+ */
+export const registerByQuery = (
+  query: QueryParamEntity,
+  onMessage: (message: IotDeviceInstanceApi.DeviceRegisterResult) => void,
+  onEnd: () => void,
+) =>
+  requestClient.requestSSE(IotDeviceInstanceApi.Apis.registerByQuery, query, {
+    method: 'GET',
+    onMessage: (msg) => onMessage(JSON.parse(msg || '{}')),
+    onEnd,
+  });
+
+/**
+ * 批量注册设备
+ * @param ids 设备列表
+ */
+export const registerBatch = (ids: string[]) =>
+  requestClient.put<number>(IotDeviceInstanceApi.Apis.registerBatch, ids);
+
+/**
+ * 批量注销设备
+ * @param ids 设备列表
+ */
+export const unregisterBatch = (ids: string[]) =>
+  requestClient.put<number>(IotDeviceInstanceApi.Apis.unregisterBatch, ids);
 
 /**
  * @description:  检查设备状态
  * @param deviceId 设备id
  * @returns number 1在线 其他离线
  */
-export const checkState = (deviceId: string) =>
+// export const checkState = (deviceId: string) =>
+//   requestClient.get<DeviceState>(
+//     parseTemplate(IotDeviceInstanceApi.Apis.checkState, {
+//       deviceId,
+//     }),
+//   );
+
+/**
+ *
+ * registerByQuery
+ * register
+ * unregister
+ * unregisterBatch
+ * registerBatch
+ * syncDeviceState
+ * getDeviceState
+ */
+
+/**
+ * 同步设备真实状态
+ * @param query 过滤条件
+ * @param onMessage  接收到消息的回调函数
+ * @param onEnd 结束的回调函数
+ */
+export const syncDeviceState = (
+  query: QueryParamEntity,
+  onMessage: (message: number) => void,
+  onEnd: () => void,
+) =>
+  requestClient.requestSSE(IotDeviceInstanceApi.Apis.syncDeviceState, query, {
+    method: 'GET',
+    onMessage: (msg) => onMessage(JSON.parse(msg)),
+    onEnd,
+  });
+
+/**
+ * 获取设备状态
+ * @param deviceId 设备id
+ */
+export const getDeviceState = (deviceId: string) =>
   requestClient.get<DeviceState>(
-    parseTemplate(IotDeviceInstanceApi.Apis.checkState, {
+    parseTemplate(IotDeviceInstanceApi.Apis.getDeviceState, {
       deviceId,
     }),
   );

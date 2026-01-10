@@ -22,9 +22,10 @@ import {
 } from 'ant-design-vue';
 
 import {
-  changeEnableStatus,
-  getDeviceDetailsPage,
+  batchDelete,
   IotDeviceInstanceApi as InstanceApi,
+  register,
+  unregister,
 } from '#/api/iot/device/instance';
 import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 import { COMMON_STATE } from '#/enums';
@@ -108,7 +109,7 @@ const [Modal, modalApi] = useVbenModal({
         await InstanceApi.basicCrudApis.postAdd(values as any);
         message.success($t('common.createSuccess'));
       } else {
-        await InstanceApi.basicCrudApis.putUpdate(currentId.value, {
+        await InstanceApi.basicCrudApis.patchSave({
           ...values,
         });
         message.success($t('common.updateSuccess'));
@@ -137,10 +138,17 @@ const gridQuery = async (params: any, ...args: any[]) => {
     pageIndex: page.currentPage - 1,
     pageSize: page.pageSize,
     terms,
-    sorts: [{ name: 'createTime', order: 'desc' }],
-  };
 
-  return await getDeviceDetailsPage(queryParams);
+    sorts: [
+      { name: 'createTime', order: 'desc' },
+      {
+        order: 'asc',
+        name: 'deviceState',
+        value: DEVICE_STATE.online,
+      },
+    ],
+  };
+  return await InstanceApi.basicCrudApis.postQuery(queryParams);
 };
 
 const [TableCard, gridApi] =
@@ -232,7 +240,7 @@ function handleEdit(row: Recordable<any>) {
 
 async function handleDelete(row: Recordable<any>) {
   try {
-    await InstanceApi.basicCrudApis.deleteBatch([row.id]);
+    await batchDelete([row.id]);
     message.success($t('common.deleteSuccess'));
     gridApi.reload();
   } catch (error) {
@@ -242,13 +250,16 @@ async function handleDelete(row: Recordable<any>) {
 
 async function handleToggleStatus(row: Recordable<any>) {
   try {
-    const newStatus = row.enableStatus === 1 ? 0 : 1;
-    await changeEnableStatus({
-      enableStatus: newStatus,
-      id: row.id,
-    });
+    const device = row as InstanceApi.DeviceInstance;
+    const doRegister = device.deviceState.value === DEVICE_STATE.unActive;
+    doRegister
+      ? // 注销设备
+        await register(row.id)
+      : // 启用设备
+        await unregister(row.id);
+
     message.success(
-      newStatus === 1
+      doRegister
         ? $t('common.enable') + $t('common.success')
         : $t('common.disable') + $t('common.success'),
     );
@@ -266,12 +277,10 @@ function handleBatchOperation(key: string) {
       return;
     }
     // Batch delete logic
-    InstanceApi.basicCrudApis
-      .deleteBatch(selectedRecords.map((item) => item.id))
-      .then(() => {
-        message.success($t('common.deleteSuccess'));
-        gridApi.reload();
-      });
+    batchDelete(selectedRecords.map((item) => item.id)).then(() => {
+      message.success($t('common.deleteSuccess'));
+      gridApi.reload();
+    });
   } else if (key === 'add') {
     // Batch add placeholder
     message.info($t('device.instance.tips.batchAddNotImplemented'));
@@ -293,7 +302,9 @@ function handleCardClick(row: any) {
       <template #toolbar-tools>
         <div class="flex gap-2">
           <Button type="primary" @click="handleAdd">
-            <template #icon><PlusIcon class="mr-1 size-4" /></template>
+            <template #icon>
+              <PlusIcon class="mr-1 size-4" />
+            </template>
             {{ $t('device.instance.action.add') }}
           </Button>
 
@@ -325,7 +336,9 @@ function handleCardClick(row: any) {
             type="link"
             @click.stop="handleCardClick(row)"
           >
-            <template #icon><EyeIcon class="size-4" /></template>
+            <template #icon>
+              <EyeIcon class="size-4" />
+            </template>
           </Button>
           <Button
             :title="$t('common.edit')"
@@ -333,20 +346,22 @@ function handleCardClick(row: any) {
             type="link"
             @click.stop="handleEdit(row)"
           >
-            <template #icon><EditIcon class="size-4" /></template>
+            <template #icon>
+              <EditIcon class="size-4" />
+            </template>
           </Button>
           <Popconfirm
             :title="
-              row.enableStatus === 1
+              row.deviceState?.value !== 'unActive'
                 ? $t('device.instance.action.confirmDisable')
                 : $t('device.instance.action.confirmEnable')
             "
             @confirm="handleToggleStatus(row)"
           >
             <Button
-              :danger="row.enableStatus === 1"
+              :danger="row.deviceState?.value !== 'unActive'"
               :title="
-                row.enableStatus === 1
+                row.deviceState?.value !== 'unActive'
                   ? $t('common.disable')
                   : $t('common.enable')
               "
@@ -354,7 +369,10 @@ function handleCardClick(row: any) {
               type="link"
             >
               <template #icon>
-                <BanIcon v-if="row.enableStatus === 1" class="size-4" />
+                <BanIcon
+                  v-if="row.deviceState?.value !== 'unActive'"
+                  class="size-4"
+                />
                 <CheckIcon v-else class="size-4" />
               </template>
             </Button>
@@ -369,7 +387,9 @@ function handleCardClick(row: any) {
               size="small"
               type="link"
             >
-              <template #icon><TrashIcon class="size-4" /></template>
+              <template #icon>
+                <TrashIcon class="size-4" />
+              </template>
             </Button>
           </Popconfirm>
         </div>
@@ -377,9 +397,19 @@ function handleCardClick(row: any) {
 
       <!-- Table Status Column -->
       <template #status="{ row }">
-        <Tag :color="row.enableStatus === 1 ? 'success' : 'error'">
+        <Tag
+          :color="
+            row.deviceState?.value === 'online'
+              ? 'success'
+              : row.deviceState?.value === 'unActive'
+                ? 'error'
+                : 'default'
+          "
+        >
           {{
-            row.enableStatus === 1 ? $t('common.enable') : $t('common.disable')
+            row.deviceState?.value === 'unActive'
+              ? $t('common.disable')
+              : row.deviceState?.text
           }}
         </Tag>
       </template>

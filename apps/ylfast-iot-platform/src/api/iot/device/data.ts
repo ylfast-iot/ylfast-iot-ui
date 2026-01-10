@@ -2,6 +2,7 @@ import type { QueryParamEntity } from '#/adapter';
 import type { PagerResult } from '#/api/basic';
 import type { DeviceMonitorApi } from '#/api/iot/device/device-monitor';
 import type { AggType } from '#/enums/agg-type';
+import type { EnumDict } from '#/types/global';
 
 import { getMultiMeasurementValue } from '#/api/dashboard';
 import { requestClient } from '#/api/request';
@@ -62,7 +63,7 @@ export namespace DeviceDataApi {
     orgId: string;
     productId: string;
     timestamp: number;
-    type: string;
+    type: EnumDict;
   };
 
   export type DeviceProperties = {
@@ -231,13 +232,11 @@ export const getDevicePropertiesList = (
 export const getDeviceLogs = (deviceId: string, params: QueryParamEntity) => {
   return requestClient.post<DeviceDataApi.DeviceLogData[]>(
     parseTemplate(DeviceDataApi.Apis.logsData, { deviceId }),
-    {
-      params,
-    },
+    params,
   );
 };
 /**
- * 获取设备日志
+ * 获取设备属性聚合数据
  * @param deviceId
  * @param params
  */

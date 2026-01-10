@@ -307,12 +307,14 @@ onUnmounted(() => {
     >
       <div class="flex items-center gap-2">
         <ActivityIcon class="size-5 text-primary" />
-        <span class="font-bold">实时属性</span>
+        <span class="font-bold">{{
+          $t('device.instance.monitor.realTimeProperty')
+        }}</span>
       </div>
       <div class="flex w-full items-center justify-end gap-3 sm:w-auto">
         <Input
           v-model:value="searchText"
-          placeholder="搜索属性"
+          :placeholder="$t('device.instance.monitor.searchProperty')"
           class="flex-1 rounded-md sm:w-64 sm:flex-initial"
           allow-clear
         >
@@ -320,7 +322,7 @@ onUnmounted(() => {
             <SearchIcon class="size-4 text-muted-foreground" />
           </template>
         </Input>
-        <Tooltip title="刷新数据">
+        <Tooltip :title="$t('common.action.refresh')">
           <div
             class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-all hover:bg-primary/5 hover:text-primary active:scale-95"
             @click="refresh"
@@ -360,7 +362,7 @@ onUnmounted(() => {
                   </span>
                 </div>
                 <div class="flex shrink-0 items-center gap-2">
-                  <Tooltip title="历史趋势">
+                  <Tooltip :title="$t('device.instance.monitor.historyTrend')">
                     <div
                       class="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                       @click="openHistoryModal(p)"
@@ -368,7 +370,10 @@ onUnmounted(() => {
                       <TrendIcon class="size-4" />
                     </div>
                   </Tooltip>
-                  <Tooltip v-if="canRead(p)" title="读属性">
+                  <Tooltip
+                    v-if="canRead(p)"
+                    :title="$t('device.instance.monitor.readProperty')"
+                  >
                     <div
                       class="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                       :class="{ 'animate-spin': readLoading[p.id] }"
@@ -377,7 +382,10 @@ onUnmounted(() => {
                       <RefreshIcon class="size-4" />
                     </div>
                   </Tooltip>
-                  <Tooltip v-if="canWrite(p)" title="写属性">
+                  <Tooltip
+                    v-if="canWrite(p)"
+                    :title="$t('device.instance.monitor.writeProperty')"
+                  >
                     <div
                       class="cursor-pointer text-muted-foreground transition-colors hover:text-primary"
                       @click="openWriteModal(p)"
@@ -415,7 +423,7 @@ onUnmounted(() => {
                   <span
                     class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60"
                   >
-                    更新时间
+                    {{ $t('device.instance.monitor.updateTime') }}
                   </span>
                   <div class="flex items-center gap-1.5 text-muted-foreground">
                     <ClockIcon class="size-3.5" />
@@ -425,7 +433,7 @@ onUnmounted(() => {
                           ? dayjs(propertyValues[p.id]?.time).format(
                               'YYYY-MM-DD HH:mm:ss',
                             )
-                          : '--'
+                          : $t('device.instance.monitor.neverUpdated')
                       }}
                     </span>
                   </div>
@@ -434,24 +442,28 @@ onUnmounted(() => {
             </div>
           </Card>
         </div>
-        <Empty v-else description="暂无属性" class="mt-20" />
+        <Empty
+          v-else
+          :description="$t('device.instance.monitor.noProperty')"
+          class="mt-20"
+        />
       </Spin>
     </div>
 
     <!-- Write Property Modal -->
     <Modal
       v-model:open="writeModalVisible"
-      :title="`写属性: ${currentWriteProperty?.name}`"
+      :title="`${$t('device.instance.monitor.writeProperty')}: ${currentWriteProperty?.name}`"
       :confirm-loading="writeLoading"
       @ok="handleWriteSubmit"
     >
       <div v-if="currentWriteProperty" class="py-4">
         <div class="mb-2 text-sm text-muted-foreground">
-          请输入
+          {{ $t('device.instance.monitor.inputValue') }}
           <span class="font-mono font-bold text-foreground">
             {{ currentWriteProperty.name }} ({{ currentWriteProperty.id }})
           </span>
-          的值:
+          :
         </div>
         <component
           :is="getFormItemComponent(currentWriteProperty.valueType.type)"

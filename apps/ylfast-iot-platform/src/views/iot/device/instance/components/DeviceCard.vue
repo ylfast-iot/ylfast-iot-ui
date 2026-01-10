@@ -4,7 +4,8 @@ import { computed } from 'vue';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { Popconfirm, Tag, Tooltip } from 'ant-design-vue';
+import { formatDate } from '@vueuse/core';
+import { Popconfirm, Tooltip } from 'ant-design-vue';
 
 import { IotDeviceInstanceApi } from '#/api/iot/device/instance';
 import { DEVICE_TYPE_ENUMS } from '#/enums/device';
@@ -24,86 +25,66 @@ const emit = defineEmits<{
 const EditIcon = createIconifyIcon('lucide:edit-3');
 const TrashIcon = createIconifyIcon('lucide:trash-2');
 const PowerIcon = createIconifyIcon('lucide:power');
-const CpuIcon = createIconifyIcon('lucide:cpu');
+const RouterIcon = createIconifyIcon('lucide:router');
 const BoxIcon = createIconifyIcon('lucide:box');
-const HashIcon = createIconifyIcon('lucide:hash');
+const ClockIcon = createIconifyIcon('lucide:clock');
+const EyeIcon = createIconifyIcon('lucide:eye');
 
-// Computed Properties for Styles & Text
-const isEnabled = computed(() => props.row.enableStatus === 1);
+// Computed Properties
+// isActive: true if state value is NOT unActive.
+const isActive = computed(() => props.row.deviceState?.value !== 'unActive');
+const isOnline = computed(() => props.row.deviceState?.value === 'online');
 
-// Status Style Logic
-const statusStyle = computed(() => {
-  if (!isEnabled.value) {
+// Formatted Time
+const createTimeText = computed(() => {
+  if (!props.row.createTime) return '-';
+  return formatDate(new Date(props.row.createTime), 'YYYY-MM-DD');
+});
+
+// Status Badge Logic
+const statusBadge = computed(() => {
+  const gradientStops =
+    'via-white via-[15%] to-white dark:via-[#151515] dark:via-[15%] dark:to-[#151515]';
+
+  const stateValue = props.row.deviceState?.value;
+
+  if (stateValue === 'unActive') {
     return {
-      bg: 'bg-red-500/10 dark:bg-red-500/20 backdrop-blur-md',
-      text: 'text-red-700 dark:text-red-400',
-      border: 'border-red-200/50 dark:border-red-500/30',
-      dot: 'bg-red-500',
+      bg: 'bg-rose-500/10 dark:bg-rose-500/20 backdrop-blur-md',
+      text: 'text-rose-700 dark:text-rose-400',
+      badgeBorder: 'border-rose-200/50 dark:border-rose-500/30',
+      dot: 'bg-rose-500',
       label: $t('device.instance.disable'),
-      iconColor: 'text-red-400',
-      cardBg:
-        'from-red-50/40 via-white to-white dark:from-red-500/5 dark:via-[#151515] dark:to-[#151515]',
-      blockBg: 'bg-red-100/30 dark:bg-red-500/10',
-      fold: 'border-red-800/20 dark:border-red-500/40',
+      fold: 'border-rose-800/20 dark:border-rose-500/40',
+      cardBg: `from-rose-50 ${gradientStops} dark:from-rose-500/10`,
+      hoverBorder: 'hover:border-rose-300 dark:hover:border-rose-500/50',
     };
   }
 
-  const state = props.row.deviceState;
-  switch (state) {
-    case 'offline': {
-      return {
-        bg: 'bg-gray-200/50 dark:bg-gray-700/50 backdrop-blur-md',
-        text: 'text-gray-600 dark:text-gray-400',
-        border: 'border-gray-300 dark:border-gray-600',
-        dot: 'bg-gray-400',
-        label: $t('device.state.offline'),
-        iconColor: 'text-gray-400',
-        cardBg:
-          'from-gray-50 via-white to-white dark:from-white/5 dark:via-[#151515] dark:to-[#151515]',
-        blockBg: 'bg-gray-100 dark:bg-gray-800',
-        fold: 'border-gray-400/30 dark:border-gray-600/50',
-      };
-    }
+  switch (stateValue) {
     case 'online': {
       return {
-        bg: 'bg-green-500/10 dark:bg-green-500/20 backdrop-blur-md',
-        text: 'text-green-700 dark:text-green-400',
-        border: 'border-green-200/50 dark:border-green-500/30',
-        dot: 'bg-green-500',
+        bg: 'bg-emerald-500/10 dark:bg-emerald-500/20 backdrop-blur-md',
+        text: 'text-emerald-700 dark:text-emerald-400',
+        badgeBorder: 'border-emerald-200/50 dark:border-emerald-500/30',
+        dot: 'bg-emerald-500',
         label: $t('device.state.online'),
-        iconColor: 'text-green-400',
-        cardBg:
-          'from-green-50/40 via-white to-white dark:from-green-500/5 dark:via-[#151515] dark:to-[#151515]',
-        blockBg: 'bg-green-100/30 dark:bg-green-500/10',
-        fold: 'border-green-800/20 dark:border-green-500/40',
-      };
-    }
-    case 'unActive': {
-      return {
-        bg: 'bg-orange-500/10 dark:bg-orange-500/20 backdrop-blur-md',
-        text: 'text-orange-700 dark:text-orange-400',
-        border: 'border-orange-200/50 dark:border-orange-500/30',
-        dot: 'bg-orange-500',
-        label: $t('device.state.unActive'),
-        iconColor: 'text-orange-400',
-        cardBg:
-          'from-orange-50/40 via-white to-white dark:from-orange-500/5 dark:via-[#151515] dark:to-[#151515]',
-        blockBg: 'bg-orange-100/30 dark:bg-orange-500/10',
-        fold: 'border-orange-800/20 dark:border-orange-500/40',
+        fold: 'border-emerald-800/20 dark:border-emerald-500/40',
+        cardBg: `from-emerald-50 ${gradientStops} dark:from-emerald-500/10`,
+        hoverBorder:
+          'hover:border-emerald-300 dark:hover:border-emerald-500/50',
       };
     }
     default: {
       return {
-        bg: 'bg-blue-500/10 dark:bg-blue-500/20 backdrop-blur-md',
-        text: 'text-blue-700 dark:text-blue-400',
-        border: 'border-blue-200/50 dark:border-blue-500/30',
-        dot: 'bg-blue-500',
-        label: $t('device.state.other'),
-        iconColor: 'text-blue-400',
-        cardBg:
-          'from-blue-50/40 via-white to-white dark:from-blue-500/5 dark:via-[#151515] dark:to-[#151515]',
-        blockBg: 'bg-blue-100/30 dark:bg-blue-500/10',
-        fold: 'border-blue-800/20 dark:border-blue-500/40',
+        bg: 'bg-slate-200/50 dark:bg-slate-700/50 backdrop-blur-md',
+        text: 'text-slate-600 dark:text-slate-400',
+        badgeBorder: 'border-slate-300 dark:border-slate-600',
+        dot: 'bg-slate-400',
+        label: $t('device.state.offline'),
+        fold: 'border-slate-400/30 dark:border-slate-600/50',
+        cardBg: `from-slate-50 ${gradientStops} dark:from-slate-500/10`,
+        hoverBorder: 'hover:border-slate-400 dark:hover:border-slate-500/50',
       };
     }
   }
@@ -111,121 +92,154 @@ const statusStyle = computed(() => {
 
 const deviceTypeConfig = computed(() => {
   if (!props.row.deviceType) return null;
-  return DEVICE_TYPE_ENUMS[props.row.deviceType];
+  return DEVICE_TYPE_ENUMS[props.row.deviceType.value];
+});
+
+// Map Ant Design colors to Tailwind classes
+const typeTagClass = computed(() => {
+  const color = deviceTypeConfig.value?.color;
+  switch (color) {
+    case 'blue': {
+      return 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400';
+    }
+    case 'cyan': {
+      return 'bg-cyan-50 text-cyan-600 dark:bg-cyan-900/20 dark:text-cyan-400';
+    }
+    case 'green': {
+      return 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400';
+    }
+    case 'orange': {
+      return 'bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400';
+    }
+    case 'purple': {
+      return 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400';
+    }
+    default: {
+      return 'bg-slate-50 text-slate-600 dark:bg-slate-800 dark:text-slate-400';
+    }
+  }
+});
+
+// Icon Style
+const iconStyle = computed(() => {
+  return isOnline.value
+    ? 'bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400'
+    : 'bg-slate-50 text-slate-500 dark:bg-slate-800 dark:text-slate-400';
 });
 </script>
 
 <template>
   <div
-    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg border border-gray-200 bg-white bg-gradient-to-br shadow-sm transition-all duration-300 hover:shadow-md dark:border-gray-800 dark:bg-[#151515]"
-    :class="statusStyle.cardBg"
+    class="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-slate-200 bg-white bg-gradient-to-br shadow-sm transition-all duration-300 hover:shadow-lg dark:border-slate-800 dark:bg-[#151515]"
+    :class="[statusBadge.cardBg, statusBadge.hoverBorder]"
     @click="emit('click', row)"
   >
-    <!-- Ribbon Status Indicator (Advanced Ribbon Style) -->
-    <div class="absolute -right-1 top-4 z-20">
+    <!-- Ribbon Status Indicator -->
+    <div class="absolute -right-1 top-3 z-20">
       <div
-        class="relative flex items-center gap-1.5 rounded-l-md border-y border-l px-3 py-1 text-[10px] font-bold shadow-sm"
-        :class="[statusStyle.bg, statusStyle.text, statusStyle.border]"
+        class="relative flex items-center gap-1.5 rounded-l-md border-y border-l px-2.5 py-0.5 text-[10px] font-bold shadow-sm"
+        :class="[statusBadge.bg, statusBadge.text, statusBadge.badgeBorder]"
       >
         <span class="relative flex h-1.5 w-1.5">
           <span
-            v-if="row.deviceState === 'online' && isEnabled"
+            v-if="row.deviceState?.value === 'online' && isActive"
             class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-            :class="statusStyle.dot"
+            :class="statusBadge.dot"
           ></span>
           <span
             class="relative inline-flex h-1.5 w-1.5 rounded-full"
-            :class="statusStyle.dot"
+            :class="statusBadge.dot"
           ></span>
         </span>
-        {{ statusStyle.label }}
+        {{ statusBadge.label }}
 
-        <!-- The Ribbon Fold (Triangle) -->
         <div
           class="absolute -bottom-[4px] right-0 h-0 w-0 border-l-[4px] border-t-[4px] border-l-transparent"
-          :class="statusStyle.fold"
+          :class="statusBadge.fold"
         ></div>
       </div>
     </div>
 
-    <!-- Header -->
-    <div
-      class="flex items-center justify-between border-b border-black/[0.03] p-3 pb-2 dark:border-white/[0.03]"
-    >
-      <div class="flex items-center gap-3 overflow-hidden">
-        <!-- Device Icon -->
-        <div
-          class="shrink-0 transition-transform duration-300 group-hover:scale-105"
-        >
-          <img
-            v-if="row.deviceCoverUrl"
-            :alt="row.deviceName"
-            :src="row.deviceCoverUrl"
-            class="size-10 rounded-lg border border-gray-100 object-cover dark:border-gray-700"
-          />
-          <div
-            v-else
-            class="flex size-10 items-center justify-center rounded-lg bg-white/50 shadow-inner dark:bg-white/5"
-          >
-            <CpuIcon :class="statusStyle.iconColor" class="size-6" />
-          </div>
-        </div>
-        <!-- Device Name -->
-        <div
-          class="truncate text-sm font-bold text-gray-800 dark:text-gray-100"
+    <!-- Header Row (Compact) -->
+    <div class="flex items-center gap-3 px-4 pb-2 pt-4">
+      <!-- Icon -->
+      <div
+        class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg transition-colors"
+        :class="iconStyle"
+      >
+        <img
+          v-if="row.deviceCoverUrl"
+          :src="row.deviceCoverUrl"
+          :alt="row.deviceName"
+          class="h-full w-full object-cover"
+        />
+        <RouterIcon v-else class="h-6 w-6" stroke-width="2" />
+      </div>
+
+      <!-- Identity -->
+      <div class="flex min-w-0 flex-col gap-0.5">
+        <h3
+          class="truncate pr-8 text-sm font-bold text-slate-900 dark:text-gray-100"
           :title="row.deviceName"
         >
           {{ row.deviceName }}
-        </div>
+        </h3>
+        <p
+          class="truncate font-mono text-[10px] text-slate-400"
+          :title="row.id"
+        >
+          ID: {{ row.id }}
+        </p>
       </div>
     </div>
 
-    <!-- Body -->
-    <div class="flex flex-1 flex-col gap-2 p-3 pt-2">
-      <!-- Technical Info Block -->
+    <!-- Info Body -->
+    <div class="group/body relative flex flex-1 flex-col gap-2 px-4 pb-3">
+      <!-- Detail Mask -->
       <div
-        class="flex flex-col gap-1.5 rounded border border-black/[0.02] p-2 dark:border-white/[0.02]"
-        :class="statusStyle.blockBg"
+        class="absolute inset-0 z-10 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover/body:opacity-100"
       >
-        <!-- Product & Type Row -->
-        <div class="flex items-center justify-between">
-          <div
-            class="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300"
-          >
-            <BoxIcon class="size-3.5 text-gray-400" />
-            <span class="truncate font-medium" :title="row.productName">{{
-              row.productName || $t('common.unknown')
-            }}</span>
-          </div>
-          <Tag
-            :color="deviceTypeConfig?.color || 'blue'"
-            class="mr-0 origin-right scale-90"
-          >
-            {{ deviceTypeConfig?.label || $t('common.unknown') }}
-          </Tag>
-        </div>
-
-        <!-- ID & SN Row -->
-        <div class="flex flex-col gap-0.5 text-xs text-gray-500">
-          <div v-if="row.sn" class="flex items-center gap-1.5">
-            <HashIcon class="size-3.5 text-gray-400 opacity-50" />
-            <span class="truncate font-mono" :title="row.sn">
-              SN: {{ row.sn }}
-            </span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <HashIcon class="size-3.5 text-gray-400" />
-            <span class="truncate font-mono" :title="row.id">
-              ID: {{ row.id }}
-            </span>
-          </div>
-        </div>
+        <div
+          class="absolute inset-0 bg-white/60 backdrop-blur-[1px] dark:bg-black/60"
+        ></div>
+        <EyeIcon
+          class="relative z-20 size-7 text-primary/80 transition-transform duration-300 group-hover/body:scale-110"
+          stroke-width="1.5"
+        />
       </div>
 
-      <!-- Description -->
-      <div class="px-1">
+      <!-- Meta Row -->
+      <div class="flex items-center justify-between gap-2 text-xs">
+        <!-- Product -->
+        <div
+          class="flex min-w-0 items-center gap-1.5 text-slate-600 dark:text-gray-400"
+        >
+          <BoxIcon class="size-3.5 shrink-0 text-slate-400" />
+          <span class="truncate" :title="row.productName">
+            {{ row.productName || $t('common.unknown') }}
+          </span>
+        </div>
+
+        <!-- Type Tag -->
+        <span
+          v-if="deviceTypeConfig"
+          class="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium"
+          :class="typeTagClass"
+        >
+          {{ deviceTypeConfig.label }}
+        </span>
+      </div>
+
+      <!-- Time Row -->
+      <div class="flex items-center gap-1.5 text-xs text-slate-400">
+        <ClockIcon class="size-3.5 shrink-0" />
+        <span class="truncate">{{ createTimeText }}</span>
+      </div>
+
+      <!-- Description Box -->
+      <div class="mt-1 rounded bg-slate-50 p-2 dark:bg-slate-800/50">
         <p
-          class="line-clamp-2 h-[39px] text-xs leading-relaxed text-gray-400"
+          class="line-clamp-1 text-[10px] leading-relaxed text-slate-500 dark:text-gray-400"
           :title="row.description"
         >
           {{ row.description || $t('common.noDescription') }}
@@ -233,23 +247,27 @@ const deviceTypeConfig = computed(() => {
       </div>
     </div>
 
-    <!-- Footer (Refined) -->
+    <!-- Action Footer -->
     <div
-      class="flex h-10 items-center justify-between border-t border-black/[0.03] bg-white/40 px-4 backdrop-blur-sm dark:border-white/[0.03] dark:bg-black/20"
+      class="mt-auto flex h-9 cursor-default items-center divide-x divide-slate-100 border-t border-slate-100 bg-slate-50/30 dark:divide-gray-800 dark:border-gray-800 dark:bg-gray-900/30"
+      @click.stop
     >
       <Tooltip :title="$t('common.edit')">
         <div
-          class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
+          class="group/btn flex flex-1 cursor-pointer items-center justify-center text-slate-400 transition-colors hover:bg-white hover:text-indigo-600 dark:hover:bg-gray-800"
           @click.stop="emit('edit', row)"
         >
-          <EditIcon class="size-4" />
+          <EditIcon
+            class="h-3.5 w-3.5 transition-transform group-hover/btn:scale-110"
+          />
         </div>
       </Tooltip>
 
-      <Tooltip :title="isEnabled ? $t('common.disable') : $t('common.enable')">
+      <!-- Toggle Status (Power) -->
+      <Tooltip :title="isActive ? $t('common.disable') : $t('common.enable')">
         <Popconfirm
           :title="
-            isEnabled
+            isActive
               ? $t('device.instance.action.confirmDisable')
               : $t('device.instance.action.confirmEnable')
           "
@@ -257,28 +275,45 @@ const deviceTypeConfig = computed(() => {
           @confirm.stop="emit('toggleStatus', row)"
         >
           <div
-            class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
-            :class="[
-              isEnabled
-                ? 'text-green-600 hover:bg-green-50 hover:text-green-700 dark:hover:bg-green-500/20'
-                : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700/50',
-            ]"
+            class="group/btn flex flex-1 cursor-pointer items-center justify-center transition-colors hover:bg-white dark:hover:bg-gray-800"
+            :class="
+              isActive
+                ? 'text-emerald-500 hover:text-emerald-700'
+                : 'text-slate-400 hover:text-emerald-600'
+            "
           >
-            <PowerIcon class="size-4" />
+            <PowerIcon
+              class="h-3.5 w-3.5 transition-transform group-hover/btn:scale-110"
+            />
           </div>
         </Popconfirm>
       </Tooltip>
 
-      <Tooltip :title="$t('common.delete')">
+      <Tooltip
+        :title="
+          isActive
+            ? $t('device.instance.tips.disableBeforeDelete')
+            : $t('common.delete')
+        "
+      >
+        <div
+          v-if="isActive"
+          class="flex flex-1 cursor-not-allowed items-center justify-center text-slate-300 dark:text-gray-600"
+        >
+          <TrashIcon class="h-3.5 w-3.5" />
+        </div>
         <Popconfirm
+          v-else
           :title="$t('common.action.confirmDelete')"
           @click.stop
           @confirm.stop="emit('delete', row)"
         >
           <div
-            class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20 dark:hover:text-red-400"
+            class="group/btn flex flex-1 cursor-pointer items-center justify-center text-slate-400 transition-colors hover:bg-white hover:text-rose-600 dark:hover:bg-gray-800"
           >
-            <TrashIcon class="size-4" />
+            <TrashIcon
+              class="h-3.5 w-3.5 transition-transform group-hover/btn:scale-110"
+            />
           </div>
         </Popconfirm>
       </Tooltip>

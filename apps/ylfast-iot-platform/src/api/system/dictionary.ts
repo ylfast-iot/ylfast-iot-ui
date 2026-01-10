@@ -27,6 +27,11 @@ export namespace SystemDictionaryApi {
      * 状态,0禁用,1启用
      */
     status: number;
+
+    /**
+     * 字典项
+     */
+    items: DictionaryItem[];
   }
 
   export interface DictionaryItem
@@ -79,6 +84,20 @@ export namespace SystemDictionaryApi {
      */
     ordinal: number;
   }
+
+  export interface DictDefine<T = any> {
+    id: string;
+    alias: string;
+    comments: string;
+    items: EnumDict<T>;
+  }
+
+  export interface ClassDictDefine extends DictDefine {
+    /**
+     * 字段
+     */
+    filed: string;
+  }
 }
 
 // Dictionary APIs
@@ -96,6 +115,43 @@ export const queryDictionaryList = (params: QueryParamEntity) =>
 
 export const deleteDictionary = (id: string) =>
   requestClient.delete<boolean>(`/dictionary/${id}`);
+
+/**
+ * 查询字典详情(POST)
+ * @param params
+ */
+export const postQueryDictionaryDetail = (params: QueryParamEntity) =>
+  requestClient.post<SystemDictionaryApi.Dictionary[]>(
+    '/dictionary/detail/_query',
+    params,
+  );
+/**
+ * 查询字典详情(GET)
+ * @param params
+ */
+export const getQueryDictionaryDetail = (params: QueryParamEntity) =>
+  requestClient.get<SystemDictionaryApi.Dictionary[]>(
+    '/dictionary/detail/_query',
+    {
+      params,
+    },
+  );
+
+/**
+ * 获取数据字段的所有选项
+ * @param id 字典id
+ */
+export const getItemDefineById = <T = any>(id: string) => {
+  return requestClient.get<EnumDict<T>[]>(`/dictionary/${id}/items`);
+};
+
+/**
+ * 获取全部数据字典
+ */
+export const getAllDict = () =>
+  requestClient.get<
+    (SystemDictionaryApi.ClassDictDefine | SystemDictionaryApi.DictDefine)[]
+  >('/dictionary/_all');
 
 // Dictionary Item APIs
 export const saveDictionaryItem = (

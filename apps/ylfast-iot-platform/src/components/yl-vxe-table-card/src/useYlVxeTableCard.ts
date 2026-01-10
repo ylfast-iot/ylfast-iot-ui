@@ -94,7 +94,7 @@ export function useYlVxeTableCard<RowType extends Record<string, any> = any>(
   // 5. 包装组件
   const WrappedComponent = defineComponent({
     name: 'YlVxeTableCardWrapper',
-    setup(_, { slots, expose }) {
+    setup(_, { attrs, expose, slots }) {
       // 2. 必须暴露这个 ref 或相关方法给外部父组件
       expose({
         // 外部组件可以直接调用这个方法
@@ -106,6 +106,7 @@ export function useYlVxeTableCard<RowType extends Record<string, any> = any>(
         h(
           YlVxeTableCard,
           {
+            ...attrs,
             gridApi,
             ref: innerCardTableRef,
             gridComponent: BaseGrid,

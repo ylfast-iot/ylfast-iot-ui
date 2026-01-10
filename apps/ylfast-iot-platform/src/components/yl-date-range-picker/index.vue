@@ -15,10 +15,12 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
+    align?: 'center' | 'end' | 'start';
     showShortcuts?: boolean;
   }>(),
   {
     showShortcuts: true,
+    align: 'end',
   },
 );
 
@@ -36,6 +38,14 @@ const RadioGroup = Radio.Group;
 const containerRef = ref<HTMLDivElement>();
 const { width } = useElementSize(containerRef);
 const isWide = computed(() => width.value > 500);
+
+const alignClass = computed(() => {
+  if (props.align === 'start')
+    return isWide.value ? 'justify-start' : 'items-start';
+  if (props.align === 'center')
+    return isWide.value ? 'justify-center' : 'items-center';
+  return isWide.value ? 'justify-end' : 'items-end';
+});
 
 // Shortcuts state
 const activeShortcut = ref<string>('1h');
@@ -93,7 +103,7 @@ function handleRangeChange(dates: any) {
   <div
     ref="containerRef"
     class="flex items-center gap-2"
-    :class="{ 'w-full flex-col items-end': !isWide, 'justify-end': isWide }"
+    :class="[!isWide ? 'w-full flex-col' : '', alignClass]"
   >
     <!-- Wide Mode: Shortcuts beside Picker -->
     <RadioGroup

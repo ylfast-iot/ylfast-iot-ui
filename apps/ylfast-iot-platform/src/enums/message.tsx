@@ -26,6 +26,7 @@ export type DeviceMessageType =
   | 'WRITE_PROPERTY';
 
 type MessageType = DeviceMessageReplyType | DeviceMessageType;
+
 export type DeviceMessageTypeValue = EnumDict<MessageType> & {
   icon?: (props: {
     color?: string;

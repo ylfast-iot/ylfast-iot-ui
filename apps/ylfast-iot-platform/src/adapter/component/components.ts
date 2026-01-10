@@ -9,6 +9,7 @@ import { defineAsyncComponent, defineComponent, h, ref } from 'vue';
 import { ApiComponent, IconPicker } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
+import { YlCardSelect } from '../../components/yl-card-select';
 import YlConfigMetadataForm from '../../components/yl-config-metadata-form/src/yl-config-metadata-form.vue';
 
 const AutoComplete = defineAsyncComponent(
@@ -119,6 +120,7 @@ export type ComponentType =
   | 'TimePicker'
   | 'TreeSelect'
   | 'Upload'
+  | 'YlCardSelect'
   | 'YlConfigMetadataForm' // New type
   | BaseFormComponentType;
 
@@ -190,6 +192,7 @@ const components: Partial<Record<ComponentType, Component>> = {
   TreeSelect: withDefaultPlaceholder(TreeSelect, 'select'),
   Upload,
   YlConfigMetadataForm, // New component
+  YlCardSelect,
 };
 
 export const getGlobalComponent = (type: ComponentType) => {

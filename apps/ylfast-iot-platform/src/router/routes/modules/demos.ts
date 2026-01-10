@@ -110,6 +110,14 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import('#/views/demos/components/yl-i18n-messages/index.vue'),
       },
+      {
+        meta: {
+          title: '业务组件演示',
+        },
+        name: 'BusinessComponentsDemo',
+        path: '/demos/business-components',
+        component: () => import('#/views/demos/business-components/index.vue'),
+      },
     ],
   },
 ];

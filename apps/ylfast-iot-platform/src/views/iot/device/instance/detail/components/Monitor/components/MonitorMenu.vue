@@ -52,7 +52,7 @@ function handleSelect(key: string) {
         <div
           class="mb-2 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground"
         >
-          属性监控
+          {{ $t('device.instance.monitor.propertyMonitor') }}
         </div>
         <div class="space-y-0.5 px-2">
           <div
@@ -77,7 +77,7 @@ function handleSelect(key: string) {
         <div
           class="mb-2 px-4 text-xs font-bold uppercase tracking-wider text-muted-foreground"
         >
-          事件监控
+          {{ $t('device.instance.monitor.eventMonitor') }}
         </div>
         <div class="space-y-0.5 px-2">
           <div

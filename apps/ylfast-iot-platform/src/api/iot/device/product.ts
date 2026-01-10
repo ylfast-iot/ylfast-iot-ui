@@ -3,8 +3,8 @@ import type { BasicModel, PagerResult } from '#/api/basic';
 // 设备产品
 import type { CommonState } from '#/enums';
 import type { DeviceType } from '#/enums/device';
+import type { EnumDict } from '#/types/global';
 
-import { IotDeviceInstanceApi } from '#/api';
 import { buildBasicCrudApis } from '#/api/basic';
 import { requestClient } from '#/api/request';
 import { parseTemplate } from '#/utils';
@@ -38,7 +38,7 @@ export namespace IotDeviceProductApi {
     /**
      * 设备类型（直连设备\网关设备\网关子设备）
      */
-    deviceType?: DeviceType;
+    deviceType?: EnumDict<DeviceType>;
 
     /**
      * 产品状态 1正常,0禁用
@@ -155,7 +155,7 @@ export namespace IotDeviceProductApi {
     /** 产品描述 */
     description?: string;
     /** 设备类型（直连设备\网关设备\网关子设备） */
-    deviceType: DeviceType;
+    deviceType: EnumDict<DeviceType>;
     /** 产品状态（1启用，0禁用） */
     state: CommonState; // Byte → number
     /** 协议id (非协议记录id) */
@@ -184,15 +184,19 @@ export namespace IotDeviceProductApi {
     deviceCount: number;
     /** 当前存储的策略模式 */
     storeStrategyMode: string;
+    createTime: number;
   }
 
   const BASE_URL = '/iot/product';
 
   export const Apis = {
-    updateTsl: `${BASE_URL}/list`,
+    // 获取产品列表
+    list: `${BASE_URL}/list`,
     saveTslConf: `${BASE_URL}/saveTslConf`,
     detail: `${BASE_URL}/detail/{id}`,
     detailPage: `${BASE_URL}/detail/page`,
+    register: `${BASE_URL}/{productId}/register`,
+    unregister: `${BASE_URL}/{productId}/unregister`,
   };
 
   // 继承基础增删改查接口
@@ -202,13 +206,26 @@ export namespace IotDeviceProductApi {
 }
 
 /**
- * 更新产品物模型
- * @param tslConf
+ * 注册/启用产品
+ * @param productId 产品id
  */
-export function saveTslConf(tslConf: IotDeviceInstanceApi.TslConfVo) {
-  return requestClient.post<IotDeviceInstanceApi.TslConfVo>(
-    IotDeviceProductApi.Apis.saveTslConf,
-    tslConf,
+export function registerProduct(productId: string) {
+  return requestClient.post(
+    parseTemplate(IotDeviceProductApi.Apis.register, {
+      productId,
+    }),
+  );
+}
+
+/**
+ * 注销/禁用产品
+ * @param productId 产品id
+ */
+export function unregisterProduct(productId: string) {
+  return requestClient.post(
+    parseTemplate(IotDeviceProductApi.Apis.unregister, {
+      productId,
+    }),
   );
 }
 

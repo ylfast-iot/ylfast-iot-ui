@@ -5,7 +5,7 @@ import type { TableCardSingleMode, YlVxeTableCardProps } from './types';
 
 import type { ExtendedVxeGridApi } from '#/adapter/vxe-table';
 
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, useAttrs, useSlots, watch } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
 
@@ -14,18 +14,26 @@ import { Empty, Spin, Tooltip } from 'ant-design-vue';
 
 import { $t } from '#/locales';
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const props = defineProps<{
   gridApi: ExtendedVxeGridApi;
   gridComponent: Component;
   mode: 'card' | 'table';
   propsConfig: YlVxeTableCardProps;
 }>();
-
 const emit = defineEmits(['update:mode', 'resize']);
-
+const attrs = useAttrs();
 // 图标
 const AppstoreOutlined = createIconifyIcon('ant-design:appstore-outlined');
 const BarsOutlined = createIconifyIcon('ant-design:bars-outlined');
+
+const slots = useSlots();
+const filteredSlotNames = computed(() => {
+  return Object.keys(slots).filter((key) => key !== 'toolbar-tools');
+});
 
 // 本地卡片数据状态 (独立于表格 DOM，但来源于同一数据流)
 const cardData = ref<any[]>([]);
@@ -173,9 +181,13 @@ defineExpose({
       :class="{ 'hide-table-body': mode === 'card' }"
       class="relative flex-1 overflow-hidden"
     >
-      <component :is="gridComponent" @vue:mounted="handleGridReady">
+      <component
+        :is="gridComponent"
+        v-bind="attrs"
+        @vue:mounted="handleGridReady"
+      >
         <!-- 透传 Slot -->
-        <template v-for="(_, name) in $slots" #[name]="data">
+        <template v-for="name in filteredSlotNames" :key="name" #[name]="data">
           <slot :name="name" v-bind="data"></slot>
         </template>
 
@@ -224,7 +236,7 @@ defineExpose({
     <div
       v-if="mode === 'card'"
       :style="{ top: `${topOffset}px`, bottom: `${bottomOffset}px` }"
-      class="card-layer absolute inset-x-0 z-10 flex flex-col bg-white dark:bg-[#151515]"
+      class="card-layer absolute inset-x-0 z-10 flex flex-col bg-white dark:bg-[#030712]"
     >
       <!-- Loading -->
       <div v-if="loading" class="flex flex-1 items-center justify-center">

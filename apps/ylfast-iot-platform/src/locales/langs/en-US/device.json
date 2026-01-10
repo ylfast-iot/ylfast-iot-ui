@@ -6,7 +6,7 @@
     "status": "Status",
     "product": "Product",
     "type": "Device Type",
-    "createTime": "Register Time",
+    "createTime": "Create Time",
     "description": "Description",
     "cover": "Cover Image",
     "enable": "Enable",
@@ -41,19 +41,85 @@
       "monitor": "Monitor",
       "thingModel": "Thing Model",
       "history": "History Data",
+      "logs": "Device Logs",
       "attrMapping": "Attr Mapping",
       "functions": "Functions",
       "dataMapping": "Data Mapping",
       "subDevice": "Sub Devices",
       "passthrough": "Passthrough"
     },
+    "monitor": {
+      "realTimeProperty": "Real-time Property",
+      "propertyMonitor": "Property Monitor",
+      "eventMonitor": "Event Monitor",
+      "searchProperty": "Search Property",
+      "historyTrend": "History Trend",
+      "readProperty": "Read Property",
+      "writeProperty": "Write Property",
+      "updateTime": "Update Time",
+      "neverUpdated": "Never Updated",
+      "noProperty": "No Properties",
+      "inputValue": "Please input value for",
+      "eventInfo": "Info Event",
+      "eventAlarm": "Alarm Event",
+      "clearLog": "Clear Logs"
+    },
+    "history": {
+      "noStrategy": "No storage strategy exists. Please configure a storage strategy to view history data.",
+      "currentStrategy": "Current Storage Strategy:",
+      "columnModeDesc": "Column Mode: Supports parallel multi-property queries",
+      "rowModeDesc": "Row Mode: Single-property trajectory query",
+      "queryType": "Query Type",
+      "deviceProperty": "Device Property",
+      "deviceEvent": "Device Event",
+      "selectProperty": "Select Property",
+      "selectQueryItem": "Select Query Item",
+      "selectEventPlaceholder": "Select an event",
+      "searchPlaceholder": "Search Name or ID...",
+      "selectAll": "Select All / Inverse",
+      "selectedCount": "Selected {count} items",
+      "noMatch": "No matching items found",
+      "timeRange": "Time Range",
+      "startQuery": "Start Query",
+      "reportTime": "Report Time",
+      "propertyName": "Property Name",
+      "propertyValue": "Property Value",
+      "formatValue": "Formatted Value",
+      "dataValue": "Data Value",
+      "emptyHistory": "Cannot fetch history data: No active storage strategy detected"
+    },
+    "logs": {
+      "time": "Log Time",
+      "type": "Type",
+      "content": "Content",
+      "detail": "Log Detail"
+    },
+    "attrMapping": {
+      "title": "Attribute Mapping List",
+      "propertyId": "Property ID",
+      "propertyName": "Property Name",
+      "mappingId": "Mapping ID",
+      "mappingIdPlaceholder": "Enter Mapping ID",
+      "helpTitle": "Function Description",
+      "helpDesc": "When the property identifier reported by the device differs from the standard property identifier defined in the platform Thing Model, use Attribute Mapping to associate them.",
+      "helpPlatformId": "Standard Property ID defined in the platform Thing Model.",
+      "helpMappingId": "Actual Property ID or register address used in device reports.",
+      "example": "Example",
+      "examplePlatform": "Platform Property",
+      "exampleDevice": "Device Report",
+      "exampleConfig": "Config Mapping"
+    },
     "action": {
       "activate": "Activate",
       "refresh": "Refresh",
       "add": "Add Device",
+      "enable": "Enable Device",
+      "disable": "Disable Device",
       "batch": "Batch Operations",
       "batchAdd": "Batch Add",
       "batchDelete": "Batch Delete",
+      "addAndBind": "Add and Bind",
+      "bindExisting": "Bind Existing",
       "confirmDisable": "Are you sure you want to disable this device?",
       "confirmEnable": "Are you sure you want to enable this device?"
     },
@@ -61,7 +127,8 @@
       "coverUrl": "Please enter image URL"
     },
     "tips": {
-      "batchAddNotImplemented": "Batch add feature pending implementation"
+      "batchAddNotImplemented": "Batch add feature pending implementation",
+      "disableBeforeDelete": "Please disable the device before deleting"
     },
     "function": {
       "searchPlaceholder": "Search Function Name/ID",
@@ -80,15 +147,42 @@
       "required": "is required"
     }
   },
+  "product": {
+    "selectorTitle": "Select Product",
+    "productType": "Product Type",
+    "productName": "Product Name",
+    "tips": {
+      "disableBeforeDelete": "Please disable the product before deleting"
+    },
+    "action": {
+      "confirmEnable": "Are you sure you want to enable this product?",
+      "confirmDisable": "Are you sure you want to disable this product?"
+    }
+  },
   "state": {
     "online": "Online",
     "offline": "Offline",
     "unActive": "Inactive",
     "other": "Other"
   },
+  "storeStrategyMode": {
+    "COLUMN": "Column Mode",
+    "ROW": "Row Mode",
+    "NONE": "None"
+  },
   "types": {
     "DIRECT": "Direct",
     "GATEWAY": "Gateway",
     "GATEWAY_CHILD": "Sub-Device"
+  },
+  "selector": {
+    "title": "Select Device",
+    "placeholder": "Please select a device"
+  },
+  "productType": {
+    "title": "Product Type",
+    "name": "Category Name",
+    "key": "Category ID",
+    "description": "Description"
   }
 }

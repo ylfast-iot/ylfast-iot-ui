@@ -40,6 +40,12 @@ export const fetchProductOptions = () =>
 export const searchFormSchemas: YlDcFormSchema[] = [
   {
     component: 'Input',
+    field: 'id',
+    label: $t('device.instance.id'),
+    termTypes: ['like', 'eq'],
+  },
+  {
+    component: 'Input',
     field: 'sn',
     label: $t('device.instance.sn'),
     termTypes: ['like', 'eq'],
@@ -66,9 +72,15 @@ export const searchFormSchemas: YlDcFormSchema[] = [
 export const columns: VxeGridProps['columns'] = [
   { type: 'checkbox', width: 50 },
   {
+    field: 'id',
+    minWidth: 150,
+    title: $t('device.instance.id'),
+  },
+  {
     field: 'sn',
     minWidth: 150,
     title: $t('device.instance.sn'),
+    formatter: ({ row }) => row.sn || row.id,
   },
   {
     field: 'deviceName',
@@ -87,7 +99,7 @@ export const columns: VxeGridProps['columns'] = [
     title: $t('device.instance.status'),
   },
   {
-    field: 'registerTime',
+    field: 'createTime',
     formatter: 'formatDateTime',
     minWidth: 160,
     title: $t('device.instance.createTime'),
@@ -160,6 +172,15 @@ export const modalFormSchemas: VbenFormSchema[] = [
     label: 'Product Name',
     dependencies: {
       triggerFields: ['productName'],
+      show: () => false,
+    },
+  },
+  {
+    component: 'Input',
+    fieldName: 'parentDeviceId',
+    label: '',
+    dependencies: {
+      triggerFields: ['parentDeviceId'],
       show: () => false,
     },
   },

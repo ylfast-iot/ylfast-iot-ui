@@ -82,6 +82,11 @@ export interface DeviceMetadata extends Metadata {
       // 分组名称
       name: string;
     }[];
+    // 属性映射
+    propertyMapping: {
+      // key为平台属性id value为原始id
+      [key: string]: string;
+    };
   };
 }
 

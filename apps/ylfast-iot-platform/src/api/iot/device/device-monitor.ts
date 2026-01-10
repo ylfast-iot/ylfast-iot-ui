@@ -287,6 +287,7 @@ export function subscribeDeviceOperationMessage(
     `device-operation${subscription.deviceId}`,
     SubscribeType.DEVICE_OPERATION_MESSAGE_SUB.formatTopicValue(
       subscription.deviceId,
+      subscription.productId,
     ),
     {},
     {

@@ -288,7 +288,10 @@ export function buildBasicCrudApis<E = any, K = number | string>(
   baseUrl: string,
 ): BasicCrudApis<E, K> {
   return {
-    deleteBatch(ids: K[]) {
+    deleteBatch(ids: K | K[]) {
+      if (!Array.isArray(ids)) {
+        ids = [ids];
+      }
       return requestClient.post(
         `${baseUrl}/${BasicApiConstants.delete.POST_DELETE_BATCH}`,
         {

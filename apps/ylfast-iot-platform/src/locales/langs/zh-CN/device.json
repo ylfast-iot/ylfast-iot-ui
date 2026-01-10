@@ -6,7 +6,7 @@
     "status": "状态",
     "product": "所属产品",
     "type": "设备类型",
-    "createTime": "注册时间",
+    "createTime": "创建时间",
     "description": "说明",
     "cover": "封面图",
     "enable": "启用",
@@ -41,19 +41,83 @@
       "monitor": "设备监控",
       "thingModel": "物模型",
       "history": "历史数据",
+      "logs": "设备日志",
       "attrMapping": "属性映射",
       "functions": "设备功能",
       "dataMapping": "数采映射",
       "subDevice": "子设备",
       "passthrough": "透传解析"
     },
+    "monitor": {
+      "realTimeProperty": "实时属性",
+      "propertyMonitor": "属性监控",
+      "eventMonitor": "事件监控",
+      "searchProperty": "搜索属性",
+      "historyTrend": "历史趋势",
+      "readProperty": "读属性",
+      "writeProperty": "写属性",
+      "updateTime": "更新时间",
+      "neverUpdated": "从未更新",
+      "noProperty": "暂无属性",
+      "inputValue": "请输入",
+      "eventInfo": "信息事件",
+      "eventAlarm": "告警事件",
+      "clearLog": "清空日志"
+    },
+    "history": {
+      "noStrategy": "当前不存在存储策略，请配置存储策略后查看历史数据",
+      "currentStrategy": "当前存储策略模式:",
+      "columnModeDesc": "列模式：支持多属性并行查询",
+      "rowModeDesc": "行模式：单属性轨迹查询",
+      "queryType": "查询类型",
+      "deviceProperty": "设备属性",
+      "deviceEvent": "设备事件",
+      "selectProperty": "选择属性",
+      "selectQueryItem": "选择查询项",
+      "selectEventPlaceholder": "请选择事件",
+      "searchPlaceholder": "搜索名称或 ID...",
+      "selectAll": "全选 / 反选",
+      "selectedCount": "已选 {count} 项",
+      "noMatch": "没有找到匹配的项",
+      "timeRange": "时间范围",
+      "startQuery": "开始查询",
+      "reportTime": "上报时间",
+      "propertyName": "属性名称",
+      "propertyValue": "属性值",
+      "formatValue": "格式化值",
+      "dataValue": "数据值",
+      "emptyHistory": "无法获取历史数据：未检测到生效的存储策略"
+    },
+    "logs": {
+      "time": "时间",
+      "type": "类型",
+      "content": "日志内容",
+      "detail": "日志详情"
+    },
+    "attrMapping": {
+      "title": "属性映射列表",
+      "propertyId": "属性标识",
+      "propertyName": "属性名称",
+      "mappingId": "映射标识",
+      "mappingIdPlaceholder": "请输入映射标识",
+      "helpTitle": "功能说明",
+      "helpDesc": "当设备上报的属性标识符与平台物模型定义的属性标识符不一致时，可以使用属性映射功能进行关联。",
+      "helpPlatformId": "平台物模型中定义的标准属性ID。",
+      "helpMappingId": "设备实际上传报文中使用的属性ID或寄存器地址。",
+      "example": "示例",
+      "examplePlatform": "平台属性",
+      "exampleDevice": "设备上报",
+      "exampleConfig": "配置映射"
+    },
     "action": {
-      "activate": "激活",
-      "refresh": "刷新",
       "add": "新增设备",
+      "enable": "启用设备",
+      "disable": "禁用设备",
       "batch": "批量操作",
       "batchAdd": "批量新增",
       "batchDelete": "批量删除",
+      "addAndBind": "新增并绑定",
+      "bindExisting": "绑定已有",
       "confirmDisable": "确定要禁用此设备吗？",
       "confirmEnable": "确定要启用此设备吗？"
     },
@@ -61,7 +125,8 @@
       "coverUrl": "请输入图片URL"
     },
     "tips": {
-      "batchAddNotImplemented": "批量新增功能待实现"
+      "batchAddNotImplemented": "批量新增功能待实现",
+      "disableBeforeDelete": "请先禁用设备后再删除"
     },
     "function": {
       "searchPlaceholder": "搜索功能名称/ID",
@@ -80,15 +145,42 @@
       "required": "是必填项"
     }
   },
+  "product": {
+    "selectorTitle": "选择产品",
+    "productType": "产品类型",
+    "productName": "产品名称",
+    "tips": {
+      "disableBeforeDelete": "请先禁用产品后再删除"
+    },
+    "action": {
+      "confirmEnable": "确定要启用此产品吗？",
+      "confirmDisable": "确定要禁用此产品吗？"
+    }
+  },
   "state": {
     "online": "在线",
     "offline": "离线",
     "unActive": "未激活",
     "other": "其他"
   },
+  "storeStrategyMode": {
+    "COLUMN": "列模式",
+    "ROW": "行模式",
+    "NONE": "无"
+  },
   "types": {
     "DIRECT": "直连设备",
     "GATEWAY": "网关设备",
     "GATEWAY_CHILD": "网关子设备"
+  },
+  "selector": {
+    "title": "选择设备",
+    "placeholder": "请选择设备"
+  },
+  "productType": {
+    "title": "产品分类",
+    "name": "分类名称",
+    "key": "分类标识",
+    "description": "描述"
   }
 }

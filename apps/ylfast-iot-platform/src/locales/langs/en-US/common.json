@@ -4,9 +4,11 @@
     "add": "Add",
     "edit": "Edit",
     "delete": "Delete",
+    "view": "View",
     "save": "Save",
     "reset": "Reset",
     "search": "Search",
+    "refresh": "Refresh",
     "more": "More",
     "confirm": "Confirm",
     "cancel": "Cancel",
@@ -31,6 +33,8 @@
   "success": "Success",
   "createSuccess": "Create Success",
   "updateSuccess": "Update Success",
+  "enableSuccess": "Enabled successfully",
+  "disableSuccess": "Disabled successfully",
   "confirmDelete": "Confirm Delete",
   "confirmUnbind": "Confirm unbind?",
   "confirmDeleteMsg": "Are you sure you want to delete this record? This action cannot be undone.",
@@ -53,6 +57,7 @@
   "text": "Text",
   "error": "Error",
   "disabled": "Disabled",
+  "unknown": "Unknown",
   "tips": {
     "selectData": "Please select data"
   }

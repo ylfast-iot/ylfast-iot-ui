@@ -4,7 +4,7 @@ import type { Subscription } from 'rxjs';
 import type { IotDeviceInstanceApi } from '#/api/iot/device/instance';
 
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router'; // Correct import
+import { useRoute, useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
@@ -18,18 +18,20 @@ import {
   Spin,
   TabPane,
   Tabs,
+  Tooltip,
 } from 'ant-design-vue';
 
 import { subscribeDeviceStateMonitor } from '#/api/iot/device/device-monitor';
 import {
-  changeEnableStatus,
   getDeviceDetail,
   register as registerDevice,
+  unregister as unregisterDevice,
 } from '#/api/iot/device/instance';
 import { getProtocolDetail } from '#/api/iot/protocol';
 
 import AttrMapping from './components/AttrMapping/index.vue';
 import DataMapping from './components/DataMapping/index.vue';
+import DeviceLogs from './components/DeviceLogs/index.vue';
 import Functions from './components/Functions/index.vue';
 import History from './components/History/index.vue';
 import Info from './components/Info/index.vue';
@@ -48,26 +50,31 @@ interface TabConfig {
 // Icons
 const RefreshIcon = createIconifyIcon('lucide:refresh-cw');
 const PowerIcon = createIconifyIcon('lucide:power');
-const CheckIcon = createIconifyIcon('lucide:check-circle');
 const BoxIcon = createIconifyIcon('lucide:box');
-const ZapIcon = createIconifyIcon('lucide:zap');
 const BackIcon = createIconifyIcon('lucide:chevron-left');
 
 const route = useRoute();
 const router = useRouter();
 const deviceId = route.query.id as string;
 
-const loading = ref(false); // Controls overlay loading
-const initialLoading = ref(true); // Controls skeleton
+const loading = ref(false);
+const initialLoading = ref(true);
 const device = ref<IotDeviceInstanceApi.DeviceDetail | null>(null);
 const activeTab = ref('info');
+
+// isActive: true if state value is NOT unActive.
+const isActive = computed(
+  () => device.value?.deviceState?.value !== 'unActive',
+);
 
 // 状态样式逻辑
 const statusStyle = computed(() => {
   if (!device.value) return {};
-  const isEnabled = device.value.enableStatus === 1;
 
-  if (!isEnabled) {
+  const stateValue = device.value.deviceState?.value;
+
+  // 如果状态是 unActive，则视为“禁用”
+  if (stateValue === 'unActive') {
     return {
       bg: 'bg-red-50 dark:bg-red-500/10',
       text: 'text-red-600 dark:text-red-400',
@@ -77,8 +84,8 @@ const statusStyle = computed(() => {
     };
   }
 
-  const state = device.value.deviceState;
-  switch (state) {
+  // 其他状态
+  switch (stateValue) {
     case 'offline': {
       return {
         bg: 'bg-gray-100 dark:bg-gray-800',
@@ -97,69 +104,65 @@ const statusStyle = computed(() => {
         label: $t('device.state.online'),
       };
     }
-    case 'unActive': {
-      return {
-        bg: 'bg-orange-50 dark:bg-orange-900/20',
-        text: 'text-orange-600 dark:text-orange-400',
-        border: 'border-orange-200 dark:border-orange-800',
-        dot: 'bg-orange-500',
-        label: $t('device.state.unActive'),
-      };
-    }
     default: {
       return {
         bg: 'bg-blue-50 dark:bg-blue-900/20',
         text: 'text-blue-600 dark:text-blue-400',
         border: 'border-blue-200 dark:border-blue-800',
         dot: 'bg-blue-500',
-        label: $t('device.state.other'),
+        label: device.value.deviceState?.text || $t('device.state.other'),
       };
     }
   }
 });
 
 const tabConfigs: TabConfig[] = [
-  { key: 'info', title: $t('device.instance.tab.info'), component: Info },
+  { component: Info, key: 'info', title: $t('device.instance.tab.info') },
   {
+    component: Monitor,
     key: 'monitor',
     title: $t('device.instance.tab.monitor'),
-    component: Monitor,
   },
   {
+    component: ThingModel,
     key: 'thingModel',
     title: $t('device.instance.tab.thingModel'),
-    component: ThingModel,
   },
   {
+    component: History,
     key: 'history',
     title: $t('device.instance.tab.history'),
-    component: History,
   },
   {
+    component: DeviceLogs,
+    key: 'logs',
+    title: $t('device.instance.tab.logs'),
+  },
+  {
+    component: AttrMapping,
     key: 'attrMapping',
     title: $t('device.instance.tab.attrMapping'),
-    component: AttrMapping,
   },
   {
+    component: Functions,
     key: 'functions',
     title: $t('device.instance.tab.functions'),
-    component: Functions,
   },
   {
+    component: DataMapping,
     key: 'dataMapping',
     title: $t('device.instance.tab.dataMapping'),
-    component: DataMapping,
   },
   {
-    key: 'subDevice',
-    title: $t('device.instance.tab.subDevice'),
     component: SubDevice,
-    show: (d) => d.deviceType === 'GATEWAY',
+    key: 'subDevice',
+    show: (d) => d.deviceType.value === 'GATEWAY',
+    title: $t('device.instance.tab.subDevice'),
   },
   {
+    component: Passthrough,
     key: 'passthrough',
     title: $t('device.instance.tab.passthrough'),
-    component: Passthrough,
   },
 ];
 
@@ -193,7 +196,10 @@ async function fetchInfo() {
     sub = subscribeDeviceStateMonitor(data.id, data.productId, (data) => {
       const stateMsg = data.payload.value;
       if (stateMsg.deviceId === device.value?.id) {
-        device.value.deviceState = stateMsg.type;
+        device.value.deviceState = {
+          text: $t(`device.instance.stateMessage.${stateMsg.type}`),
+          value: stateMsg.type,
+        };
         message.success($t(`device.instance.stateMessage.${stateMsg.type}`));
       }
     });
@@ -207,21 +213,14 @@ async function fetchInfo() {
 
 async function handleToggleStatus() {
   if (!device.value) return;
-  const newStatus = device.value.enableStatus === 1 ? 0 : 1;
   try {
-    await changeEnableStatus({ id: device.value.id, enableStatus: newStatus });
-    message.success($t('common.success'));
-    await fetchInfo();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function handleActivate() {
-  if (!device.value) return;
-  try {
-    await registerDevice(device.value.id);
-    message.success($t('common.success'));
+    if (isActive.value) {
+      await unregisterDevice(device.value.id);
+      message.success($t('common.disableSuccess'));
+    } else {
+      await registerDevice(device.value.id);
+      message.success($t('common.enableSuccess'));
+    }
     await fetchInfo();
   } catch (error) {
     console.error(error);
@@ -310,10 +309,7 @@ onUnmounted(() => {
                     >
                       <span class="relative flex h-1.5 w-1.5">
                         <span
-                          v-if="
-                            device.deviceState === 'online' &&
-                            device.enableStatus === 1
-                          "
+                          v-if="device.deviceState?.value === 'online'"
                           class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                           :class="statusStyle.dot"
                         ></span>
@@ -339,51 +335,45 @@ onUnmounted(() => {
 
               <!-- Right: Custom Actions -->
               <div class="flex items-center gap-1">
-                <!-- Activate Action -->
-                <div
-                  v-if="
-                    device.enableStatus === 1 &&
-                    device.deviceState === 'unActive'
-                  "
-                  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-orange-500 transition-all hover:bg-orange-50 hover:text-orange-600 dark:hover:bg-orange-500/20"
-                  @click="handleActivate"
-                  title="激活设备"
-                >
-                  <ZapIcon class="size-4" />
-                </div>
-
                 <!-- Refresh Action -->
-                <div
-                  v-if="device.enableStatus === 1"
-                  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
-                  @click="fetchInfo"
-                  title="刷新状态"
-                >
-                  <RefreshIcon class="size-4" />
-                </div>
+                <Tooltip :title="$t('common.refresh')">
+                  <div
+                    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-500 transition-all hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-500/20 dark:hover:text-blue-400"
+                    @click="fetchInfo"
+                  >
+                    <RefreshIcon class="size-4" />
+                  </div>
+                </Tooltip>
 
                 <!-- Enable/Disable Action -->
-                <Popconfirm
-                  v-if="device.enableStatus === 1"
-                  :title="$t('device.instance.action.confirmDisable')"
-                  @confirm="handleToggleStatus"
+                <Tooltip
+                  v-if="isActive"
+                  :title="$t('device.instance.action.disable')"
                 >
-                  <div
-                    class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-500/20 dark:hover:text-red-400"
-                    title="禁用设备"
+                  <Popconfirm
+                    :title="$t('device.instance.action.confirmDisable')"
+                    @confirm="handleToggleStatus"
                   >
-                    <PowerIcon class="size-4" />
-                  </div>
-                </Popconfirm>
+                    <div
+                      class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-red-500 transition-all hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/20"
+                    >
+                      <PowerIcon class="size-4" />
+                    </div>
+                  </Popconfirm>
+                </Tooltip>
 
-                <div
-                  v-else
-                  class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-gray-400 transition-all hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-500/20 dark:hover:text-green-400"
-                  @click="handleToggleStatus"
-                  title="启用设备"
-                >
-                  <CheckIcon class="size-4" />
-                </div>
+                <Tooltip v-else :title="$t('device.instance.action.enable')">
+                  <Popconfirm
+                    :title="$t('device.instance.action.confirmEnable')"
+                    @confirm="handleToggleStatus"
+                  >
+                    <div
+                      class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-green-500 transition-all hover:bg-green-50 dark:text-green-400 dark:hover:bg-green-500/20"
+                    >
+                      <PowerIcon class="size-4" />
+                    </div>
+                  </Popconfirm>
+                </Tooltip>
               </div>
             </div>
           </div>

@@ -4,20 +4,24 @@
     "add": "新增",
     "edit": "编辑",
     "delete": "删除",
+    "view": "查看",
     "save": "保存",
     "reset": "重置",
     "search": "查询",
+    "refresh": "刷新",
     "more": "更多",
     "confirm": "确认",
     "cancel": "取消",
     "confirmDelete": "确认删除吗？",
     "unbind": "解绑",
     "batchUnbind": "批量解绑",
-    "batchDelete": "批量删除"
+    "batchDelete": "批量删除",
+    "addSub": "新增子级"
   },
   "autoGenerate": "自动生成",
   "basicInfo": "基本信息",
   "name": "名称",
+  "parent": "上级分类",
   "username": "用户名",
   "status": "状态",
   "description": "说明",
@@ -31,6 +35,8 @@
   "success": "成功",
   "createSuccess": "创建成功",
   "updateSuccess": "更新成功",
+  "enableSuccess": "启用成功",
+  "disableSuccess": "禁用成功",
   "confirmDelete": "确认删除",
   "confirmUnbind": "确认解绑吗？",
   "confirmDeleteMsg": "确认删除该记录吗？此操作不可恢复。",
@@ -53,6 +59,7 @@
   "text": "文本",
   "error": "错误",
   "disabled": "已禁用",
+  "unknown": "未知",
   "tips": {
     "selectData": "请选择数据"
   }

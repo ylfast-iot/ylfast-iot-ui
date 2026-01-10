@@ -66,7 +66,7 @@ export const SubscribeType: SubscribeTypeEnum = {
     text: '数据采集订阅主题',
   },
   DEVICE_MESSAGE_SUB: {
-    value: '/device/message/{productId}/{deviceId}/properties/realtime',
+    value: '/device/{productId}/{deviceId}/message/property/report',
     formatTopicValue(deviceId: string, productId: string) {
       return replaceVariables(this.value, {
         deviceId,
@@ -77,10 +77,11 @@ export const SubscribeType: SubscribeTypeEnum = {
     text: '设备消息订阅主题(实时)',
   },
   DEVICE_OPERATION_MESSAGE_SUB: {
-    value: '/device/operation/message/{deviceId}',
-    formatTopicValue(deviceId: string) {
+    value: '/device/{product}/{deviceId}/online,offline',
+    formatTopicValue(deviceId: string, productId: string) {
       return replaceVariables(this.value, {
         deviceId,
+        productId,
       });
     },
     label: '设备操作消息',

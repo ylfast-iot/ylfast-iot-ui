@@ -106,7 +106,8 @@ pnpm build
 4.  **组件存放规范**:
     - **页面私有组件**: 仅在当前页面使用的组件，存放在 `src/views/[module]/[page]/components/`。
     - **模块共享组件**: 在同一业务模块下多个页面复用的组件，存放在 `src/views/[module]/components/`。
-    - **全局业务组件**: 跨模块复用的业务组件（如 `yl-desc`, `dc-form`），存放在 `src/components/`。
+    - **全局技术组件**: 跨模块复用的通用功能组件（如 `yl-desc`, `dc-form`, `yl-vxe-table-card`），存放在 `src/components/`。
+    - **全局业务组件**: 与 IoT 业务领域强相关的复用组件（如 `device-selector`, `product-picker`），存放在 `src/components/business/`。
     - **通用基础组件**: 纯 UI 组件或底层封装，若需跨 app 复用，放入 `packages/`。
 5.  **API**: 使用 `src/api` 定义接口，保持与后端路径一致。
 
@@ -456,6 +457,33 @@ const gridQuery = async (_params: any, ...args: any[]) => {
 };
 ```
 
+### 13.4 表格事件监听规范 (Grid Events)
+
+当需要监听 `vxe-table` 的原生事件（如复选框选中 `checkbox-change`、全选 `checkbox-all`、单元格点击 `cell-click` 等）时，**必须**使用 `gridEvents` 属性进行配置，而不是在模板中手动绑定 `@event`。
+
+**优势**:
+
+- 逻辑集中：所有表格相关逻辑都在 Hook 配置中。
+- 类型安全：便于管理和维护。
+
+**示例**:
+
+```typescript
+const [TableCard, gridApi] = useYlVxeTableCard({
+  // ... 其他配置
+  gridEvents: {
+    checkboxChange: handleCheckboxChange,
+    checkboxAll: handleCheckboxChange,
+    cellClick: handleCellClick,
+  },
+});
+
+function handleCheckboxChange() {
+  const records = gridApi.grid.getCheckboxRecords();
+  console.log('Selected:', records.length);
+}
+```
+
 ## 14. 枚举与配置管理规范 (Enum & Configuration Management)
 
 为了避免在组件中硬编码状态、颜色、标签等逻辑，提高代码的可维护性和一致性，**必须**将所有枚举类型的相关配置（包括 Value、Label、Color、Icon 等）统一封装在枚举对象中。
@@ -536,8 +564,294 @@ export const DEVICE_TYPE_ENUMS: { [key in DeviceType]: DeviceTypeEnumDict } = {
 </template>
 ```
 
+## 15. 业务组件 (Business Components) 开发规范
+
+存放在 `src/components/business/` 目录下的组件属于**领域驱动型业务组件**，它们与 IoT 业务对象（如设备、产品、协议、组织等）深度绑定。
+
+### 15.1 目录组织
+
+建议按业务领域进行二级分类，以保持结构清晰：
+
+```text
+src/components/business/
+├── device/                 # 设备领域
+│   ├── device-selector/    # 设备选择器
+│   └── ...
+├── product/                # 产品领域
+│   └── product-picker/
+├── organization/           # 组织领域
+└── user/                   # 用户领域
+```
+
+### 15.2 实现原则
+
+1.  **高内聚**: 业务逻辑（如 API 调用、数据转换）应尽可能收敛在组件内部。
+2.  **v-model 友好**: 必须支持 `v-model:value`，通常传递 ID 或 ID 数组。
+3.  **Label 回显**: 复杂选择器应支持通过 ID 自动拉取名称并进行回显，不应强制父组件传入 Label。
+4.  **复用技术组件**: 优先使用 `useYlVxeTableCard` (列表选择) 或 `yl-dc-form` (表单输入) 来实现业务逻辑。
+
+## 16. 业务选择器开发规范 (Business Selector Development Guidelines)
+
+本项目采用基于 **CommonSelector** 的分层架构来构建一致且高效的业务选择器（如设备选择器、产品选择器）。
+
+### 16.1 核心架构
+
+所有业务选择器都基于 `src/components/business/common-selector` 构建，遵循以下协议：
+
+1.  **协议层 (`types.ts`)**:
+    - 使用 `BaseSelectorProps<T>` 定义外部 API。
+    - 使用 `SelectorActionType<T>` 定义 Ref 暴露的强类型方法。
+2.  **通用层 (CommonSelector)**:
+    - 处理分页、搜索、列表/卡片切换、拦截器 (`beforeFetch`, `afterFetch`)。
+3.  **业务层 (Business Wrapper)**:
+    - 注入具体的 API、表格列配置、搜索表单配置。
+    - 实现特有的插槽（如 `*CardItem.vue`）。
+    - 使用 `useSelectorEcho` 实现自动化回显。
+
+### 16.2 开发步骤
+
+以创建一个 **`UserSelector`** 为例：
+
+#### Step 1: 定义配置 (`config.ts`)
+
+在 `src/components/business/user/user-selector/src/config.ts` 中定义：
+
+- `searchFormSchemas`: 搜索表单配置。
+- `tableColumns`: 表格列定义。
+- `queryUserList`: 列表查询函数 (对接 API，返回 `{ data, total }`)。
+- `queryUserListNoPaging`: 回显查询函数 (用于 ID 换 Object)。
+
+#### Step 2: 实现卡片 UI (`UserCardItem.vue`)
+
+如果支持卡片模式，创建一个纯展示组件 `UserCardItem.vue`，接收 `item` 和 `isSelected` 属性。
+
+#### Step 3: 创建业务组件
+
+在 `src/components/business/user/user-selector/src/components/` 下创建：
+
+- **`UserSelectorContent.vue`**: 封装 `CommonSelectorContent`，传入配置并实现 Slot。
+- **`UserSelectorModal.vue`**: 封装 `CommonModal` (纯弹窗模式)。
+- **`UserListSelector.vue`**: 封装 `CommonList` (纯列表模式)。
+- **`UserCardSelector.vue`**: 封装 `CommonCard` (纯卡片模式)。
+
+#### Step 4: 创建入口组件 (`index.vue`)
+
+在 `src/index.vue` 中创建一个集成组件。
+
+- 继承 `BaseSelectorProps<UserRecord>`。
+- 使用 `useSelectorEcho` 处理回显。
+- 绑定 `v-model:value`。
+
+#### Step 5: 创建 Hooks
+
+在 `src/hooks/` 下创建对应的 Hooks，返回 `SelectorHookResult<T>`：
+
+- `useUserSelector()`: **完整版**，包含触发器。
+- `useUserModalSelector()`: **纯弹窗版**，返回 Promise。
+- `useUserListSelector()`: **嵌入式列表**。
+- `useUserCardSelector()`: **嵌入式卡片**。
+- `useUserSelectorContent()`: **嵌入式内容区** (支持模式切换)。
+
+#### Step 6: 创建 Demo 案例
+
+在 `views/demos/business-components/components/` 下创建 `UserSelectorDemo.vue` 并注册到演示首页。
+
+### 16.3 目录结构示例
+
+```text
+src/components/business/user/user-selector/
+├── index.ts                # 统一导出入口
+├── src/
+│   ├── config.ts           # 业务配置文件 (定义 API、Columns、Schemas)
+│   ├── index.vue           # 完整业务组件 (集成 Trigger + Modal，处理 v-model)
+│   ├── components/         # 内部视图组件
+│   │   ├── UserCardItem.vue        # 单个卡片渲染组件 (纯展示)
+│   │   ├── UserSelectorContent.vue # 视图聚合组件 (包装 CommonSelectorContent)
+│   │   ├── UserSelectorModal.vue   # 纯弹窗组件 (包装 CommonModal)
+│   │   ├── UserListSelector.vue    # 纯列表组件 (包装 CommonList)
+│   │   └── UserCardSelector.vue    # 纯卡片组件 (包装 CommonCard)
+│   └── hooks/              # 强类型业务 Hooks
+│       ├── useUserSelector.ts         # 对应 index.vue (带 Trigger)
+│       ├── useUserModalSelector.ts    # 对应 UserSelectorModal.vue
+│       ├── useUserListSelector.ts     # 对应 UserListSelector.vue
+│       ├── useUserCardSelector.ts     # 对应 UserCardSelector.vue
+│       └── useUserSelectorContent.ts  # 对应 UserSelectorContent.vue
+```
+
+### 16.4 最佳实践
+
+1.  **极致复用**: 严禁从零编写分页、搜索、选中管理和弹窗逻辑。所有业务选择器**必须**基于 `CommonSelector` 套件构建，仅通过 `config.ts` 和插槽进行差异化。
+2.  **泛型约束**: 始终为 Props 和 Hooks 传入业务模型泛型 `<T>` (如 `DeviceInstance`)。这能确保 `afterFetch` 的参数、`getSelection` 的返回值以及回显列表具有完美的 IDE 自动补全和 TS 类型检查。
+3.  **自动化回显**: 统一使用 `useSelectorEcho`。该 Hook 内置了“差量加载”逻辑，能自动跳过已存在的详情，仅请求缺失详情的 ID，显著减少网络开销。
+4.  **业务拦截**:
+    - 利用 `beforeFetch` 注入隐含的业务过滤条件（例如：某场景下只需选择“已在线”且“未绑定”的设备）。
+    - 利用 `afterFetch` 对后端返回的原始数据进行二次加工（例如：合并两个字段显示）。
+5.  **UI 规范一致性**:
+    - **卡片**: 必须提取独立的 `*CardItem.vue` 以保证在 Modal 和嵌入模式下视觉一致。
+    - **高度**: 弹窗内视图必须配置 `min-h-[500px]` 以防止数据加载时的布局跳变。
+
+---
+
 输出的文档和代码都必须是中文的，代码注释尽量中文
 
 ---
 
 **总结**: 一个优秀的业务组件应该是 **结构清晰的、类型安全的、配置驱动的、并且具有极致用户体验的**。
+
+## 17. API 对接开发规范 (API Integration Guidelines)
+
+为确保前端 API 层的统一性和可维护性，新增 API 必须遵循以下规范。
+
+### 17.1 目录与命名
+
+1.  **文件位置**: `apps/ylfast-iot-platform/src/api/[module]/[sub-module]/[entity].ts`。
+    - 例: `apps/ylfast-iot-platform/src/api/iot/device/product-type.ts`。
+2.  **命名空间**: 使用 `namespace` 封装实体类型和 API 常量，命名格式为 `[Module][Entity]Api`。
+    - 例: `namespace IotProductTypeApi`。
+
+### 17.2 核心结构定义
+
+每个 API 文件应包含以下三个核心部分：
+
+1.  **实体定义**:
+    - 必须继承 `BasicModel`。
+    - 如果是树形结构，必须继承 `TreeSortSupport<T>` (T 为自身类型)。
+    - 字段注释必须清晰。
+2.  **常量定义**:
+    - `BASE_URL`: 定义基础接口路径。
+    - `Apis`: 定义具体接口路径字典。
+3.  **基础 CRUD**:
+    - 使用 `buildBasicCrudApis` 生成标准增删改查方法。
+
+### 17.3 请求方法规范
+
+使用 `#/api/request` 中的 `requestClient` 发起请求。
+
+- **GET 请求**: 参数必须包裹在 `params` 对象中。
+  ```typescript
+  requestClient.get<T>(url, { params: queryParam });
+  ```
+- **POST 请求**: 数据直接作为第二个参数（Body）。
+  ```typescript
+  requestClient.post<T>(url, bodyData);
+  ```
+
+### 17.4 标准模板代码
+
+以下是一个标准的 API 文件模板：
+
+````typescript
+import type { QueryParamEntity } from '#/adapter';
+import type { BasicModel, TreeSortSupport } from '#/api/basic';
+
+import { buildBasicCrudApis } from '#/api/basic';
+import { requestClient } from '#/api/request';
+
+/**
+ * @description 产品分类API
+ */
+export namespace IotProductTypeApi {
+  // 1. 定义 Base URL
+  const BASE_URL = '/iot/product/type';
+
+  // 2. 定义实体接口
+  export interface ProductType
+    extends BasicModel,
+      TreeSortSupport<ProductType> { // 泛型传入自身以支持 children 推断
+    key: string;
+    name: string;
+    description?: string;
+  }
+
+  // 3. 定义特殊接口路径
+  export const Apis = {
+    getAllTree: `${BASE_URL}/_tree`,
+  };
+
+  // 4. 生成基础 CRUD (add, update, delete, get, etc.)
+  export const basicCrudApis = buildBasicCrudApis<ProductType, string>(
+    BASE_URL,
+  );
+}
+
+// 5. 导出自定义 API 方法
+
+/**
+ * @description 获取全部分类(树结构) - GET 示例
+ */
+export function getAllProductTypeTree(query?: QueryParamEntity) {
+  return requestClient.get<IotProductTypeApi.ProductType[]>(
+    IotProductTypeApi.Apis.getAllTree,
+    { params: query }, // 注意 params 包裹
+  );
+}
+
+## 18. 标准页面开发规范 (Standard Page Development Guidelines)
+
+为了保持页面代码的一致性和可维护性，新增业务页面必须遵循以下规范。
+
+### 18.1 目录结构
+
+每个业务页面必须是一个独立的目录，包含以下文件：
+
+```text
+src/views/[module]/[entity]/
+├── index.vue           # 页面入口 (列表页)
+├── data.ts             # 配置数据 (表格列、搜索表单、弹窗表单)
+└── components/         # 页面私有组件
+    └── [Entity]Modal.vue # 新增/编辑弹窗 (可选)
+````
+
+### 18.2 核心技术选型
+
+1.  **表格组件**: 必须使用 `useYlVxeTableCard`。
+2.  **表单组件**: 必须使用 `yl-dc-form` (搜索栏) 和 `useVbenForm` (弹窗表单)。
+3.  **弹窗组件**: 必须使用 `useVbenModal` 或 `useVbenDrawer` (v5 版本)。
+4.  **国际化**:
+    - 严禁硬编码中文。
+    - 必须使用 `$t()` 函数。
+    - 配置数据 (`data.ts`) 必须导出**函数** (`getColumns`, `getSearchFormSchemas`) 以确保 i18n 动态加载。
+
+### 18.3 代码实现规范
+
+#### 1. 配置数据 (`data.ts`)
+
+- **导出函数**: 所有配置必须通过函数导出。
+- **字段命名**:
+  - `VbenFormSchema` (Modal表单): 使用 `fieldName` (v5 规范)。
+  - `YlDcFormSchema` (搜索表单): 使用 `field`。
+  - `VxeGridProps` (表格列): 使用 `field`。
+
+```typescript
+// Good
+export const getColumns = (): VxeGridProps['columns'] => [
+  { field: 'name', title: $t('common.name') },
+];
+
+export const getModalFormSchemas = (): VbenFormSchema[] => [
+  { fieldName: 'name', label: $t('common.name'), rules: 'required' },
+];
+```
+
+#### 2. 页面入口 (`index.vue`)
+
+- **API 调用**: 使用 `gridQuery` 函数对接 API。
+- **CRUD 操作**: 使用 `BasicCrudApis` 提供的标准方法 (`deleteById`, `postAdd`, `putUpdate`)。
+- **树形结构**: 如果是树形数据，配置 `treeConfig` 并根据数据量考虑开启 `virtualYConfig`。
+
+#### 3. 性能优化
+
+- **虚拟滚动**: 对于可能包含大量数据的树形表格，建议开启虚拟滚动并关闭默认全展开。
+
+```typescript
+// 虚拟滚动配置示例
+gridOptions: {
+  treeConfig: {
+    expandAll: false, // 关闭默认全展开
+    // ...
+  },
+  virtualYConfig: {
+    enabled: true, // 开启虚拟滚动
+  },
+}
+```
