@@ -1,0 +1,52 @@
+{
+  "name": "组件名称",
+  "type": "组件类型",
+  "description": "描述",
+  "address": "地址信息",
+  "state": "组件状态",
+  "shareCluster": "集群",
+  "shareClusterHelp": "共享配置：所有节点统一配置；独立配置：每个节点单独配置。",
+  "cluster": "共享配置",
+  "configuration": "配置信息",
+  "serverId": "服务器节点",
+  "client": "客户端",
+  "server": "服务端",
+  "action": {
+    "start": "启动",
+    "shutdown": "停止",
+    "confirmStart": "确定要启动该网络组件吗？",
+    "confirmShutdown": "确定要停止该网络组件吗？"
+  },
+  "validate": {
+    "idExists": "组件ID已存在"
+  },
+  "types": {
+    "TCP_SERVER": "TCP服务",
+    "UDP_SERVER": "UDP服务",
+    "MQTT_CLIENT": "MQTT客户端",
+    "MQTT_SERVER": "MQTT服务",
+    "HTTP_SERVER": "HTTP服务",
+    "WS_SERVER": "WebSocket服务"
+  },
+  "placeholder": {
+    "selectNode": "请选择服务器节点"
+  },
+  "config": {
+    "independent": "独立配置",
+    "independentDesc": "节点差异化配置，根据不同服务器节点设置特定参数。",
+    "cluster": "共享配置",
+    "sharedDesc": "全局统一配置，适用于集群节点配置一致的场景。"
+  },
+  "clusterConfig": {
+    "nodePrefix": "节点 #",
+    "assignNode": "指派服务器节点",
+    "removeNode": "移除节点",
+    "addNode": "添加节点配置",
+    "empty": "暂无集群配置",
+    "validateError": "请选择第 {nodes} 个节点的服务器"
+  },
+  "tips": {
+    "selectTypeFirst": "选择组件类型后将自动加载协议配置表单",
+    "stopFirst": "请先停止网络组件"
+  }
+}

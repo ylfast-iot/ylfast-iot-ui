@@ -1,0 +1,86 @@
+{
+  "name": "Certificate Management",
+  "configurations": "Configurations",
+  "modes": {
+    "server": "Server",
+    "client": "Client"
+  },
+  "formats": {
+    "PEM": "PEM",
+    "PEM_desc": "Base64 encoded text format",
+    "PFX": "PFX",
+    "PFX_desc": "Binary PKCS#12 format",
+    "JKS": "JKS",
+    "JKS_desc": "Java KeyStore format"
+  },
+  "types": {
+    "common": "International Standard (Common)",
+    "common_desc": "Common certificate protocol conforming to X.509 standard"
+  },
+  "authMethods": {
+    "single": "Single",
+    "binomial": "Binomial"
+  },
+  "fields": {
+    "name": "Name",
+    "mode": "Mode",
+    "format": "Format",
+    "standard": "Standard",
+    "type": "Type",
+    "authMethod": "Auth Method",
+    "authenticationMethod": "Authentication Method",
+    "description": "Description",
+    "description_short": "Description",
+    "key": "Private Key (Key)",
+    "cert": "Certificate (Cert)",
+    "trust": "Trust Certificate (Trust)",
+    "keystore": "Keystore",
+    "trustKeystore": "Trust Keystore",
+    "password": "Password",
+    "keystorePwd": "Keystore Password",
+    "trustKeystorePwd": "Truststore Password"
+  },
+  "tips": {
+    "uploadCert": "Click to upload certificate file",
+    "uploadKey": "Click to upload key file",
+    "uploadTrust": "Click to upload trust certificate file",
+    "uploadKeystore": "Click to upload keystore file",
+    "uploadTrustKeystore": "Click to upload trust keystore file",
+    "configured": "Configured"
+  },
+  "edit": {
+    "title": "Certificate Details",
+    "subtitle": "Please accurately fill in the certificate information and key configuration",
+    "doc": {
+      "overview": "Overview",
+      "overviewContent": "Certificates are the foundation of network security communication, used for identity verification (such as TLS/SSL) and data encryption. This module supports storing and managing digital certificates of various standards for network components (such as MQTT, HTTP, TCP) to enable encrypted transmission or mutual authentication.",
+      "model": "Configuration Model",
+      "serverTitle": "Server Certificate (Server Mode)",
+      "serverContent": "When running as a server (such as MQTT Broker), you need to configure the certificate and the corresponding private key. The private key is strictly confidential and used to decrypt client data.",
+      "clientTitle": "Client Certificate (Client Mode)",
+      "clientContent": "When connecting to external services as a client, you need to configure a trust certificate to verify the legitimacy of the remote service.",
+      "format": "Format Description",
+      "pemTitle": "PEM Format",
+      "pemContent": "Text format, starting with -----BEGIN... Supports direct pasting of content or uploading via button.",
+      "binaryTitle": "PFX / JKS Format",
+      "binaryContent": "Binary container format. After uploading the file, you must fill in the correct \"Keystore Password\" to properly load the key information within it.",
+      "trustTip": "Tip: If mutual authentication is enabled, please ensure that the \"Truststore\" or \"Trust Certificate\" is correctly configured, otherwise the connection will be interrupted due to verification failure.",
+      "checklist": {
+        "title": "Configuration Checklist",
+        "item1": "Confirm certificate file matches private key content (PEM only)",
+        "item2": "Is the Keystore/Truststore password filled in correctly?",
+        "item3": "Is the \"Truststore\" uploaded when mutual authentication is enabled?",
+        "item4": "Check if the certificate validity period has expired"
+      }
+    }
+  },
+  "placeholder": {
+    "keystoreBase64": "Please enter or paste Keystore Base64 content",
+    "keystorePwd": "Please enter Keystore password",
+    "trustKeystoreBase64": "Please enter or paste Truststore Base64 content",
+    "trustKeystorePwd": "Please enter Truststore password"
+  },
+  "selector": {
+    "title": "Select Certificate"
+  }
+}

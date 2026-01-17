@@ -1,0 +1,24 @@
+{
+  "id": "协议ID",
+  "name": "协议名称",
+  "type": "协议类型",
+  "description": "协议描述",
+  "configuration": "协议配置",
+  "scriptEditorComingSoon": "脚本编辑器 (即将推出)",
+  "supportedFormatsJar": "支持的格式: .jar (Java Archive)",
+  "uploadNoInfo": "上传成功，但未返回协议信息",
+  "absolutePath": "绝对路径",
+  "selectTypeFirst": "请先选择协议类型",
+  "jar": "JAR包",
+  "script": "脚本",
+  "local": "本地文件",
+  "location": "文件路径",
+  "validate": {
+    "jarExtension": "文件路径必须以 .jar 结尾"
+  },
+  "scriptEditorPlaceholder": "请输入脚本内容",
+  "helpDoc": "帮助文档",
+  "writeDoc": "协议文档编写",
+  "transports": "协议包作用范围",
+  "scriptType": "脚本类型"
+}

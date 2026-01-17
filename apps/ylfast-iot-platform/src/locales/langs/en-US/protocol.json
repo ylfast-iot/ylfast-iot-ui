@@ -1,0 +1,24 @@
+{
+  "id": "Protocol ID",
+  "name": "Protocol Name",
+  "type": "Protocol Type",
+  "description": "Description",
+  "configuration": "Configuration",
+  "scriptEditorComingSoon": "Script Editor (Coming Soon)",
+  "supportedFormatsJar": "Supported formats: .jar (Java Archive)",
+  "uploadNoInfo": "Upload successful but no protocol info returned",
+  "absolutePath": "Absolute Path",
+  "selectTypeFirst": "Please select Protocol Type first",
+  "jar": "JAR",
+  "script": "Script",
+  "local": "Local File",
+  "location": "File Location",
+  "validate": {
+    "jarExtension": "File path must end with .jar"
+  },
+  "scriptEditorPlaceholder": "Please enter script content",
+  "helpDoc": "Help Document",
+  "writeDoc": "Write Document",
+  "transports": "Transports Scope",
+  "scriptType": "Script Type"
+}

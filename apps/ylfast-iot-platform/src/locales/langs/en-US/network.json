@@ -1,0 +1,52 @@
+{
+  "name": "Component Name",
+  "type": "Component Type",
+  "description": "Description",
+  "address": "Address Info",
+  "state": "State",
+  "shareCluster": "Cluster",
+  "shareClusterHelp": "Shared Config: All nodes use the same config; Standalone: Each node has its own config.",
+  "cluster": "Cluster Config",
+  "configuration": "Configuration",
+  "serverId": "Server Node",
+  "client": "Client",
+  "server": "Server",
+  "action": {
+    "start": "Start",
+    "shutdown": "Shutdown",
+    "confirmStart": "Are you sure you want to start this network component?",
+    "confirmShutdown": "Are you sure you want to shut down this network component?"
+  },
+  "validate": {
+    "idExists": "Component ID already exists"
+  },
+  "types": {
+    "TCP_SERVER": "TCP Server",
+    "UDP_SERVER": "UDP Server",
+    "MQTT_CLIENT": "MQTT Client",
+    "MQTT_SERVER": "MQTT Server",
+    "HTTP_SERVER": "HTTP Server",
+    "WS_SERVER": "WebSocket Server"
+  },
+  "placeholder": {
+    "selectNode": "Please select server node"
+  },
+  "config": {
+    "independent": "Standalone",
+    "independentDesc": "Node-specific configuration, setting unique parameters for each server node.",
+    "cluster": "Shared Config",
+    "sharedDesc": "Unified global configuration, ideal for clusters where node settings are identical."
+  },
+  "clusterConfig": {
+    "nodePrefix": "Node #",
+    "assignNode": "Assign Server Node",
+    "removeNode": "Remove Node",
+    "addNode": "Add Node Config",
+    "empty": "No Cluster Config",
+    "validateError": "Please select server for node(s) {nodes}"
+  },
+  "tips": {
+    "selectTypeFirst": "Protocol configuration form will load automatically after selecting component type",
+    "stopFirst": "Please stop the network component first"
+  }
+}

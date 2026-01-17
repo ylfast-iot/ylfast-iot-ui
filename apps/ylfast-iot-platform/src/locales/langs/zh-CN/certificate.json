@@ -1,0 +1,86 @@
+{
+  "name": "证书管理",
+  "configurations": "证书配置",
+  "modes": {
+    "server": "服务端",
+    "client": "客户端"
+  },
+  "formats": {
+    "PEM": "PEM",
+    "PEM_desc": "Base64 编码的文本格式",
+    "PFX": "PFX",
+    "PFX_desc": "二进制 PKCS#12 格式",
+    "JKS": "JKS",
+    "JKS_desc": "Java KeyStore 格式"
+  },
+  "types": {
+    "common": "国际标准 (Common)",
+    "common_desc": "符合 X.509 标准的通用证书协议"
+  },
+  "authMethods": {
+    "single": "单向认证",
+    "binomial": "双向认证"
+  },
+  "fields": {
+    "name": "证书名称",
+    "mode": "证书类型",
+    "format": "证书格式",
+    "standard": "证书标准",
+    "type": "证书标准",
+    "authMethod": "认证方式",
+    "authenticationMethod": "认证方式",
+    "description": "证书说明",
+    "description_short": "说明",
+    "key": "私钥 / 信任库 (Key / Truststore)",
+    "cert": "证书内容 / 库 (Cert / Keystore)",
+    "trust": "信任证书 (Trust)",
+    "keystore": "证书库 (Keystore)",
+    "trustKeystore": "信任库",
+    "password": "密码",
+    "keystorePwd": "证书库密码",
+    "trustKeystorePwd": "信任库密码"
+  },
+  "tips": {
+    "uploadCert": "点击上传证书文件",
+    "uploadKey": "点击上传私钥文件",
+    "uploadTrust": "点击上传信任证书文件",
+    "uploadKeystore": "点击上传证书库文件",
+    "uploadTrustKeystore": "点击上传信任库文件",
+    "configured": "已配置"
+  },
+  "edit": {
+    "title": "证书详细信息",
+    "subtitle": "请准确填写证书的基本信息与密钥配置",
+    "doc": {
+      "overview": "概述",
+      "overviewContent": "证书是网络安全通信的基础，用于身份验证（如 TLS/SSL）及数据加密。本模块支持存储和管理多种标准的数字证书，可供网络组件（如 MQTT、HTTP、TCP）引用以开启加密传输或双向认证。",
+      "model": "配置模型",
+      "serverTitle": "服务端证书 (Server Mode)",
+      "serverContent": "作为服务端运行（如 MQTT Broker）时，需配置证书和对应的私钥。私钥严格保密，用于解密客户端数据。",
+      "clientTitle": "客户端证书 (Client Mode)",
+      "clientContent": "作为客户端连接外部服务时，需配置信任证书以校验远端服务的合法性。",
+      "format": "格式说明",
+      "pemTitle": "PEM 格式",
+      "pemContent": "文本格式，以 -----BEGIN... 开头。支持直接粘贴内容或通过按钮上传。",
+      "binaryTitle": "PFX / JKS 格式",
+      "binaryContent": "二进制容器格式。上传文件后必须填写正确的“证书库密码”方可正常加载其中的密钥信息。",
+      "trustTip": "提示：若开启双向认证，请确保“信任库”或“信任证书”已正确配置，否则连接将因校验失败而中断。",
+      "checklist": {
+        "title": "配置检查清单",
+        "item1": "确认证书文件与私钥内容匹配 (仅 PEM)",
+        "item2": "Keystore/Truststore 密码是否填写正确",
+        "item3": "双向认证时是否已上传“信任库”",
+        "item4": "检查证书有效期是否已过期"
+      }
+    }
+  },
+  "placeholder": {
+    "keystoreBase64": "请输入或粘贴证书库 Base64 内容",
+    "keystorePwd": "请输入证书库密码",
+    "trustKeystoreBase64": "请输入或粘贴信任库 Base64 内容",
+    "trustKeystorePwd": "请输入信任库密码"
+  },
+  "selector": {
+    "title": "选择证书"
+  }
+}
