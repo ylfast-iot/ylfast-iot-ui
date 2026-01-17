@@ -14,6 +14,7 @@ import { $t, setupI18n } from '#/locales';
 import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
+import { registerSelectors } from './components/business/selector-registry';
 import { router } from './router';
 
 async function bootstrap(namespace: string) {
@@ -22,6 +23,10 @@ async function bootstrap(namespace: string) {
 
   // 初始化表单组件
   await initSetupVbenForm();
+
+  // 注册业务选择器
+  // 注册业务选择器
+  await registerSelectors();
 
   // // 设置弹窗的默认配置
   // setDefaultModalProps({

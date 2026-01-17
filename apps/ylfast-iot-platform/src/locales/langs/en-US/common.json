@@ -1,6 +1,7 @@
 {
   "action": {
     "label": "Action",
+    "action": "Action",
     "add": "Add",
     "edit": "Edit",
     "delete": "Delete",
@@ -10,25 +11,32 @@
     "search": "Search",
     "refresh": "Refresh",
     "more": "More",
+    "upload": "Upload",
     "confirm": "Confirm",
     "cancel": "Cancel",
     "confirmDelete": "Are you sure you want to delete?",
+    "confirmEnable": "Are you sure you want to enable?",
+    "confirmDisable": "Are you sure you want to disable?",
     "unbind": "Unbind",
     "batchUnbind": "Batch Unbind",
-    "batchDelete": "Batch Delete"
+    "batchDelete": "Batch Delete",
+    "addSub": "Add Sub"
   },
   "autoGenerate": "Auto Generate",
   "basicInfo": "Basic Information",
   "name": "Name",
   "username": "Username",
+  "type": "Type",
   "status": "Status",
   "description": "Description",
+  "help": "Help",
   "createTime": "Create Time",
   "enable": "Enabled",
   "disable": "Disabled",
   "sort": "Sort",
   "deleteSuccess": "Delete Success",
   "saveSuccess": "Save Success",
+  "uploadSuccess": "Upload Success",
   "copySuccess": "Copied to clipboard",
   "success": "Success",
   "createSuccess": "Create Success",
@@ -41,9 +49,14 @@
   "comingSoon": "Coming Soon",
   "noData": "No Data",
   "noDescription": "No Description",
+  "selectFile": "Select File",
   "placeholder": {
     "input": "Please enter",
     "select": "Please select"
+  },
+  "validate": {
+    "required": "This field is required",
+    "exists": "Already exists"
   },
   "select": "Please Select",
   "pleaseSelect": "Please select data",
@@ -58,6 +71,8 @@
   "error": "Error",
   "disabled": "Disabled",
   "unknown": "Unknown",
+  "yes": "Yes",
+  "no": "No",
   "tips": {
     "selectData": "Please select data"
   }

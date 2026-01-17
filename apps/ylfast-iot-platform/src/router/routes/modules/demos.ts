@@ -112,6 +112,15 @@ const routes: RouteRecordRaw[] = [
       },
       {
         meta: {
+          title: 'Monaco Editor 演示',
+        },
+        name: 'MonacoEditorDemo',
+        path: '/demos/monaco-editor',
+        component: () =>
+          import('#/views/demos/components/monaco-editor/index.vue'),
+      },
+      {
+        meta: {
           title: '业务组件演示',
         },
         name: 'BusinessComponentsDemo',

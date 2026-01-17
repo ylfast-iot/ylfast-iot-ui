@@ -11,14 +11,15 @@ import {
   getDeviceStateInfo,
   getDeviceTypeInfo,
   queryDeviceList,
-  searchFormSchemas,
-  tableColumns,
+  useDeviceSelectorConfig,
 } from '../config';
 import DeviceCardItem from './DeviceCardItem.vue';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['change']);
+
+const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
 
 const contentRef = ref();
 

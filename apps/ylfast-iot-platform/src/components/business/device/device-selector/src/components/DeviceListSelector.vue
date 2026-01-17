@@ -11,13 +11,14 @@ import {
   getDeviceStateInfo,
   getDeviceTypeInfo,
   queryDeviceList,
-  searchFormSchemas,
-  tableColumns,
+  useDeviceSelectorConfig,
 } from '../config';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['selectionChange']);
+
+const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
 
 const listRef = ref();
 

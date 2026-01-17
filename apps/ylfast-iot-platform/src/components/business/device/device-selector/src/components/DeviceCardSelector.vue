@@ -5,12 +5,14 @@ import { ref } from 'vue';
 
 import { CommonCard } from '#/components/business/common-selector';
 
-import { queryDeviceList, searchFormSchemas } from '../config';
+import { queryDeviceList, useDeviceSelectorConfig } from '../config';
 import DeviceCardItem from './DeviceCardItem.vue';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['selectionChange']);
+
+const { searchFormSchemas } = useDeviceSelectorConfig();
 
 const cardRef = ref();
 

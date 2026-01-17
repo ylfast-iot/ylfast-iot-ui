@@ -1,6 +1,5 @@
 import type { QueryParamEntity, Recordable } from '#/adapter';
 import type { BasicModel } from '#/api/basic';
-import type { DeviceMessage } from '#/types/device';
 
 import { buildBasicCrudApis } from '#/api/basic';
 import { requestClient } from '#/api/request';
@@ -28,7 +27,10 @@ export namespace IotProtocolApi {
      * 描述
      */
     protocolDescription: string;
-
+    /**
+     * 状态
+     */
+    state: number;
     /**
      * 配置
      */
@@ -64,14 +66,31 @@ export namespace IotProtocolApi {
     transport: string;
   };
 
+  export interface ProtocolSupport {
+    description: string;
+    id: string;
+    name: string;
+  }
+
+  export interface ProtocolUploadResult {
+    fileUploadRes: any;
+    protocols: ProtocolSupport[];
+  }
+
   const BASE_URL = '/iot/protocol';
   export const Apis = {
     detail: `${BASE_URL}/{id}/detail`,
     LoaderProvidersApi: `${BASE_URL}/loader/providers`,
-    debugProtocolEncode: `${BASE_URL}/{deviceId}/encode`,
-    debugProtocolDecode: `${BASE_URL}/{deviceId}/decode`,
-    protocolDebuggerDetail: `${BASE_URL}/detail/{deviceId}`,
-    debugLogsReceive: `${BASE_URL}/debug/{deviceId}/logs`,
+    registeredList: `${BASE_URL}/registered/list`,
+    // 启用
+    register: `${BASE_URL}/{id}/_register`,
+    // 禁用
+    unregister: `${BASE_URL}/{id}/_unregister`,
+    // 检查id是否存在
+    exists: `${BASE_URL}/{id}/exists`,
+    // 协议默认物模型
+    defaultDeviceMetadata: `${BASE_URL}/{id}/{transport}/metadata`,
+    upload: `${BASE_URL}/upload`,
   };
 
   // 继承基础增删改查接口
@@ -84,6 +103,41 @@ export namespace IotProtocolApi {
 export const getProtocolSupportLoaderProviders = () =>
   requestClient.get<{ document: string; name: string; provider: string }[]>(
     IotProtocolApi.Apis.LoaderProvidersApi,
+  );
+
+/**
+ * @description: 发布协议
+ * @param id
+ */
+export const deployProtocol = (id: string) =>
+  requestClient.post<boolean>(
+    parseTemplate(IotProtocolApi.Apis.register, { id }),
+  );
+
+/**
+ * @description: 取消发布协议
+ * @param id
+ */
+export const unDeployProtocol = (id: string) =>
+  requestClient.post<boolean>(
+    parseTemplate(IotProtocolApi.Apis.unregister, { id }),
+  );
+
+/**
+ * @description: 检查协议ID是否存在
+ * @param id
+ */
+export const checkProtocolExists = (id: string) =>
+  requestClient.get<boolean>(parseTemplate(IotProtocolApi.Apis.exists, { id }));
+
+/**
+ * @description: 获取协议默认物模型
+ * @param id
+ * @param transport
+ */
+export const getProtocolDefaultMetadata = (id: string, transport: string) =>
+  requestClient.get<string>(
+    parseTemplate(IotProtocolApi.Apis.defaultDeviceMetadata, { id, transport }),
   );
 
 /**
@@ -110,75 +164,22 @@ export const getProtocolDetail = (id: string) =>
   );
 
 /**
- * @description:  调试协议编码
- * @param deviceId 设备id
- * @param deviceMessage 设备消息
- * @returns string 编码后的报文
+ * @description: 获取已经注册在内存中的协议
+ * @returns IotProtocolApi.ProtocolSupport[]
  */
-export const debugProtocolEncode = (
-  deviceId: string,
-  deviceMessage: DeviceMessage,
-) =>
-  requestClient.post<string>(
-    parseTemplate(IotProtocolApi.Apis.debugProtocolEncode, {
-      deviceId,
-    }),
-    deviceMessage,
+export const getRegisteredProtocols = () =>
+  requestClient.get<IotProtocolApi.ProtocolSupport[]>(
+    IotProtocolApi.Apis.registeredList,
   );
 
 /**
- * @description:  调试协议解码
- * @param deviceId 设备id
- * @param message 消息
- * @returns DeviceMessage
+ * @description: 上传协议
+ * @param file 协议文件
+ * @returns IotProtocolApi.ProtocolUploadResult
  */
-export const debugProtocolDecode = (deviceId: string, message: string) =>
-  requestClient.post<DeviceMessage>(
-    parseTemplate(IotProtocolApi.Apis.debugProtocolDecode, {
-      deviceId,
-    }),
-    message,
+export const uploadProtocol = (file: File) => {
+  return requestClient.upload<IotProtocolApi.ProtocolUploadResult>(
+    IotProtocolApi.Apis.upload,
+    { file },
   );
-
-/**
- * @description:  获取协议调试器详情
- * @param deviceId 设备id
- * @returns ProtocolDebuggerDetail
- */
-export const protocolDebuggerDetail = (deviceId: string) =>
-  requestClient.get<IotProtocolApi.ProtocolDebuggerDetail>(
-    parseTemplate(IotProtocolApi.Apis.protocolDebuggerDetail, {
-      deviceId,
-    }),
-  );
-
-/**
- * @description:  接收调试日志
- * @param deviceId 设备id
- * @param messageCallback 成功回调监听
- * @param errorCallback 异常回调监听
- * @returns  void
- */
-export const debugLogsReceive = (
-  deviceId: string,
-  messageCallback: (msg: string) => void,
-  errorCallback?: (event: Event) => void,
-) => {
-  return requestClient
-    .requestSSE(
-      parseTemplate(IotProtocolApi.Apis.debugLogsReceive, {
-        deviceId,
-      }),
-      null,
-      {
-        onMessage(data) {
-          messageCallback(data);
-        },
-        onEnd() {
-          // 处理完成
-          console.warn('处理完成');
-        },
-      },
-    )
-    .catch((error) => errorCallback && errorCallback(error));
 };

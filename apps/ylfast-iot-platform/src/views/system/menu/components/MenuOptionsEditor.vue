@@ -7,7 +7,7 @@ import { $t } from '@vben/locales';
 
 import { Button, Input, InputNumber, message, Select } from 'ant-design-vue';
 
-import YlMonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import YlMonacoEditor from '#/components/yl-monaco-editor';
 
 const props = withDefaults(defineProps<Props>(), {
   value: () => ({}),

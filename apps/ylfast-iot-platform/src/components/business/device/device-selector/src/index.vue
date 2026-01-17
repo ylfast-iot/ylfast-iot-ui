@@ -19,8 +19,7 @@ import {
   getDeviceTypeInfo,
   queryDeviceList,
   queryDeviceListNoPaging,
-  searchFormSchemas,
-  tableColumns,
+  useDeviceSelectorConfig,
 } from './config';
 
 const props = withDefaults(defineProps<BaseSelectorProps>(), {
@@ -35,6 +34,8 @@ const props = withDefaults(defineProps<BaseSelectorProps>(), {
 });
 
 const emit = defineEmits(['update:value', 'change', 'select']);
+
+const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
 
 const modalRef = ref();
 

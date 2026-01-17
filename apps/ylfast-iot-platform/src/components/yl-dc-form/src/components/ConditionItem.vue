@@ -12,7 +12,7 @@ import { globalShareState } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
 
 import { useVModel } from '@vueuse/core';
-import { Button, Input, Select, Tooltip } from 'ant-design-vue';
+import { Button, FormItemRest, Input, Select, Tooltip } from 'ant-design-vue';
 
 import { $t } from '#/locales';
 
@@ -177,49 +177,57 @@ watch(
   <div class="condition-row">
     <!-- Logic Operator -->
     <div v-if="!hideLogic" class="condition-item logic-select">
-      <Select
-        v-if="index > 0"
-        v-model:value="conditionVM.type"
-        class="responsive-select-sm"
-        :size="size"
-        :options="logicTypes"
-      />
-      <span v-else class="placeholder-block"></span>
+      <FormItemRest>
+        <Select
+          v-if="index > 0"
+          v-model:value="conditionVM.type"
+          class="responsive-select-sm"
+          :size="size"
+          :options="logicTypes"
+        />
+        <span v-else class="placeholder-block"></span>
+      </FormItemRest>
     </div>
 
     <!-- Column Select -->
     <div class="condition-item column-select">
-      <Select
-        v-model:value="conditionVM.column"
-        class="responsive-select-md"
-        :size="size"
-        :placeholder="$t('ylDcForm.placeholder.selectField')"
-        :options="schemas"
-        :field-names="{ label: 'label', value: 'field' }"
-      />
+      <FormItemRest>
+        <Select
+          v-model:value="conditionVM.column"
+          class="responsive-select-md"
+          :size="size"
+          :placeholder="$t('ylDcForm.placeholder.selectField')"
+          :options="schemas"
+          :field-names="{ label: 'label', value: 'field' }"
+        />
+      </FormItemRest>
     </div>
 
     <!-- Term Type Select -->
     <div class="condition-item term-select">
-      <Select
-        v-model:value="conditionVM.termType"
-        class="responsive-select-sm"
-        :size="size"
-        :options="availableTermTypes"
-      />
+      <FormItemRest>
+        <Select
+          v-model:value="conditionVM.termType"
+          class="responsive-select-sm"
+          :size="size"
+          :options="availableTermTypes"
+        />
+      </FormItemRest>
     </div>
 
     <!-- Value Input -->
     <div class="condition-item value-input">
       <!-- Dynamic Component -->
-      <component
-        :is="valueComponent"
-        v-bind="valueComponentProps"
-        :model-value="conditionVM.value"
-        :value="conditionVM.value"
-        @update:model-value="(val: any) => (conditionVM.value = val)"
-        @update:value="(val: any) => (conditionVM.value = val)"
-      />
+      <FormItemRest>
+        <component
+          :is="valueComponent"
+          v-bind="valueComponentProps"
+          :model-value="conditionVM.value"
+          :value="conditionVM.value"
+          @update:model-value="(val: any) => (conditionVM.value = val)"
+          @update:value="(val: any) => (conditionVM.value = val)"
+        />
+      </FormItemRest>
     </div>
 
     <!-- Actions -->

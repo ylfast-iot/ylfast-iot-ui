@@ -11,12 +11,13 @@ import {
   getDeviceStateInfo,
   getDeviceTypeInfo,
   queryDeviceList,
-  searchFormSchemas,
-  tableColumns,
+  useDeviceSelectorConfig,
 } from '../config';
 import DeviceCardItem from './DeviceCardItem.vue';
 
 const emit = defineEmits(['confirm']);
+
+const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
 
 const modalRef = ref();
 

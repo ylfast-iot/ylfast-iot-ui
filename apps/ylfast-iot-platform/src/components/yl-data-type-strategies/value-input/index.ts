@@ -6,12 +6,13 @@ import FileInput from './FileInput.vue';
 import GeoInput from './GeoInput.vue';
 import NumberInput from './NumberInput.vue';
 import ObjectInput from './ObjectInput.vue';
+import PasswordInput from './PasswordInput.vue';
 import { getFormItemComponent, registerFormItemComponent } from './registry';
 import StringInput from './StringInput.vue';
 
 // Register defaults
 registerFormItemComponent('STRING', StringInput);
-registerFormItemComponent('PASSWORD', StringInput);
+registerFormItemComponent('PASSWORD', PasswordInput);
 
 registerFormItemComponent('INTEGER', NumberInput);
 registerFormItemComponent('LONG', NumberInput);

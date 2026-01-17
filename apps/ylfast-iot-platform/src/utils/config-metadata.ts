@@ -3,23 +3,33 @@ import type { EnumItem, EnumTypeDef, Rule } from '#/types/data-type';
 
 import { $t } from '@vben/locales';
 
+import { getGlobalComponents } from '#/adapter/component/components';
+
 export function getSpan(prop: ConfigPropertyMetadata) {
   return prop.type.expands?.span || 24;
 }
 
 export function getRules(prop: ConfigPropertyMetadata): Rule[] {
-  const rules = prop.type.expands?.rules;
-  if (rules) return Array.isArray(rules) ? rules : [rules];
-  if (prop.type.expands?.required) {
-    return [
-      {
-        required: true,
-        message: `${$t('ylConfigMetadataForm.pleaseEnter')}${prop.name}`,
-        trigger: ['change', 'blur'],
-      },
-    ];
+  const result: Rule[] = [];
+  const expands = prop.type.expands;
+
+  // 1. 处理必填
+  if (expands?.required) {
+    result.push({
+      required: true,
+      message: `${$t('ylConfigMetadataForm.pleaseEnter')}${prop.name}`,
+      trigger: ['change', 'blur'],
+    });
   }
-  return [];
+
+  // 2. 处理自定义规则
+  const rules = expands?.rules;
+  if (rules) {
+    const rulesArray = Array.isArray(rules) ? rules : [rules];
+    result.push(...rulesArray);
+  }
+
+  return result;
 }
 
 export function isVisible(prop: ConfigPropertyMetadata) {
@@ -27,11 +37,54 @@ export function isVisible(prop: ConfigPropertyMetadata) {
 }
 
 export function isDisabled(prop: ConfigPropertyMetadata) {
-  return prop.type.expands?.disabled;
+  return (
+    prop.type.expands?.disabled === true ||
+    prop.type.expands?.componentProps?.disabled === true
+  );
 }
 
 export function getComponentProps(prop: ConfigPropertyMetadata) {
-  return prop.type.expands?.componentProps || {};
+  const expands = prop.type.expands || {};
+  const componentProps = { ...expands.componentProps };
+
+  // 这里的优先级是：如果 componentProps 已经定义了，则不覆盖
+  if (expands.placeholder && componentProps.placeholder === undefined) {
+    componentProps.placeholder = expands.placeholder;
+  }
+
+  if (expands.disabled !== undefined && componentProps.disabled === undefined) {
+    componentProps.disabled = expands.disabled;
+  }
+
+  if (
+    expands.maxLength !== undefined &&
+    componentProps.maxLength === undefined
+  ) {
+    componentProps.maxLength = expands.maxLength;
+  }
+
+  return componentProps;
+}
+
+const extensionComponents: Record<string, any> = {};
+
+export function getComponent(prop: ConfigPropertyMetadata) {
+  const components = getGlobalComponents();
+
+  return (
+    components[prop.type.expands?.component] ||
+    extensionComponents[prop.type.expands?.component] ||
+    prop.type.expands?.component ||
+    components.Input
+  );
+}
+
+export function getMaxLength(prop: ConfigPropertyMetadata) {
+  return prop.type.expands?.maxLength;
+}
+
+export function getExpand(key: string, prop: ConfigPropertyMetadata) {
+  return prop.type.expands?.[key];
 }
 
 export function getEnumOptions(prop: ConfigPropertyMetadata) {

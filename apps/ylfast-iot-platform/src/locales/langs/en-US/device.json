@@ -145,6 +145,9 @@
       "selectTip": "Select a function from the left sidebar",
       "invoked": "Command sent successfully",
       "required": "is required"
+    },
+    "selector": {
+      "title": "Select Device"
     }
   },
   "product": {

@@ -17,8 +17,7 @@ import ProductCardItem from './components/ProductCardItem.vue';
 import {
   queryProductList,
   queryProductListNoPaging,
-  searchFormSchemas,
-  tableColumns,
+  useProductSelectorConfig,
 } from './config';
 
 const props = withDefaults(defineProps<BaseSelectorProps>(), {
@@ -33,6 +32,8 @@ const props = withDefaults(defineProps<BaseSelectorProps>(), {
 });
 
 const emit = defineEmits(['update:value', 'change', 'select']);
+
+const { searchFormSchemas, tableColumns } = useProductSelectorConfig();
 
 const modalRef = ref();
 

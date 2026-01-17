@@ -32,7 +32,7 @@ import {
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition'; // Re-adding for dynamic component loading
 import ObjectDefinition from '#/components/yl-data-type-strategies/type-definition/ObjectDefinition.vue';
-import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import MonacoEditor from '#/components/yl-monaco-editor';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type'; // Re-adding for DataType options
 
 import { createBaseGridOptions, isInherited } from './helper';

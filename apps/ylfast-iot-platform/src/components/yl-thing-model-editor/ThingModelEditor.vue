@@ -12,7 +12,7 @@ import { $t } from '@vben/locales';
 import { useClipboard } from '@vueuse/core';
 import { message, TabPane, Tabs, Tooltip, Upload } from 'ant-design-vue';
 
-import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import MonacoEditor from '#/components/yl-monaco-editor';
 import { downloadByData } from '#/utils/file/download';
 
 import EventEditor from './src/EventEditor.vue';

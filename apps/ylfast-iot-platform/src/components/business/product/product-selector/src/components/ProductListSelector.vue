@@ -7,11 +7,13 @@ import { Tag } from 'ant-design-vue';
 
 import { CommonList } from '#/components/business/common-selector';
 
-import { queryProductList, searchFormSchemas, tableColumns } from '../config';
+import { queryProductList, useProductSelectorConfig } from '../config';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['selectionChange']);
+
+const { searchFormSchemas, tableColumns } = useProductSelectorConfig();
 
 const listRef = ref();
 

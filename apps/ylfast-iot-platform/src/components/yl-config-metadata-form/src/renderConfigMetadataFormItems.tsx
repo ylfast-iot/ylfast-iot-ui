@@ -7,7 +7,7 @@ import type {
 } from '#/types/config-metadata';
 import type { Recordable } from '#/types/data-type';
 
-import { defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
@@ -46,7 +46,11 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
     ? props.metadata
     : [props.metadata].filter(Boolean);
 
-  const formModel = useVModel(props, 'model');
+  const modelRef = useVModel(props, 'model');
+  const formModel = computed({
+    get: () => modelRef.value || {},
+    set: (val) => (modelRef.value = val),
+  });
 
   function getObjPropertyMetadata(
     prop: ConfigPropertyMetadata,

@@ -6,6 +6,7 @@ import FileDefinition from './FileDefinition.vue';
 import GeoDefinition from './GeoDefinition.vue';
 import NumberDefinition from './NumberDefinition.vue';
 import ObjectDefinition from './ObjectDefinition.vue';
+import PasswordDefinition from './PasswordDefinition.vue';
 import {
   getTypeDefinitionComponent,
   registerTypeDefinitionComponent,
@@ -29,6 +30,9 @@ registerTypeDefinitionComponent('DATE', DateDefinition);
 registerTypeDefinitionComponent('ENUM', EnumDefinition);
 
 registerTypeDefinitionComponent('OBJECT', ObjectDefinition);
+registerTypeDefinitionComponent('PASSWORD', PasswordDefinition);
+registerTypeDefinitionComponent('STRING', StringDefinition);
+
 registerTypeDefinitionComponent('ARRAY', ArrayDefinition);
 registerTypeDefinitionComponent('FILE', FileDefinition);
 registerTypeDefinitionComponent('GEO', GeoDefinition);

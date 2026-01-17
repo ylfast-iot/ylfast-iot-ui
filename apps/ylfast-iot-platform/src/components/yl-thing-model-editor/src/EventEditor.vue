@@ -33,7 +33,7 @@ import {
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition';
 // import ObjectDefinition from '#/components/yl-data-type-strategies/type-definition/ObjectDefinition.vue'; // No longer needed
-import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import MonacoEditor from '#/components/yl-monaco-editor';
 import { ALARM_LEVEL_ENUMS } from '#/enums/alarm-level';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 

@@ -4,7 +4,7 @@ import { defineComponent, h, ref, unref } from 'vue';
 
 import { CommonList } from '#/components/business/common-selector';
 
-import { queryDeviceList, searchFormSchemas, tableColumns } from '../config';
+import { queryDeviceList, useDeviceSelectorConfig } from '../config';
 
 export function useDeviceListSelector(props: CommonSelectorProps = {}) {
   const listRef = ref();
@@ -24,14 +24,15 @@ export function useDeviceListSelector(props: CommonSelectorProps = {}) {
   const ConnectedDeviceListSelector = defineComponent({
     name: 'ConnectedDeviceListSelector',
     setup() {
+      const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
       return () =>
         h(
           CommonList,
           {
             ref: listRef,
             queryApi: queryDeviceList,
-            searchFormSchemas,
-            tableColumns,
+            searchFormSchemas: unref(searchFormSchemas),
+            tableColumns: unref(tableColumns),
             idField: 'id',
             ...props,
           },

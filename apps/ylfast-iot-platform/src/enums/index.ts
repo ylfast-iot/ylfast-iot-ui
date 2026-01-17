@@ -3,6 +3,7 @@ import type { EnumDict } from '#/types/global';
 import { $t } from '@vben/locales';
 
 export type CommonState = 'ENABLE' | 'FORBIDDEN' | 'PAUSE';
+export type GeneralState = 'disabled' | 'enabled' | 'paused';
 export type CommonStateNumber = 0 | 1 | 2;
 
 export const COMMON_STATE: {

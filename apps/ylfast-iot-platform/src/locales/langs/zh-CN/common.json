@@ -1,6 +1,7 @@
 {
   "action": {
     "label": "操作",
+    "action": "操作",
     "add": "新增",
     "edit": "编辑",
     "delete": "删除",
@@ -10,9 +11,12 @@
     "search": "查询",
     "refresh": "刷新",
     "more": "更多",
+    "upload": "上传",
     "confirm": "确认",
     "cancel": "取消",
     "confirmDelete": "确认删除吗？",
+    "confirmEnable": "确认启用吗？",
+    "confirmDisable": "确认禁用吗？",
     "unbind": "解绑",
     "batchUnbind": "批量解绑",
     "batchDelete": "批量删除",
@@ -23,14 +27,17 @@
   "name": "名称",
   "parent": "上级分类",
   "username": "用户名",
+  "type": "类型",
   "status": "状态",
   "description": "说明",
+  "help": "帮助",
   "createTime": "创建时间",
   "enable": "启用",
   "disable": "禁用",
   "sort": "排序",
   "deleteSuccess": "删除成功",
   "saveSuccess": "保存成功",
+  "uploadSuccess": "上传成功",
   "copySuccess": "已复制到剪贴板",
   "success": "成功",
   "createSuccess": "创建成功",
@@ -43,9 +50,14 @@
   "comingSoon": "敬请期待",
   "noData": "暂无数据",
   "noDescription": "暂无描述",
+  "selectFile": "选择文件",
   "placeholder": {
     "input": "请输入",
     "select": "请选择"
+  },
+  "validate": {
+    "required": "此项必填",
+    "exists": "已存在"
   },
   "select": "请选择",
   "pleaseSelect": "请选择数据",
@@ -60,6 +72,8 @@
   "error": "错误",
   "disabled": "已禁用",
   "unknown": "未知",
+  "yes": "是",
+  "no": "否",
   "tips": {
     "selectData": "请选择数据"
   }

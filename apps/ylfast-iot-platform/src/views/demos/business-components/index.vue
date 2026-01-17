@@ -5,6 +5,7 @@ import { Page } from '@vben/common-ui';
 
 import { Empty, TabPane, Tabs } from 'ant-design-vue';
 
+import CertificateSelectorDemo from './components/CertificateSelectorDemo.vue';
 import DeviceSelectorDemo from './components/DeviceSelectorDemo.vue';
 import ProductSelectorDemo from './components/ProductSelectorDemo.vue';
 
@@ -25,7 +26,12 @@ const activeKey = ref('device');
           <ProductSelectorDemo />
         </TabPane>
 
-        <!-- Tab 3: User Selector (Coming Soon) -->
+        <!-- Tab 3: Certificate Selector -->
+        <TabPane key="certificate" tab="证书选择器 (CertificateSelector)">
+          <CertificateSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 4: User Selector (Coming Soon) -->
         <TabPane key="user" tab="用户选择器 (UserSelector)">
           <div
             class="flex h-[400px] w-full items-center justify-center rounded-lg border border-dashed bg-white"

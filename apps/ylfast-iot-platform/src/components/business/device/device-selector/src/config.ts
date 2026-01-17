@@ -3,54 +3,63 @@ import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { YlDcFormSchema } from '#/components/yl-dc-form';
 import type { DeviceType } from '#/enums/device';
 
+import { computed } from 'vue';
+
 import { $t } from '@vben/locales';
 
 import { IotDeviceInstanceApi as DeviceApi } from '#/api/iot/device/instance';
 import { DEVICE_TYPE_ENUMS } from '#/enums/device';
 
-export const searchFormSchemas: YlDcFormSchema[] = [
-  {
-    component: 'Input',
-    field: 'id',
-    label: $t('device.instance.id'),
-    termTypes: ['eq', 'like'],
-  },
-  {
-    component: 'Input',
-    field: 'deviceName',
-    label: $t('device.instance.name'),
-    termTypes: ['eq', 'like'],
-  },
-  {
-    component: 'Input',
-    field: 'sn',
-    label: $t('device.instance.sn'),
-    termTypes: ['eq', 'like'],
-  },
-];
+export function useDeviceSelectorConfig() {
+  const searchFormSchemas = computed<YlDcFormSchema[]>(() => [
+    {
+      component: 'Input',
+      field: 'id',
+      label: $t('device.instance.id'),
+      termTypes: ['eq', 'like'],
+    },
+    {
+      component: 'Input',
+      field: 'deviceName',
+      label: $t('device.instance.name'),
+      termTypes: ['eq', 'like'],
+    },
+    {
+      component: 'Input',
+      field: 'sn',
+      label: $t('device.instance.sn'),
+      termTypes: ['eq', 'like'],
+    },
+  ]);
 
-export const tableColumns: VxeGridProps['columns'] = [
-  { field: 'id', title: $t('device.instance.id'), width: 180 },
-  {
-    field: 'sn',
-    formatter: ({ row }) => row.sn || row.id,
-    title: $t('device.instance.sn'),
-    width: 180,
-  },
-  { field: 'deviceName', minWidth: 150, title: $t('device.instance.name') },
-  {
-    field: 'deviceType',
-    slots: { default: 'deviceType' },
-    title: $t('device.instance.type'),
-    width: 100,
-  },
-  {
-    field: 'deviceState',
-    slots: { default: 'deviceState' },
-    title: $t('device.instance.status'),
-    width: 100,
-  },
-];
+  const tableColumns = computed<VxeGridProps['columns']>(() => [
+    { field: 'id', title: $t('device.instance.id'), width: 180 },
+    {
+      field: 'sn',
+      formatter: ({ row }) => row.sn || row.id,
+      title: $t('device.instance.sn'),
+      width: 180,
+    },
+    { field: 'deviceName', minWidth: 150, title: $t('device.instance.name') },
+    {
+      field: 'deviceType',
+      slots: { default: 'deviceType' },
+      title: $t('device.instance.type'),
+      width: 100,
+    },
+    {
+      field: 'deviceState',
+      slots: { default: 'deviceState' },
+      title: $t('device.instance.status'),
+      width: 100,
+    },
+  ]);
+
+  return {
+    searchFormSchemas,
+    tableColumns,
+  };
+}
 
 export async function queryDeviceList(params: QueryParamEntity) {
   return await DeviceApi.basicCrudApis.postQuery({

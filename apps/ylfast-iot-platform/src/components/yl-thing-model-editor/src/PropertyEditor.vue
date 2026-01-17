@@ -23,7 +23,7 @@ import { Button, Input, message, Modal, Select, Tooltip } from 'ant-design-vue';
 
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import { getTypeDefinitionComponent } from '#/components/yl-data-type-strategies/type-definition';
-import MonacoEditor from '#/components/yl-monaco-editor/index.vue';
+import MonacoEditor from '#/components/yl-monaco-editor';
 import { DATA_TYPE_OPTIONS } from '#/enums/data-type';
 
 import GroupTabs from './components/GroupTabs.vue';

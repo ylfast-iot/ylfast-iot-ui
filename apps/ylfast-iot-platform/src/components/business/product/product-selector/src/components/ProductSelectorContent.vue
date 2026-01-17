@@ -7,12 +7,14 @@ import { Tag } from 'ant-design-vue';
 
 import { CommonSelectorContent } from '#/components/business/common-selector';
 
-import { queryProductList, searchFormSchemas, tableColumns } from '../config';
+import { queryProductList, useProductSelectorConfig } from '../config';
 import ProductCardItem from './ProductCardItem.vue';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['change']);
+
+const { searchFormSchemas, tableColumns } = useProductSelectorConfig();
 
 const contentRef = ref();
 

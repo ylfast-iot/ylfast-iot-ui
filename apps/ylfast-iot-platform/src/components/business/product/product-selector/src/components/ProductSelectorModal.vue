@@ -7,10 +7,12 @@ import { Tag } from 'ant-design-vue';
 
 import { CommonModal } from '#/components/business/common-selector';
 
-import { queryProductList, searchFormSchemas, tableColumns } from '../config';
+import { queryProductList, useProductSelectorConfig } from '../config';
 import ProductCardItem from './ProductCardItem.vue';
 
 const emit = defineEmits(['confirm']);
+
+const { searchFormSchemas, tableColumns } = useProductSelectorConfig();
 
 const modalRef = ref();
 

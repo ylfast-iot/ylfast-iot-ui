@@ -5,12 +5,14 @@ import { ref } from 'vue';
 
 import { CommonCard } from '#/components/business/common-selector';
 
-import { queryProductList, searchFormSchemas } from '../config';
+import { queryProductList, useProductSelectorConfig } from '../config';
 import ProductCardItem from './ProductCardItem.vue';
 
 const props = defineProps<CommonSelectorProps>();
 
 const emit = defineEmits(['selectionChange']);
+
+const { searchFormSchemas } = useProductSelectorConfig();
 
 const cardRef = ref();
 

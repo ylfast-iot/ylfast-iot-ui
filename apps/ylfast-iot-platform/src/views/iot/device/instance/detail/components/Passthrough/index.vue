@@ -4,43 +4,40 @@ import type { IotDeviceInstanceApi } from '#/api/iot/device/instance';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { Button, Empty } from 'ant-design-vue';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 
-import { debugLogsReceive } from '#/api/iot/protocol';
-
-const props = defineProps<{
+defineProps<{
   device: IotDeviceInstanceApi.DeviceDetail;
 }>();
 
 const logs = ref<{ content: string; time: string; type: string }[]>([]);
 const isRunning = ref(false);
 
-function handleMessage(msg: string) {
-  if (!isRunning.value) return;
-
-  try {
-    const data = JSON.parse(msg);
-    logs.value.unshift({
-      content: typeof data === 'object' ? JSON.stringify(data, null, 2) : data,
-      time: dayjs().format('HH:mm:ss.SSS'),
-      type: data.messageType || 'DEBUG',
-    });
-  } catch {
-    logs.value.unshift({
-      content: msg,
-      time: dayjs().format('HH:mm:ss.SSS'),
-      type: 'RAW',
-    });
-  }
-
-  if (logs.value.length > 200) {
-    logs.value.pop();
-  }
-}
+// function handleMessage(msg: string) {
+//   if (!isRunning.value) return;
+//
+//   try {
+//     const data = JSON.parse(msg);
+//     logs.value.unshift({
+//       content: typeof data === 'object' ? JSON.stringify(data, null, 2) : data,
+//       time: dayjs().format('HH:mm:ss.SSS'),
+//       type: data.messageType || 'DEBUG',
+//     });
+//   } catch {
+//     logs.value.unshift({
+//       content: msg,
+//       time: dayjs().format('HH:mm:ss.SSS'),
+//       type: 'RAW',
+//     });
+//   }
+//
+//   if (logs.value.length > 200) {
+//     logs.value.pop();
+//   }
+// }
 
 function start() {
   isRunning.value = true;
-  debugLogsReceive(props.device.id, handleMessage);
 }
 
 function stop() {
