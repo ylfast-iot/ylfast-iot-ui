@@ -1,5 +1,6 @@
 {
   "name": "Component Name",
+  "selectTitle": "Select Network Component",
   "type": "Component Type",
   "description": "Description",
   "address": "Address Info",

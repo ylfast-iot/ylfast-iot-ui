@@ -28,6 +28,7 @@
   "parent": "上级分类",
   "username": "用户名",
   "type": "类型",
+  "transport": "传输协议",
   "status": "状态",
   "description": "说明",
   "help": "帮助",

@@ -4,67 +4,168 @@ import type { IotDeviceProductApi } from '#/api/iot/device/product';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import { Tag } from 'ant-design-vue';
+import { getDeviceTypeInfo, getProductStateInfo } from '../config';
 
 defineProps<{
   isSelected?: boolean;
   item: IotDeviceProductApi.DeviceProduct;
 }>();
 
-const CheckIcon = createIconifyIcon('lucide:check-circle');
+const CheckIcon = createIconifyIcon('lucide:check-circle-2');
 const PackageIcon = createIconifyIcon('lucide:package');
 </script>
 
 <template>
   <div
-    class="group relative flex cursor-pointer items-start gap-4 rounded-lg border border-border bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-md dark:border-border/60 dark:bg-[#1c1e23]"
-    :class="[isSelected ? '!border-primary ring-1 ring-primary/20' : '']"
+    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border-2 p-4 transition-all duration-300 ease-in-out"
+    :class="[
+      isSelected
+        ? 'border-primary bg-primary/5 shadow-lg shadow-primary/10 ring-1 ring-primary/20'
+        : 'border-border bg-card hover:border-primary/50 hover:shadow-xl hover:shadow-gray-200/50 dark:hover:shadow-none',
+    ]"
   >
     <!-- Selection Checkmark -->
-    <div
-      v-if="isSelected"
-      class="absolute -right-2 -top-2 z-10 flex size-6 items-center justify-center rounded-full bg-white shadow-sm dark:bg-[#1c1e23]"
-    >
-      <CheckIcon class="size-full text-primary" />
-    </div>
-
-    <!-- Left: Icon -->
-    <div class="shrink-0">
+    <transition name="scale">
       <div
-        class="flex size-16 items-center justify-center rounded-lg bg-blue-50 text-blue-500 shadow-inner dark:bg-blue-500/10"
+        v-if="isSelected"
+        class="absolute right-2 top-2 z-20 flex size-6 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-primary/20 dark:bg-[#1c1e23]"
       >
-        <PackageIcon class="size-8" />
+        <CheckIcon class="size-full text-primary" />
       </div>
-    </div>
+    </transition>
 
-    <!-- Right: Content -->
-    <div
-      class="flex flex-1 flex-col justify-start self-stretch overflow-hidden"
-    >
-      <!-- Header -->
-      <div class="flex items-start justify-between gap-2">
+    <!-- Header Section -->
+    <div class="flex items-center gap-4">
+      <div class="shrink-0">
+        <img
+          v-if="item.coverUrl"
+          :src="item.coverUrl"
+          class="size-12 rounded-xl border border-border object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <div
+          v-else
+          class="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary/20"
+        >
+          <PackageIcon class="size-6" />
+        </div>
+      </div>
+
+      <div class="flex flex-1 flex-col gap-0.5 overflow-hidden">
         <span
-          class="line-clamp-1 text-base font-bold leading-tight text-foreground"
+          class="truncate text-base font-bold tracking-tight text-foreground transition-colors duration-300"
           :title="item.productName"
         >
           {{ item.productName }}
         </span>
+        <span
+          class="text-[10px] font-medium uppercase text-muted-foreground opacity-70"
+        >
+          ID: {{ item.id }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Details Section -->
+    <div class="mt-4 flex flex-col gap-2.5">
+      <!-- State/Status -->
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-muted-foreground">{{
+          $t('common.status')
+        }}</span>
+        <div
+          class="flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset"
+          :class="[
+            getProductStateInfo(item.state).statusColor === 'success'
+              ? 'bg-emerald-50 text-emerald-700 ring-emerald-700/10 dark:bg-emerald-500/10 dark:text-emerald-400'
+              : 'bg-rose-50 text-rose-700 ring-rose-700/10 dark:bg-rose-500/10 dark:text-rose-400',
+          ]"
+        >
+          <div
+            class="size-1.5 rounded-full"
+            :class="[
+              getProductStateInfo(item.state).statusColor === 'success'
+                ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]'
+                : 'bg-rose-500',
+            ]"
+          ></div>
+          {{ getProductStateInfo(item.state).label }}
+        </div>
       </div>
 
-      <!-- Body -->
-      <div
-        class="mt-2 grid grid-cols-1 gap-2 rounded-md bg-muted/20 p-2 dark:bg-muted/10"
-      >
-        <!-- Type -->
-        <div class="flex items-center gap-2">
-          <span class="text-xs text-muted-foreground">{{
-            $t('device.product.productType')
-          }}</span>
-          <Tag color="blue" class="!m-0 text-[10px]">
-            {{ item.productType }}
-          </Tag>
+      <!-- Info Grid -->
+      <div class="grid grid-cols-2 gap-3 border-t border-border pt-3">
+        <!-- Device Type -->
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60"
+          >
+            {{ $t('device.instance.type') }}
+          </span>
+          <span
+            class="truncate text-xs font-bold text-muted-foreground transition-colors group-hover:text-primary"
+          >
+            {{ getDeviceTypeInfo(item.deviceType).label }}
+          </span>
+        </div>
+        <!-- Product Type (Category) -->
+        <div class="flex flex-col items-end gap-1">
+          <span
+            class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60"
+          >
+            {{ $t('device.product.productType') }}
+          </span>
+          <span
+            class="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary"
+          >
+            {{ item.productType || 'Unknown' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Protocol & Transport -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="flex flex-col gap-1">
+          <span
+            class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60"
+          >
+            {{ $t('protocol.name') }}
+          </span>
+          <span
+            class="truncate text-xs font-medium text-foreground/80 group-hover:text-foreground"
+          >
+            {{ item.protocolName || '-' }}
+          </span>
+        </div>
+        <div class="flex flex-col items-end gap-1">
+          <span
+            class="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/60"
+          >
+            {{ $t('common.transport') }}
+          </span>
+          <span
+            class="truncate text-xs font-medium text-foreground/80 group-hover:text-foreground"
+          >
+            {{ item.transport || '-' }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.border-primary {
+  box-shadow: 0 0 15px -3px hsl(var(--primary), 0.2);
+}
+</style>

@@ -1,5 +1,6 @@
 {
   "id": "Protocol ID",
+  "selectTitle": "Select Protocol",
   "name": "Protocol Name",
   "type": "Protocol Type",
   "description": "Description",

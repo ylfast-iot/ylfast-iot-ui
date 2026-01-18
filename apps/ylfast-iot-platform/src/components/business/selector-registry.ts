@@ -1,6 +1,12 @@
 import type { Component } from 'vue';
 
-export type SelectorType = 'cert' | 'device' | 'product';
+export type SelectorType =
+  | 'cert'
+  | 'device'
+  | 'network'
+  | 'product'
+  | 'protocol'
+  | 'user';
 
 const selectorRef = new Map<SelectorType, Component>();
 
@@ -32,6 +38,15 @@ export async function registerSelectors() {
     }),
     import('./product/product-selector').then(({ ProductSelector }) => {
       selectorRegistry.add('product', ProductSelector);
+    }),
+    import('./protocol/protocol-selector').then(({ ProtocolSelector }) => {
+      selectorRegistry.add('protocol', ProtocolSelector);
+    }),
+    import('./network/network-selector').then(({ NetworkSelector }) => {
+      selectorRegistry.add('network', NetworkSelector);
+    }),
+    import('./user/user-selector').then(({ UserSelector }) => {
+      selectorRegistry.add('user', UserSelector);
     }),
   ]);
 }

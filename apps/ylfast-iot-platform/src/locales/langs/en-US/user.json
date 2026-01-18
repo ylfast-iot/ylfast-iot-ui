@@ -1,4 +1,5 @@
 {
+  "selectTitle": "Select User",
   "field": {
     "id": "ID",
     "name": "Name",

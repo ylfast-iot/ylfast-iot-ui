@@ -1,5 +1,6 @@
 {
   "id": "协议ID",
+  "selectTitle": "选择协议",
   "name": "协议名称",
   "type": "协议类型",
   "description": "协议描述",

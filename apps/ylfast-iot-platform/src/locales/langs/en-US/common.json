@@ -27,6 +27,7 @@
   "name": "Name",
   "username": "Username",
   "type": "Type",
+  "transport": "Transport",
   "status": "Status",
   "description": "Description",
   "help": "Help",

@@ -1,5 +1,6 @@
 {
   "name": "组件名称",
+  "selectTitle": "选择网络组件",
   "type": "组件类型",
   "description": "描述",
   "address": "地址信息",

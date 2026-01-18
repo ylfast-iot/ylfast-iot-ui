@@ -70,6 +70,7 @@ catalog:
   archiver: ^7.0.1
   autoprefixer: ^10.4.22
   axios: ^1.10.0
+  baseline-browser-mapping: ^2.9.15
   axios-mock-adapter: ^2.1.0
   cac: ^6.7.14
   chalk: ^5.4.1

@@ -3,11 +3,14 @@ import { ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
 
-import { Empty, TabPane, Tabs } from 'ant-design-vue';
+import { TabPane, Tabs } from 'ant-design-vue';
 
 import CertificateSelectorDemo from './components/CertificateSelectorDemo.vue';
 import DeviceSelectorDemo from './components/DeviceSelectorDemo.vue';
+import NetworkSelectorDemo from './components/NetworkSelectorDemo.vue';
 import ProductSelectorDemo from './components/ProductSelectorDemo.vue';
+import ProtocolSelectorDemo from './components/ProtocolSelectorDemo.vue';
+import UserSelectorDemo from './components/UserSelectorDemo.vue';
 
 const activeKey = ref('device');
 </script>
@@ -26,18 +29,24 @@ const activeKey = ref('device');
           <ProductSelectorDemo />
         </TabPane>
 
+        <!-- Tab 3: Protocol Selector -->
+        <TabPane key="protocol" tab="协议选择器 (ProtocolSelector)">
+          <ProtocolSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 5: Network Selector -->
+        <TabPane key="network" tab="网络组件选择器 (NetworkSelector)">
+          <NetworkSelectorDemo />
+        </TabPane>
+
         <!-- Tab 3: Certificate Selector -->
         <TabPane key="certificate" tab="证书选择器 (CertificateSelector)">
           <CertificateSelectorDemo />
         </TabPane>
 
-        <!-- Tab 4: User Selector (Coming Soon) -->
+        <!-- Tab 4: User Selector -->
         <TabPane key="user" tab="用户选择器 (UserSelector)">
-          <div
-            class="flex h-[400px] w-full items-center justify-center rounded-lg border border-dashed bg-white"
-          >
-            <Empty description="用户选择器开发中..." />
-          </div>
+          <UserSelectorDemo />
         </TabPane>
       </Tabs>
     </div>

@@ -82,6 +82,7 @@
     "@vitejs/plugin-vue-jsx": "catalog:",
     "@vue/test-utils": "catalog:",
     "autoprefixer": "catalog:",
+    "baseline-browser-mapping": "catalog:",
     "cross-env": "catalog:",
     "cspell": "catalog:",
     "happy-dom": "catalog:",
