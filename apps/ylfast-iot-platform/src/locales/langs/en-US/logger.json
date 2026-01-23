@@ -12,7 +12,8 @@
     "className": "Class Name",
     "methodName": "Method Name",
     "lineNumber": "Line Number",
-    "detail": "Log Detail"
+    "detail": "Log Detail",
+    "serviceNode": "Service Node"
   },
   "access": {
     "title": "Access Log",
@@ -30,6 +31,7 @@
     "exception": "Exception",
     "ipRegion": "IP Region",
     "action": "Action",
-    "target": "Target Class"
+    "target": "Target Class",
+    "server": "Service Node"
   }
 }

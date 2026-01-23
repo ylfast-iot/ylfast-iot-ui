@@ -1,5 +1,8 @@
 import type { DataType, DataTypeDef, Recordable, Rule } from './data-type';
 
+import type { BaseSelectorProps } from '#/components/business/common-selector';
+import type { SelectorType } from '#/components/business/selector-registry';
+
 export interface ConfigMetadata {
   /**
    * 配置名称
@@ -56,7 +59,16 @@ export interface PropertyValueType extends DataTypeDef {
   type: DataType;
   expands?: {
     [key: string]: any;
-    componentProps?: Record<string, any>; // 组件属性
+    componentProps?: {
+      [key: string]: any;
+
+      // 选择器组件的配置
+      selectorType?: SelectorType; // 选择器类型
+      // 组件类型 code为编辑器、selector为选择器 (String类型生效)
+      type?: 'code' | 'selector' | string;
+    } &
+      // 选择器相关属性
+      BaseSelectorProps; // 组件属性
     configMetadata?:
       | ConfigMetadata
       | ConfigMetadata[]

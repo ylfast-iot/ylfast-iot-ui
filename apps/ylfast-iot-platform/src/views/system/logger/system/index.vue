@@ -10,6 +10,7 @@ import { $t } from '@vben/locales';
 import { Button, Tag } from 'ant-design-vue';
 
 import { querySystemLogsPost } from '#/api/system/logger';
+import { getClusterNodes } from '#/api/system/monitor/cluster';
 import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 
 import SystemLogDetail from './components/SystemLogDetail.vue';
@@ -36,8 +37,8 @@ const [TableCard] = useYlVxeTableCard<LoggerApi.SystemLog>({
         title: $t('logger.system.message'),
       },
       {
-        field: 'context.server',
-        title: $t('logger.system.serviceName'),
+        field: 'serverId',
+        title: $t('logger.system.serviceNode'),
         width: 150,
       },
       {
@@ -103,6 +104,18 @@ const [TableCard] = useYlVxeTableCard<LoggerApi.SystemLog>({
         field: 'message',
         label: $t('logger.system.message'),
         termTypes: ['like'],
+      },
+      {
+        component: 'ApiSelect',
+        componentProps: {
+          api: getClusterNodes,
+          labelField: 'serverId',
+          resultField: 'nodes',
+          valueField: 'serverId',
+        },
+        field: 'serverId',
+        label: $t('logger.system.serviceNode'),
+        termTypes: ['eq'],
       },
     ],
   },

@@ -101,6 +101,7 @@ function handleInputChange() {
           <TrashIcon class="size-3.5" />
         </Button>
         <Upload
+          accept=".crt,.cer,.pem"
           :before-upload="(file: File) => handleUpload(file, 'cert', true)"
           :show-upload-list="false"
         >
@@ -132,6 +133,7 @@ function handleInputChange() {
           <TrashIcon class="size-3.5" />
         </Button>
         <Upload
+          accept=".key,.pem"
           :before-upload="(file: File) => handleUpload(file, 'key', true)"
           :show-upload-list="false"
         >
@@ -163,6 +165,7 @@ function handleInputChange() {
           <TrashIcon class="size-3.5" />
         </Button>
         <Upload
+          accept=".crt,.cer,.pem"
           :before-upload="(file: File) => handleUpload(file, 'trust', true)"
           :show-upload-list="false"
         >
@@ -197,6 +200,7 @@ function handleInputChange() {
             <TrashIcon class="size-3.5" />
           </Button>
           <Upload
+            :accept="format === 'PFX' ? '.pfx,.p12' : '.jks,.keystore'"
             :before-upload="
               (file: File) => handleUpload(file, 'keystoreBase64')
             "
@@ -249,6 +253,7 @@ function handleInputChange() {
             <TrashIcon class="size-3.5" />
           </Button>
           <Upload
+            :accept="format === 'PFX' ? '.pfx,.p12' : '.jks,.keystore'"
             :before-upload="
               (file: File) => handleUpload(file, 'trustKeyStoreBase64')
             "

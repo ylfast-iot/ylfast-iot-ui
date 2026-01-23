@@ -10,6 +10,8 @@
   "systemMonitor": {
     "title": "系统监控",
     "description": "实时监控系统资源使用情况",
+    "selectNode": "选择节点",
+    "clusterNode": "集群节点",
     "cpu": {
       "title": "CPU使用率",
       "jvmCpu": "JVM CPU",

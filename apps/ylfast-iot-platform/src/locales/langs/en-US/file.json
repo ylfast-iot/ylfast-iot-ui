@@ -1,0 +1,138 @@
+{
+  "title": "File Manager",
+  "fileName": "File Name",
+  "fileType": "File Type",
+  "fileSize": "File Size",
+  "bucket": "Bucket",
+  "serverNode": "Server Node",
+  "storagePath": "Storage Path",
+  "createTime": "Upload Time",
+  "expires": "Expires",
+  "id": "File ID",
+  "extension": "Extension",
+  "md5": "MD5 Checksum",
+  "sha256": "SHA256 Checksum",
+  "node": "Node",
+  "path": "Path",
+  "action": {
+    "upload": "Upload File",
+    "batchUpload": "Batch Upload",
+    "preview": "Preview",
+    "download": "Download",
+    "copy": "Copy Link",
+    "rename": "Rename",
+    "viewDetails": "View Details",
+    "delete": "Delete",
+    "edit": "Edit",
+    "copyMd5": "Copy MD5",
+    "copySha256": "Copy SHA256",
+    "clear": "Clear",
+    "startUpload": "Start Upload",
+    "batchDelete": "Batch Delete ({count})"
+  },
+  "card": {
+    "expired": "Expired",
+    "validity": "Valid Until",
+    "copySuccess": "{label} copied to clipboard",
+    "node": "Node",
+    "bucket": "Bucket",
+    "expires": "Expires"
+  },
+  "upload": {
+    "title": "Multipart File Upload",
+    "selectFile": "Select File",
+    "dragTip": "Click or drag files to upload",
+    "dragSubTip": "Support batch upload. Large files are automatically sharded.",
+    "selectBucket": "Please select bucket",
+    "selectNode": "Please select server node",
+    "selectNodeTip": "Please select the server node for file upload.",
+    "autoNode": "Auto Select",
+    "fileOptions": "File Options",
+    "publicAccess": "Public Access",
+    "publicAccessDesc": "Allow direct access via dynamic URL",
+    "tempFile": "Temporary File",
+    "tempFileDesc": "Files will be automatically cleaned by system tasks",
+    "expires": "Expiration Time",
+    "expiresPlaceholder": "Leave empty for system default",
+    "uploading": "Uploading...",
+    "success": "Upload tasks completed",
+    "totalFiles": "Total {count} files",
+    "empty": "No file selected",
+    "viewResponse": "View Response",
+    "responseTitle": "Upload Response - {name}",
+    "fail": "{name} upload failed: {reason}",
+    "shardError": "Multipart upload completed but failed to retrieve final file info",
+    "unknownError": "Unknown error"
+  },
+  "edit": {
+    "title": "Manage File Metadata",
+    "name": "File Name",
+    "namePlaceholder": "Please enter file display name",
+    "sysParams": "System Parameters (Read-only)",
+    "expiresError": "Expiration time must be later than current time",
+    "updateSuccess": "Update successful",
+    "updateFail": "Update failed"
+  },
+  "sidebar": {
+    "resourceBrowser": "Resource Browser",
+    "clusterNodes": "Cluster Nodes",
+    "allNodes": "All Nodes",
+    "buckets": "Buckets",
+    "root": "Root / All",
+    "defaultStorage": "Default Storage",
+    "defaultStorageDesc": "System built-in default storage",
+    "addBucket": "Add Bucket"
+  },
+  "bucketManage": {
+    "id": "Bucket ID",
+    "idPlaceholder": "Auto-generated if left empty",
+    "name": "Bucket Name",
+    "desc": "Description",
+    "descPlaceholder": "Describe the business usage of the bucket (optional)",
+    "edit": "Edit Bucket",
+    "create": "New Bucket",
+    "createSuccess": "Created successfully",
+    "updateSuccess": "Modified successfully",
+    "saveFail": "Save failed"
+  },
+  "filter": {
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Enter file name",
+      "dateRange": "Created Time",
+      "sizeRange": "File Size"
+  },
+  "tips": {
+    "deleteConfirm": "Are you sure you want to delete this file?",
+    "deleteFileConfirm": "Are you sure you want to delete file \"{name}\"? This cannot be undone.",
+    "deleteBatchConfirm": "Are you sure you want to delete the selected {count} files? This cannot be undone.",
+    "deleteConfirmBucket": "Are you sure you want to delete bucket \"{name}\"? All files in this bucket will be moved to the default storage.",
+    "deleteSuccess": "Deleted successfully",
+    "deleteFail": "Delete failed",
+    "batchDeleteSuccess": "Batch delete successful",
+    "batchDeleteFail": "Batch delete failed",
+    "copySuccess": "Link copied to clipboard",
+    "noPreview": "Preview not supported for this file type"
+  },
+    "view": {
+    "card": "Card View",
+    "list": "List View"
+  }, 
+  "type": {
+    "image": "Image",
+    "video": "Video",
+    "audio": "Audio",
+    "document": "Document",
+    "archive": "Archive",
+    "code": "Code",
+    "other": "Other"
+  },
+  "group": {
+    "all": "All Files",
+    "byServerNode": "By Server Node",
+    "byBucket": "By Bucket"
+  },
+  "preview": {
+    "title": "File Preview - {name}",
+    "notSupported": "Preview not supported for this file type in-system"
+  }
+}

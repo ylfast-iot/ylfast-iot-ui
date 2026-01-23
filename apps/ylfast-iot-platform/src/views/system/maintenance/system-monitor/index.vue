@@ -3,21 +3,37 @@ import type { Subscription } from 'rxjs';
 
 import type { DashboardApi } from '#/api/dashboard';
 import type { DashboardSystemMonitor } from '#/api/dashboard/system-monitor';
+import type { SystemClusterMonitorApi } from '#/api/system/monitor/cluster';
 
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 import { Page } from '@vben/common-ui';
+import { createIconifyIcon } from '@vben/icons';
+
+import { Select } from 'ant-design-vue';
 
 import {
   getSystemMonitorHistoryMeasurementValue,
   subscribeSystemMonitor,
 } from '#/api/dashboard/system-monitor';
+import { getClusterNodes } from '#/api/system/monitor/cluster';
 import { YlStatisticCard, YlTrendChart } from '#/components/yl-dashboard';
 import { $t } from '#/locales';
+
+// const NetworkIcon = createIconifyIcon('lucide:network');
+// const ActivityIcon = createIconifyIcon('lucide:activity');
+const ServerIcon = createIconifyIcon('lucide:server');
 
 // --- State ---
 const loading = ref(true);
 const subscription = ref<null | Subscription>(null);
+
+const serverId = ref<string>();
+const clusterNodes = ref<SystemClusterMonitorApi.ClusterNodeInfo[]>([]);
+
+const currentNode = computed(() => {
+  return clusterNodes.value.find((n) => n.serverId === serverId.value);
+});
 
 const systemInfo = ref<DashboardSystemMonitor.SystemInfo>({
   cpu: { jvmUsage: 0, systemUsage: 0 },
@@ -70,14 +86,31 @@ const getChartValue = (used: number, total: number) => {
 };
 
 // --- Lifecycle ---
-onMounted(() => {
+const initSubscription = () => {
+  if (subscription.value) {
+    subscription.value.unsubscribe();
+  }
+  loading.value = true;
   subscription.value = subscribeSystemMonitor((message) => {
     loading.value = false;
     if (message && message.payload && message.payload.value) {
       systemInfo.value = message.payload.value;
     }
-  });
+  }, serverId.value);
+};
+
+onMounted(async () => {
+  const result = await getClusterNodes();
+  clusterNodes.value = result.nodes || [];
+  if (result.local && result.local.serverId) {
+    serverId.value = result.local.serverId;
+  }
+  initSubscription();
 });
+
+const onServerChange = () => {
+  initSubscription();
+};
 
 onUnmounted(() => {
   if (subscription.value) {
@@ -176,6 +209,7 @@ const getCpuTrend = async ({
   return await getSystemMonitorHistoryMeasurementValue('cpu', {
     from: startTime,
     to: endTime,
+    serverId: serverId.value,
   });
 };
 
@@ -200,6 +234,7 @@ const getJvmTrend = async ({
   return await getSystemMonitorHistoryMeasurementValue('jvm', {
     from: startTime,
     to: endTime,
+    serverId: serverId.value,
   });
 };
 const jvmOptionGenerator = (
@@ -221,10 +256,71 @@ const jvmOptionGenerator = (
 </script>
 
 <template>
-  <Page
-    :title="$t('dashboard.systemMonitor.title')"
-    :description="$t('dashboard.systemMonitor.description')"
-  >
+  <Page :description="$t('dashboard.systemMonitor.description')">
+    <template #title>
+      <div class="flex items-center gap-4">
+        <span class="text-xl font-bold tracking-tight">{{
+          $t('dashboard.systemMonitor.title')
+        }}</span>
+        <transition name="fade-slide">
+          <div
+            v-if="currentNode"
+            class="flex items-center gap-2.5 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs shadow-sm shadow-primary/5"
+          >
+            <div class="relative flex h-2 w-2">
+              <span
+                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"
+              ></span>
+              <span
+                class="relative inline-flex h-2 w-2 rounded-full bg-primary"
+              ></span>
+            </div>
+            <div class="h-3.5 w-px bg-primary/20"></div>
+            <div class="flex items-center gap-1.5 font-mono">
+              <span class="font-medium italic text-foreground/40">NODE:</span>
+              <span class="font-bold text-primary">
+                {{ currentNode.host }}:{{ currentNode.port }}
+              </span>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </template>
+    <template #extra>
+      <div
+        class="flex items-center gap-2 overflow-hidden rounded-xl border border-border bg-card/60 px-2 py-1 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:shadow-md"
+      >
+        <div
+          class="group flex h-8 items-center gap-2 rounded-lg bg-muted/50 px-2.5 text-muted-foreground"
+        >
+          <ServerIcon
+            class="size-4 transition-colors group-hover:text-primary"
+          />
+          <span
+            class="text-xs font-bold uppercase tracking-wider transition-colors group-hover:text-primary"
+          >
+            {{ $t('dashboard.systemMonitor.clusterNode') }}
+          </span>
+        </div>
+        <div class="h-4 w-px bg-border/50"></div>
+        <Select
+          v-model:value="serverId"
+          :placeholder="$t('dashboard.systemMonitor.selectNode')"
+          class="w-44"
+          :bordered="false"
+          @change="onServerChange"
+          dropdown-class-name="premium-select-dropdown"
+        >
+          <Select.Option
+            v-for="node in clusterNodes"
+            :key="node.serverId"
+            :value="node.serverId"
+          >
+            <span class="font-mono text-xs font-bold">{{ node.serverId }}</span>
+          </Select.Option>
+        </Select>
+      </div>
+    </template>
     <!-- Top: Statistic Cards -->
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <!-- CPU Usage -->
@@ -337,6 +433,7 @@ const jvmOptionGenerator = (
     <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
       <!-- CPU Trend -->
       <YlTrendChart
+        :key="serverId"
         :title="$t('dashboard.systemMonitor.cpu.trendTitle')"
         :api="getCpuTrend"
         :option-generator="cpuOptionGenerator"
@@ -345,6 +442,7 @@ const jvmOptionGenerator = (
 
       <!-- JVM Trend -->
       <YlTrendChart
+        :key="serverId"
         :title="$t('dashboard.systemMonitor.jvm.trendTitle')"
         :api="getJvmTrend"
         :option-generator="jvmOptionGenerator"
@@ -355,5 +453,29 @@ const jvmOptionGenerator = (
 </template>
 
 <style scoped>
-/* Add any specific styles if necessary, but Tailwind should cover it */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+:deep(.ant-select-selector) {
+  background-color: transparent !important;
+}
+
+:deep(.premium-select-dropdown) {
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
+}
 </style>

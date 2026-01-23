@@ -10,6 +10,7 @@ import { $t } from '@vben/locales';
 import { Button, Tag } from 'ant-design-vue';
 
 import { queryAccessLogsPost } from '#/api/system/logger';
+import { getClusterNodes } from '#/api/system/monitor/cluster';
 import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 
 import AccessLogDetail from './components/AccessLogDetail.vue';
@@ -47,6 +48,11 @@ const [TableCard] = useYlVxeTableCard<LoggerApi.AccessLog>({
         field: 'context.username',
         title: $t('logger.access.user'),
         width: 120,
+      },
+      {
+        field: 'serverId',
+        title: $t('logger.access.server'),
+        width: 150,
       },
       {
         field: 'operation',
@@ -116,6 +122,18 @@ const [TableCard] = useYlVxeTableCard<LoggerApi.AccessLog>({
         },
         field: 'httpMethod',
         label: $t('logger.access.method'),
+      },
+      {
+        component: 'ApiSelect',
+        componentProps: {
+          api: getClusterNodes,
+          labelField: 'serverId',
+          resultField: 'nodes',
+          valueField: 'serverId',
+        },
+        field: 'serverId',
+        label: $t('logger.access.server'),
+        termTypes: ['eq'],
       },
     ],
   },

@@ -10,7 +10,7 @@ export type WebSocketMessage<T = any> = {
   payload: T;
   requestId: string;
   topic: string;
-  type: 'complete' | 'error' | 'result';
+  type: 'authError' | 'complete' | 'error' | 'ping' | 'pong' | 'result';
 };
 
 // socket选项
@@ -41,9 +41,23 @@ export const initWebSocket = (options: SocketOptions = {}) => {
   };
   const url = `${_socketOptions.socketUrl}${_socketOptions.urlSuffix}`;
 
+  // 如果存在X_Access_Token | token | accessToken | access_token | Authorization 的查询参数则不设置否则设置
+
+  const urlObj = new URL(convertUrl(url));
+  const params = urlObj.searchParams;
+  if (
+    !params.has('X_Access_Token') &&
+    !params.has('token') &&
+    !params.has('accessToken') &&
+    !params.has('access_token') &&
+    !params.has('Authorization')
+  ) {
+    params.set('X_Access_Token', token);
+  }
+
   if (count < total) {
     count += 1;
-    ws = new WebSocket(convertUrl(url));
+    ws = new WebSocket(urlObj.toString());
     ws.addEventListener('open', () => {
       count = 0;
       timer = setInterval(heartCheck, 2000);
@@ -63,6 +77,9 @@ export const initWebSocket = (options: SocketOptions = {}) => {
       const data: WebSocketMessage<string> = JSON.parse(msg.data);
       if (data.type === 'error') {
         console.error({ key: 'error', message: data.message });
+      }
+      if (data.type === 'authError') {
+        console.error({ key: 'authError', message: data.message });
       }
       if (subs[data.requestId]) {
         if (data.type === 'complete') {

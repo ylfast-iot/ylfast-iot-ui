@@ -10,6 +10,8 @@
   "systemMonitor": {
     "title": "System Monitor",
     "description": "Real-time system resource monitoring",
+    "selectNode": "Select Node",
+    "clusterNode": "Cluster Node",
     "cpu": {
       "title": "CPU Usage",
       "jvmCpu": "JVM CPU",

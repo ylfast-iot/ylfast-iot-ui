@@ -8,17 +8,29 @@ export default defineConfig(async () => {
         proxy: {
           '/api': {
             changeOrigin: true,
+            ws: true,
             rewrite: (path) => path.replace(/^\/api/, ''),
             // 真实后端服务地址
-            target: 'http://localhost:8090',
+            target: 'http://localhost:9000/api',
           },
-          '/socket': {
-            changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/socket/, ''),
-            // 真实后端服务地址
-            target: 'http://localhost:8090',
-            ws: true,
-          },
+
+
+          // '/api': {
+          //   changeOrigin: true,
+          //   ws: true,
+          //   rewrite: (path) => path.replace(/^\/api/, ''),
+          //   // 真实后端服务地址
+          //   target: 'http://localhost:8090',
+          // },
+
+
+          // '/socket': {
+          //   changeOrigin: true,
+          //   rewrite: (path) => path.replace(/^\/socket/, ''),
+          //   // 真实后端服务地址
+          //   target: 'http://localhost:8090',
+          //   ws: true,
+          // },
         },
       },
     },

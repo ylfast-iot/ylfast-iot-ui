@@ -187,17 +187,21 @@ export namespace DashboardSystemMonitor {
     format?: string;
     /** 结束时间戳（必选） */
     to: number;
+    /** 服务器节点ID,不填默认为当前节点 */
+    serverId?: string;
   }
 }
 
 /**
  * 实时订阅系统资源信息
  * @param onMessage 消息回调
+ * @param serverId 服务器节点ID,不填默认为当前节点
  */
 export function subscribeSystemMonitor(
   onMessage: (
     message: WebSocketMessage<DashboardSystemMonitor.SystemMeasurementValue>,
   ) => void,
+  serverId?: string,
 ): Subscription {
   return subscribeMeasurementValue(
     `operations-statistics-system-info-realTime`,
@@ -210,6 +214,7 @@ export function subscribeSystemMonitor(
         type: 'all',
         interval: '1s',
         agg: 'avg',
+        serverId,
       },
     },
     onMessage,
@@ -223,7 +228,7 @@ export function subscribeSystemMonitor(
  */
 export function getSystemMonitorHistoryMeasurementValue(
   group: DashboardSystemMonitor.SystemMonitorGroup,
-  params: DashboardSystemMonitor.MetricParams,
+  params: any,
 ) {
   if (!params.format) {
     params.format = 'YYYY-MM-dd HH:mm:ss';

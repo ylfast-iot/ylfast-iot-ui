@@ -1,0 +1,138 @@
+{
+  "title": "文件管理",
+  "fileName": "文件名",
+  "fileType": "文件类型",
+  "fileSize": "文件大小",
+  "bucket": "存储桶",
+  "serverNode": "服务节点",
+  "storagePath": "物理路径",
+  "createTime": "上传时间",
+  "expires": "过期时间",
+  "id": "文件 ID",
+  "extension": "扩展名",
+  "md5": "MD5 校验码",
+  "sha256": "SHA256 校验码",
+  "node": "节点",
+  "path": "路径",
+  "action": {
+    "upload": "上传文件",
+    "batchUpload": "批量上传",
+    "preview": "预览",
+    "download": "下载",
+    "copy": "复制链接",
+    "rename": "重命名",
+    "viewDetails": "查看详情",
+    "delete": "删除",
+    "edit": "编辑",
+    "copyMd5": "复制 MD5",
+    "copySha256": "复制 SHA256",
+    "clear": "清空",
+    "startUpload": "开始上传",
+    "batchDelete": "批量删除 ({count})"
+  },
+  "card": {
+    "expired": "已过期",
+    "validity": "有效期",
+    "copySuccess": "{label} 已复制到剪贴板",
+    "node": "节点",
+    "bucket": "存储桶",
+    "expires": "过期时间"
+  },
+  "upload": {
+    "title": "分片上传文件",
+    "selectFile": "选择文件",
+    "dragTip": "点击或拖拽文件上传",
+    "dragSubTip": "支持批量。大文件自动分片。",
+    "selectBucket": "请选择存储桶",
+    "selectNode": "请选择服务节点",
+    "selectNodeTip": "请选择文件上传的服务节点。",
+    "autoNode": "自动选择",
+    "fileOptions": "文件选项",
+    "publicAccess": "公开访问",
+    "publicAccessDesc": "允许通过动态URL直接访问文件",
+    "tempFile": "临时文件",
+    "tempFileDesc": "文件将被系统定时任务自动清理",
+    "expires": "过期时间",
+    "expiresPlaceholder": "不填则使用系统默认过期时间",
+    "uploading": "上传中...",
+    "success": "上传任务处理完成",
+    "totalFiles": "共 {count} 个文件",
+    "empty": "暂未选择文件",
+    "viewResponse": "预览响应",
+    "responseTitle": "上传响应 - {name}",
+    "fail": "{name} 上传失败: {reason}",
+    "shardError": "分片上传完成但未获取到最终文件信息",
+    "unknownError": "未知错误"
+  },
+  "edit": {
+    "title": "管理文件元数据",
+    "name": "文件名称",
+    "namePlaceholder": "请输入文件显示名称",
+    "sysParams": "系统参数 (只读)",
+    "expiresError": "过期时间必须晚于当前时间",
+    "updateSuccess": "更新成功",
+    "updateFail": "更新失败"
+  },
+  "sidebar": {
+    "resourceBrowser": "资源浏览器",
+    "clusterNodes": "集群节点",
+    "allNodes": "全部节点",
+    "buckets": "存储桶",
+    "root": "根目录 / 全部",
+    "defaultStorage": "默认存储",
+    "defaultStorageDesc": "系统内置默认存储空间",
+    "addBucket": "新增存储桶"
+  },
+  "bucketManage": {
+    "id": "存储桶 ID",
+    "idPlaceholder": "不输入则由系统自动生成",
+    "name": "存储桶名称",
+    "desc": "描述",
+    "descPlaceholder": "请描述存储桶的业务用途 (可选)",
+    "edit": "编辑存储桶",
+    "create": "新增存储桶",
+    "createSuccess": "创建成功",
+    "updateSuccess": "修改成功",
+    "saveFail": "保存失败"
+  },
+  "filter": {
+      "keyword": "关键词",
+      "keywordPlaceholder": "请输入文件名",
+      "dateRange": "创建时间",
+      "sizeRange": "文件大小"
+  },
+  "tips": {
+    "deleteConfirm": "确认删除该文件吗？",
+    "deleteFileConfirm": "确认删除文件 \"{name}\" 吗？此操作不可恢复。",
+    "deleteBatchConfirm": "确认删除选中的 {count} 个文件吗？此操作不可恢复。",
+    "deleteConfirmBucket": "确认删除存储桶 \"{name}\" 吗？当前存储空间下的所有文件将会被移动到默认空间中。",
+    "deleteSuccess": "删除成功",
+    "deleteFail": "删除失败",
+    "batchDeleteSuccess": "批量删除成功",
+    "batchDeleteFail": "批量删除失败",
+    "copySuccess": "链接已复制到剪贴板",
+    "noPreview": "该文件类型暂不支持预览"
+  },
+    "view": {
+    "card": "卡片视图",
+    "list": "列表视图"
+  }, 
+  "type": {
+    "image": "图片",
+    "video": "视频",
+    "audio": "音频",
+    "document": "文档",
+    "archive": "压缩包",
+    "code": "代码",
+    "other": "其他"
+  },
+  "group": {
+    "all": "全部文件",
+    "byServerNode": "按服务节点",
+    "byBucket": "按存储桶"
+  },
+  "preview": {
+    "title": "文件预览 - {name}",
+    "notSupported": "该文件类型暂不支持系统内预览"
+  }
+}
