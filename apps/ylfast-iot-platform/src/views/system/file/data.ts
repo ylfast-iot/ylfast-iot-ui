@@ -117,8 +117,6 @@ export function useFileTableColumns() {
     {
       field: 'action',
       title: $t('common.action.label'),
-      width: 180,
-      align: 'center',
       fixed: 'right' as any,
       slots: { default: 'actionSlot' },
     },

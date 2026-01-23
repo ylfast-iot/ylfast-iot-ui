@@ -187,5 +187,34 @@
     "name": "Category Name",
     "key": "Category ID",
     "description": "Description"
+  },
+  "dashboard": {
+    "title": "Device Statistics Dashboard",
+    "product": {
+      "title": "Product Statistics",
+      "total": "Total Products",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "device": {
+      "title": "Device Statistics",
+      "total": "Total Devices",
+      "online": "Online",
+      "offline": "Offline"
+    },
+    "onlineData": {
+      "title": "Device Online Data",
+      "todayOnline": "Today Online",
+      "yesterdayOnline": "Yesterday Online"
+    },
+    "message": {
+      "title": "Device Message Statistics",
+      "today": "Today Messages",
+      "yesterday": "Yesterday Messages",
+      "thisMonth": "This Month Messages"
+    },
+    "trend": {
+      "title": "Device Message Trend"
+    }
   }
 }

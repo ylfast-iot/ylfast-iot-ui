@@ -3,24 +3,21 @@ import type { Dayjs } from 'dayjs';
 
 import { computed, ref } from 'vue';
 
-import { useElementSize } from '@vueuse/core';
 import { DatePicker, Radio } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 import { $t } from '#/locales';
 
-defineOptions({
-  name: 'YlDateRangePicker',
-});
-
 const props = withDefaults(
   defineProps<{
     align?: 'center' | 'end' | 'start';
+    isWide?: boolean;
     showShortcuts?: boolean;
   }>(),
   {
-    showShortcuts: true,
     align: 'end',
+    isWide: false,
+    showShortcuts: true,
   },
 );
 
@@ -34,17 +31,12 @@ const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
-// Layout handling
-const containerRef = ref<HTMLDivElement>();
-const { width } = useElementSize(containerRef);
-const isWide = computed(() => width.value > 500);
-
 const alignClass = computed(() => {
   if (props.align === 'start')
-    return isWide.value ? 'justify-start' : 'items-start';
+    return props.isWide ? 'justify-start' : 'items-start';
   if (props.align === 'center')
-    return isWide.value ? 'justify-center' : 'items-center';
-  return isWide.value ? 'justify-end' : 'items-end';
+    return props.isWide ? 'justify-center' : 'items-center';
+  return props.isWide ? 'justify-end' : 'items-end';
 });
 
 // Shortcuts state
@@ -100,11 +92,7 @@ function handleRangeChange(dates: any) {
 </script>
 
 <template>
-  <div
-    ref="containerRef"
-    class="flex items-center gap-2"
-    :class="[!isWide ? 'w-full flex-col' : '', alignClass]"
-  >
+  <div class="flex items-center gap-2" :class="[alignClass]">
     <!-- Wide Mode: Shortcuts beside Picker -->
     <RadioGroup
       v-if="isWide && props.showShortcuts"

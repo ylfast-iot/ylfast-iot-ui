@@ -1,3 +1,12 @@
+export type ChartType = 'statistic' | 'trend';
+
+export interface TrendDataItem {
+  /** 时间标签 */
+  label: string;
+  /** 数值 */
+  value: number;
+}
+
 export interface StatisticCardProps {
   /**
    * 标题
@@ -45,9 +54,22 @@ export interface StatisticCardProps {
    */
   variant?: 'default' | 'error' | 'primary' | 'success' | 'warning';
   /**
-   * 图表数据 (如果提供，右侧将显示饼图而不是图标)
+   * 图表类型 ('statistic' | 'trend')
+   * @default 'statistic'
+   */
+  chartType?: ChartType;
+  /**
+   * 图表数据 (统计图表 - 用于仪表盘)
    */
   chartData?: Array<{ name: string; value: number }>;
+  /**
+   * 趋势数据 (趋势图表 - 用于折线/面积图)
+   */
+  trendData?: TrendDataItem[];
+  /**
+   * 趋势图颜色
+   */
+  trendColor?: string;
   /**
    * 仪表盘阈值配置 (e.g. [{ value: 0.3, color: 'green' }, ...])
    * value 为 0-1 之间的小数

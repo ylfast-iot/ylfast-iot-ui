@@ -24,7 +24,7 @@ const emit = defineEmits<TrendChartEmits>();
 // Layout handling
 const containerRef = ref<HTMLDivElement>();
 const { width } = useElementSize(containerRef);
-const isWide = computed(() => width.value > 720);
+const isWide = computed(() => width.value > 1020);
 
 // Date range state
 const rangeValue = ref<[Dayjs, Dayjs]>([dayjs().subtract(1, 'hour'), dayjs()]);
@@ -85,21 +85,16 @@ const isLoading = computed(() => props.loading || internalLoading.value);
     class="flex flex-col rounded-xl border border-border bg-card p-5 transition-all duration-300"
   >
     <!-- Header -->
-    <div
-      class="mb-6 flex flex-wrap items-center justify-between gap-4"
-      :class="{ 'flex-col items-stretch': !isWide }"
-    >
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-2">
         <div class="h-4 w-1 rounded-full bg-primary"></div>
         <span class="text-base font-medium">{{ title }}</span>
       </div>
 
-      <div
-        class="flex items-center gap-2"
-        :class="{ 'w-full': !isWide, 'justify-end': isWide }"
-      >
+      <div class="flex items-center gap-2" :class="{ 'justify-end': isWide }">
         <YlDateRangePicker
           v-model:value="rangeValue"
+          :is-wide="isWide"
           :show-shortcuts="showDateShortcuts"
           class="w-full sm:w-auto"
           @change="triggerFetch"
@@ -109,10 +104,7 @@ const isLoading = computed(() => props.loading || internalLoading.value);
 
     <!-- Content -->
     <div class="relative h-[300px] w-full overflow-hidden">
-      <div
-        v-if="isLoading"
-        class="absolute inset-0 z-10 flex h-full flex-col justify-between bg-card"
-      >
+      <div v-if="isLoading" class="flex h-full flex-col justify-between">
         <div class="px-2 pt-2">
           <Skeleton active :paragraph="{ rows: 1 }" />
         </div>
@@ -125,13 +117,13 @@ const isLoading = computed(() => props.loading || internalLoading.value);
             active
             shape="square"
             :style="{
-              width: '8%',
+              width: '6%',
               height: `${Math.random() * 60 + 20}%`,
             }"
           />
         </div>
       </div>
-      <Chart v-show="!isLoading" :loading="isLoading" :options="finalOptions" />
+      <Chart v-else :loading="isLoading" :options="finalOptions" />
     </div>
   </div>
 </template>

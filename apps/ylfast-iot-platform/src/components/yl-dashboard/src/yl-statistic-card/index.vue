@@ -8,13 +8,16 @@ import { createIconifyIcon } from '@vben/icons';
 import { Skeleton } from 'ant-design-vue';
 
 import StatisticChart from './StatisticChart.vue';
+import TrendChart from './TrendChart.vue';
 
 const props = withDefaults(defineProps<StatisticCardProps>(), {
+  chartType: 'statistic',
   loading: false,
+  max: 100,
+  min: 0,
+  trendColor: '#3b82f6',
   unit: '',
   variant: 'default',
-  min: 0,
-  max: 100,
 });
 
 const variantClasses = computed(() => {
@@ -51,7 +54,7 @@ const TrendIcon = computed(() => {
   return createIconifyIcon('lucide:minus');
 });
 
-const trendColor = computed(() => {
+const trendClass = computed(() => {
   if (props.trend === 'up') {
     return 'text-green-500';
   }
@@ -100,9 +103,9 @@ const trendColor = computed(() => {
           </div>
         </div>
 
-        <!-- Right Side: Gauge Chart -->
+        <!-- Right Side: Statistic Chart (Gauge) -->
         <div
-          v-if="chartData && chartData.length > 0"
+          v-if="chartType === 'statistic' && chartData && chartData.length > 0"
           class="h-[100px] w-[140px] flex-shrink-0"
         >
           <StatisticChart
@@ -111,6 +114,18 @@ const trendColor = computed(() => {
             :max="max"
             :thresholds="thresholds"
             :unit="unit"
+          />
+        </div>
+
+        <!-- Right Side: Trend Chart (Line/Area) -->
+        <div
+          v-else-if="chartType === 'trend'"
+          class="h-[100px] w-[240px] flex-shrink-0"
+        >
+          <TrendChart
+            v-if="trendData && trendData.length > 0"
+            :trend-data="trendData"
+            :color="props.trendColor"
           />
         </div>
 
@@ -131,7 +146,7 @@ const trendColor = computed(() => {
       <div class="relative z-10 mt-2 flex items-center justify-between">
         <div v-if="trend || trendValue" class="flex items-center gap-1 text-xs">
           <span
-            :class="trendColor"
+            :class="trendClass"
             class="flex items-center gap-0.5 font-medium"
           >
             <component :is="TrendIcon" v-if="trend" class="size-3.5" />
@@ -149,6 +164,9 @@ const trendColor = computed(() => {
           <div class="h-3 w-0.5 rounded-full bg-border"></div>
           <span class="font-medium text-foreground">{{ footerValue }}</span>
         </div>
+
+        <!-- Extra slot for additional content -->
+        <slot name="extra"></slot>
       </div>
     </template>
   </div>

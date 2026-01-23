@@ -127,6 +127,15 @@ const routes: RouteRecordRaw[] = [
         path: '/demos/business-components',
         component: () => import('#/views/demos/business-components/index.vue'),
       },
+      {
+        meta: {
+          title: '统计卡片演示',
+        },
+        name: 'YlStatisticCardDemo',
+        path: '/demos/yl-statistic-card',
+        component: () =>
+          import('#/views/demos/components/YlStatisticCardDemo.vue'),
+      },
     ],
   },
 ];

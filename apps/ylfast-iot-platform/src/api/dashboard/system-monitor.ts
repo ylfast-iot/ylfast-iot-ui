@@ -228,7 +228,7 @@ export function subscribeSystemMonitor(
  */
 export function getSystemMonitorHistoryMeasurementValue(
   group: DashboardSystemMonitor.SystemMonitorGroup,
-  params: any,
+  params: DashboardSystemMonitor.MetricParams,
 ) {
   if (!params.format) {
     params.format = 'YYYY-MM-dd HH:mm:ss';

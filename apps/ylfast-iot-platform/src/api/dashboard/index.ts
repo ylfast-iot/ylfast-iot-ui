@@ -15,6 +15,18 @@ export namespace DashboardApi {
   }
 
   /**
+   * 仪表盘数字类型指标响应
+   */
+  export type DashboardMeasurementNumberResponse =
+    DashboardMeasurementResponse<number>;
+
+  /**
+   * 仪表盘字符串类型指标响应
+   */
+  export type DashboardMeasurementStringResponse =
+    DashboardMeasurementResponse<string>;
+
+  /**
    * 仪表盘数据
    */
   export interface MeasurementValue<T = any> {
@@ -79,6 +91,40 @@ export namespace DashboardApi {
     name: string;
     type: DataType;
     dimensions: DimensionInfo[];
+  }
+
+  export interface BaseMetricParams {
+    /** 起始时间戳（必选） */
+    from: number | string;
+
+    /** 返回的时间格式 */
+    format?: string;
+
+    /** 结束时间戳（可选） */
+    to?: number | string;
+
+    /** 最大数据量 */
+    limit?: number;
+
+    /** 周期 例如: 1h,10m,30s */
+    time?:
+      | '1d'
+      | '1h'
+      | '1m'
+      | '1M'
+      | '2h'
+      | '4h'
+      | '5m'
+      | '7d'
+      | '8h'
+      | '10m'
+      | '12h'
+      | '15m'
+      | '24h'
+      | '30d'
+      | '30m'
+      | '30s'
+      | string;
   }
 }
 

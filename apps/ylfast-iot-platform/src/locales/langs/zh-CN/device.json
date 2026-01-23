@@ -185,5 +185,34 @@
     "name": "分类名称",
     "key": "分类标识",
     "description": "描述"
+  },
+  "dashboard": {
+    "title": "设备统计仪表盘",
+    "product": {
+      "title": "产品统计",
+      "total": "产品总数",
+      "enabled": "已启用",
+      "disabled": "已禁用"
+    },
+    "device": {
+      "title": "设备统计",
+      "total": "设备总数",
+      "online": "在线",
+      "offline": "离线"
+    },
+    "onlineData": {
+      "title": "设备在线数据",
+      "todayOnline": "今日在线",
+      "yesterdayOnline": "昨日在线"
+    },
+    "message": {
+      "title": "设备消息统计",
+      "today": "今日消息",
+      "yesterday": "昨日消息",
+      "thisMonth": "本月消息"
+    },
+    "trend": {
+      "title": "设备消息量趋势"
+    }
   }
 }
