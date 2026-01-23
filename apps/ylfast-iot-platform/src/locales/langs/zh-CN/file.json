@@ -111,7 +111,8 @@
     "batchDeleteSuccess": "批量删除成功",
     "batchDeleteFail": "批量删除失败",
     "copySuccess": "链接已复制到剪贴板",
-    "noPreview": "该文件类型暂不支持预览"
+    "noPreview": "该文件类型暂不支持预览",
+    "systemBucketCannotDelete": "系统存储桶无法删除或修改"
   },
     "view": {
     "card": "卡片视图",

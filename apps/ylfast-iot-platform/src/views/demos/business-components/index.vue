@@ -8,6 +8,7 @@ import { TabPane, Tabs } from 'ant-design-vue';
 import CertificateSelectorDemo from './components/CertificateSelectorDemo.vue';
 import DeviceSelectorDemo from './components/DeviceSelectorDemo.vue';
 import NetworkSelectorDemo from './components/NetworkSelectorDemo.vue';
+import PluginSelectorDemo from './components/PluginSelectorDemo.vue';
 import ProductSelectorDemo from './components/ProductSelectorDemo.vue';
 import ProtocolSelectorDemo from './components/ProtocolSelectorDemo.vue';
 import UserSelectorDemo from './components/UserSelectorDemo.vue';
@@ -32,6 +33,11 @@ const activeKey = ref('device');
         <!-- Tab 3: Protocol Selector -->
         <TabPane key="protocol" tab="协议选择器 (ProtocolSelector)">
           <ProtocolSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 4: Plugin Selector -->
+        <TabPane key="plugin" tab="插件选择器 (PluginSelector)">
+          <PluginSelectorDemo />
         </TabPane>
 
         <!-- Tab 5: Network Selector -->

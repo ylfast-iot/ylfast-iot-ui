@@ -145,6 +145,8 @@ export interface FileBucketEntity {
   createTime?: number;
   /** 创建人ID */
   creatorId?: string;
+  /** 是否系统桶 */
+  system?: boolean;
 }
 
 // ==================== 桶管理 (Bucket Management) ====================

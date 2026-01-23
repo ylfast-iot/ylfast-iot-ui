@@ -33,6 +33,7 @@ const MoreVerticalIcon = createIconifyIcon('lucide:more-horizontal');
 const EditIcon = createIconifyIcon('lucide:edit-3');
 const Trash2Icon = createIconifyIcon('lucide:trash-2');
 const UploadIcon = createIconifyIcon('lucide:upload');
+const LockIcon = createIconifyIcon('lucide:lock');
 </script>
 
 <template>
@@ -227,16 +228,22 @@ const UploadIcon = createIconifyIcon('lucide:upload');
             ]"
           />
           <div class="ml-2 flex flex-1 flex-col truncate">
-            <span
-              class="text-[14px]"
-              :class="
-                selectedBucket === bucket.id
-                  ? 'text-primary'
-                  : 'text-foreground/70'
-              "
-            >
-              {{ bucket.name }}
-            </span>
+            <div class="flex items-center gap-1.5 truncate">
+              <span
+                class="text-[14px]"
+                :class="
+                  selectedBucket === bucket.id
+                    ? 'text-primary'
+                    : 'text-foreground/70'
+                "
+              >
+                {{ bucket.name }}
+              </span>
+              <LockIcon
+                v-if="bucket.system"
+                class="size-3 text-foreground/30"
+              />
+            </div>
             <span
               v-if="bucket.description"
               class="truncate text-[11px] opacity-50"
@@ -246,6 +253,7 @@ const UploadIcon = createIconifyIcon('lucide:upload');
             </span>
           </div>
           <Dropdown
+            v-if="!bucket.system"
             :trigger="['click']"
             class="opacity-0 transition-opacity group-hover/item:opacity-100"
           >

@@ -52,6 +52,10 @@ export function useFileResources(options?: { onBucketDeleted?: () => void }) {
   };
 
   const handleDeleteBucket = (item: FileBucketEntity) => {
+    if (item.system) {
+      message.warning($t('file.tips.systemBucketCannotDelete'));
+      return;
+    }
     Modal.confirm({
       title: $t('common.confirm'),
       content: $t('file.tips.deleteConfirmBucket', { name: item.name }),

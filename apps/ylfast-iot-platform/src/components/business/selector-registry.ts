@@ -4,6 +4,7 @@ export type SelectorType =
   | 'cert'
   | 'device'
   | 'network'
+  | 'plugin'
   | 'product'
   | 'protocol'
   | 'user';
@@ -44,6 +45,9 @@ export async function registerSelectors() {
     }),
     import('./network/network-selector').then(({ NetworkSelector }) => {
       selectorRegistry.add('network', NetworkSelector);
+    }),
+    import('./plugin/plugin-selector').then(({ PluginSelector }) => {
+      selectorRegistry.add('plugin', PluginSelector);
     }),
     import('./user/user-selector').then(({ UserSelector }) => {
       selectorRegistry.add('user', UserSelector);

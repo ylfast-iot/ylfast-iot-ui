@@ -1,0 +1,87 @@
+<script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
+import { onMounted, ref } from 'vue';
+
+import { Tag } from 'ant-design-vue';
+
+import { getPluginTypes } from '#/api/iot/plugin';
+import { CommonSelectorContent } from '#/components/business/common-selector';
+
+import { queryPluginList, usePluginSelectorConfig } from '../config';
+import PluginCardItem from './PluginCardItem.vue';
+
+const props = defineProps<CommonSelectorProps>();
+
+const emit = defineEmits(['change']);
+
+const { searchFormSchemas, tableColumns } = usePluginSelectorConfig();
+
+const contentRef = ref();
+
+// Plugin type mapping for display names
+const pluginTypeMap = ref<Map<string, string>>(new Map());
+
+onMounted(async () => {
+  try {
+    const types = await getPluginTypes();
+    types.forEach((t) => {
+      pluginTypeMap.value.set(t.id || t.value, t.name || t.text);
+    });
+  } catch (error) {
+    console.error('Failed to load plugin types for selector content:', error);
+  }
+});
+
+function handleChange(rows: any[]) {
+  emit('change', rows);
+}
+
+function getSelection() {
+  return contentRef.value?.getSelection();
+}
+
+function clearSelection() {
+  contentRef.value?.clearSelection();
+}
+
+function setSelection(rows: any[]) {
+  contentRef.value?.setSelection(rows);
+}
+
+function setMode(mode: 'card' | 'table') {
+  contentRef.value?.setMode(mode);
+}
+
+defineExpose({ getSelection, clearSelection, setSelection, setMode });
+</script>
+
+<template>
+  <CommonSelectorContent
+    ref="contentRef"
+    v-bind="props"
+    id-field="id"
+    :query-api="queryPluginList"
+    :search-form-schemas="searchFormSchemas"
+    :table-columns="tableColumns"
+    @change="handleChange"
+  >
+    <!-- Table Slots -->
+    <template #type="{ row }">
+      <Tag
+        class="rounded-md border-0 bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary"
+      >
+        {{ pluginTypeMap.get(row.type) || row.type }}
+      </Tag>
+    </template>
+
+    <!-- Card Slot -->
+    <template #card-item="{ item, isSelected }">
+      <PluginCardItem
+        :is-selected="isSelected"
+        :item="item"
+        :type-map="pluginTypeMap"
+      />
+    </template>
+  </CommonSelectorContent>
+</template>

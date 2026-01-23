@@ -111,7 +111,8 @@
     "batchDeleteSuccess": "Batch delete successful",
     "batchDeleteFail": "Batch delete failed",
     "copySuccess": "Link copied to clipboard",
-    "noPreview": "Preview not supported for this file type"
+    "noPreview": "Preview not supported for this file type",
+    "systemBucketCannotDelete": "System bucket cannot be deleted or modified"
   },
     "view": {
     "card": "Card View",

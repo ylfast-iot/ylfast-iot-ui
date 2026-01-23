@@ -1,0 +1,45 @@
+{
+  "title": "Plugin Management",
+  "driver": "Plugin Driver",
+  "id": "Plugin ID",
+  "idHint": "If not filled, the system will automatically generate a unique ID",
+  "name": "Plugin Name",
+  "type": "Plugin Type",
+  "version": "Version",
+  "provider": "Provider",
+  "configuration": "Configuration",
+  "uploadPlugin": "Upload Plugin",
+  "pluginPackage": "Plugin Package",
+  "noDriver": "No Plugin Driver",
+  "types": {
+    "device-gateway": "Device Gateway",
+    "rule-engine": "Rule Engine",
+    "media": "Media Service",
+    "notify": "Notification Service",
+    "data-collector": "Data Collector",
+    "other": "Other"
+  },
+  "action": {
+    "register": "Register",
+    "unregister": "Unregister",
+    "install": "Install",
+    "uninstall": "Uninstall"
+  },
+  "status": {
+    "installed": "Installed",
+    "uninstalled": "Uninstalled",
+    "running": "Running",
+    "stopped": "Stopped"
+  },
+  "validate": {
+    "idExists": "Plugin ID already exists"
+  },
+  "upload": {
+    "success": "Plugin uploaded successfully",
+    "failed": "Plugin upload failed",
+    "selectFile": "Select plugin file",
+    "supportFormat": "Supports jar format plugin package",
+    "dragTitle": "Click or drag file to this area to upload",
+    "onlyJar": "Only jar format plugin packages are supported"
+  }
+}
