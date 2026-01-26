@@ -61,29 +61,9 @@ const searchFormSchemas: YlDcFormSchema[] = [
 ];
 
 // 前端过滤与分页逻辑
-// 纯过滤逻辑
+// 协议列表由后端过滤，此处直接返回
 const filteredProtocolList = computed(() => {
-  let list = protocolList.value;
-
-  if (queryTerms.value.length > 0) {
-    list = list.filter((item) => {
-      return queryTerms.value.every((term) => {
-        const fieldMapping: Record<string, string> = {
-          protocolId: 'id',
-          protocolName: 'name',
-          protocolDescription: 'description',
-        };
-
-        const field = fieldMapping[term.column] || term.column;
-        const value = term.value?.replace(/%/g, '').toLowerCase();
-        if (!value) return true;
-
-        const itemValue = String((item as any)[field] || '').toLowerCase();
-        return itemValue.includes(value);
-      });
-    });
-  }
-  return list;
+  return protocolList.value;
 });
 
 // 分页逻辑
@@ -95,13 +75,24 @@ const paginatedProtocolList = computed(() => {
 });
 
 function handleSearch(terms: any[]) {
-  queryTerms.value = terms;
+  const fieldMapping: Record<string, string> = {
+    protocolId: 'id',
+    protocolName: 'name',
+    protocolDescription: 'description',
+  };
+
+  queryTerms.value = terms.map((term) => ({
+    ...term,
+    column: fieldMapping[term.column] || term.column,
+  }));
   pagination.value.current = 1;
+  fetchProtocols();
 }
 
 function handleReset() {
   queryTerms.value = [];
   pagination.value.current = 1;
+  fetchProtocols();
 }
 
 function handlePageChange(page: number, pageSize: number) {
@@ -121,6 +112,7 @@ async function fetchProtocols() {
   try {
     const res = await getSupportTransportProtocols(props.transportId, {
       paging: false, // 消息协议通常数量不多，先获取全部后前端分页
+      terms: queryTerms.value,
     });
     protocolList.value = res || [];
     pagination.value.total = protocolList.value.length;
