@@ -30,6 +30,7 @@
   "transport": "Transport",
   "status": "Status",
   "description": "Description",
+  "detail": "Detail",
   "help": "Help",
   "createTime": "Create Time",
   "enable": "Enabled",

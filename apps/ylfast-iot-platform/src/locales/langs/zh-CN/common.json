@@ -31,6 +31,7 @@
   "transport": "传输协议",
   "status": "状态",
   "description": "说明",
+  "detail": "详情",
   "help": "帮助",
   "createTime": "创建时间",
   "enable": "启用",
