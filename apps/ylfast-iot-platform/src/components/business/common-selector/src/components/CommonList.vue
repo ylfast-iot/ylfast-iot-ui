@@ -51,7 +51,13 @@ const [TableCard, gridApi] = useYlVxeTableCard<any>({
         query: async ({ page }: any, ...args: any) => {
           if (props.queryApi) {
             const formValues = args[0] || {};
-            const terms = formValues.terms || [];
+            const terms = [...(formValues.terms || [])];
+
+            // 合并外部传入的 terms
+            if (props.paramsTerms && props.paramsTerms.length > 0) {
+              terms.push(...props.paramsTerms);
+            }
+
             let queryParams: QueryParamEntity = {
               pageIndex: page.currentPage - 1,
               pageSize: page.pageSize,

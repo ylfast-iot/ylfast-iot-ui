@@ -124,6 +124,22 @@ function handleChange(val: any, rows: any[]) {
               <DeviceSelector v-model:value="multiValue" disabled />
             </div>
 
+            <div class="space-y-2">
+              <div class="font-bold text-red-500">
+                外部传入查询条件 (paramsTerms)
+              </div>
+              <DeviceSelector
+                v-model:value="multiValue"
+                :params-terms="[
+                  { column: 'productId', value: '2004278456441692160' },
+                ]"
+                placeholder="仅展示特定产品的设备"
+              />
+              <div class="text-xs text-gray-500">
+                固定筛选 productId: 2004278456441692160
+              </div>
+            </div>
+
             <div class="col-span-2 space-y-2 border-t pt-4">
               <div class="font-bold">自定义 Trigger 插槽</div>
               <DeviceSelector v-model:value="customTriggerValue">

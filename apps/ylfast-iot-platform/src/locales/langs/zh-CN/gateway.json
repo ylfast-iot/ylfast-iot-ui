@@ -1,0 +1,139 @@
+{
+  "name": "网关名称",
+  "title": "设备网关",
+  "description": "网关描述",
+  "provider": "接入方式",
+  "channel": "通道类型",
+  "channelId": "通道ID",
+  "transport": "传输协议",
+  "protocol": "消息协议",
+  "state": "网关状态",
+  "configuration": "网关配置",
+  "states": {
+    "enabled": "运行中",
+    "disabled": "已停止",
+    "paused": "已暂停"
+  },
+  "channels": {
+    "network": "网络组件",
+    "channel": "采集通道",
+    "plugin": "插件实例",
+    "sub": "子设备"
+  },
+  "action": {
+    "startup": "启动",
+    "pause": "暂停",
+    "shutdown": "停止",
+    "confirmStartup": "确定要启动该网关吗？",
+    "confirmPause": "确定要暂停该网关吗？",
+    "confirmShutdown": "确定要停止该网关吗？"
+  },
+  "tips": {
+    "stopFirst": "请先停止网关"
+  },
+  "session": {
+    "title": "设备会话",
+    "deviceId": "设备ID",
+    "serverId": "所属节点",
+    "address": "设备地址",
+    "connectTime": "连接时间",
+    "lastCommTime": "最后通信",
+    "pendingMessages": "待处理消息",
+    "parentDeviceId": "上级设备",
+    "remove": "移除会话",
+    "confirmRemove": "确定要移除该设备会话吗？",
+    "removeSuccess": "会话已移除",
+    "noSession": "暂无设备会话",
+    "total": "共 {count} 个会话",
+    "sessionId": "会话 ID",
+    "copyId": "复制 ID",
+    "sidebar": {
+      "clusterNodes": "集群节点",
+      "allNodes": "全部节点"
+    }
+  },
+  "access": {
+    "selectionTitle": "选择接入方式",
+    "selectionSub": "请根据设备类型选择对应的网关接入组件",
+    "btn": "接入",
+    "wizard": "选型向导"
+  },
+  "detail": {
+    "add": "新增网关",
+    "edit": "编辑网关",
+    "basicInfo": "基础信息",
+    "basicInfoDesc": "设置网关的名称、标识及选填的描述内容",
+    "id": "标识 (ID)",
+    "name": "名称",
+    "desc": "说明",
+    "idPlaceholder": "请输入唯一标识",
+    "namePlaceholder": "请输入名称",
+    "descPlaceholder": "请输入描述信息",
+    "advConfig": "进阶配置",
+    "advConfigDesc": "配置网关特定通道和协议的高级运行参数",
+    "configPreview": "配置预览",
+    "docs": "帮助文档",
+    "prev": "上一步",
+    "next": "下一步",
+    "save": "保存修改",
+    "create": "立即创建",
+    "updateSuccess": "更新成功",
+    "createSuccess": "新增成功",
+    "notFound": "未找到对应的接入方式",
+    "validation": {
+      "select": "请选择{title}",
+      "nameRequired": "请输入网关名称",
+      "selectNode": "请选择服务运行节点"
+    },
+    "network": {
+      "title": "网络组件",
+      "alert": "请选择对应的网络组件进行接入",
+      "loading": "正在加载网络组件...",
+      "empty": "暂无符合条件的网络组件",
+      "noAddress": "暂无运行地址"
+    },
+    "protocol": {
+      "title": "消息协议",
+      "alert": "请选择消息协议，用于对网络数据进行编解码",
+      "loading": "正在加载消息协议...",
+      "empty": "暂无符合条件的协议",
+      "noDesc": "暂无详细描述，该协议用于解析和构造对应传输协议的消息报文。"
+    },
+    "plugin": {
+      "title": "插件选择",
+      "alert": "请选择对应的驱动插件进行接入",
+      "loading": "正在加载插件驱动...",
+      "empty": "暂无符合条件的插件",
+      "driverDesc": "该插件提供了标准的物理层连接与协议解析能力，支持开箱即用的设备接入方案。"
+    },
+    "gatewayBasicConfig": "网关基础配置",
+    "pluginRuntimeConfig": "插件运行配置",
+    "transportDetails": "传输协议详情",
+    "features": "协议特性",
+    "routes": "路由列表",
+    "direction": "方向",
+    "upstream": "上行",
+    "downstream": "下行"
+  },
+  "plugin": {
+    "runMode": "运行模式",
+    "runModeSingle": "单节点",
+    "runModeMulti": "多节点",
+    "runModeSingleDesc": "插件在单个节点上独立运行",
+    "runModeMultiDesc": "插件在集群多个节点上分布式运行",
+    "sharedConfig": "共享配置",
+    "sharedEnabled": "所有节点共享同一份配置",
+    "sharedDisabled": "每个节点独立配置",
+    "configMode": "数据配置方式",
+    "configModeIndependent": "独立配置",
+    "globalConfig": "全局共享配置",
+    "singleConfig": "单节点配置"
+  },
+  "status": {
+    "online": "在线",
+    "error": "异常"
+  },
+  "pagination": {
+    "total": "共 {total} 条"
+  }
+}

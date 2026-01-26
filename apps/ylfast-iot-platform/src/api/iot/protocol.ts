@@ -77,6 +77,23 @@ export namespace IotProtocolApi {
     protocols: ProtocolSupport[];
   }
 
+  export interface ProtocolInfo {
+    /** 协议ID */
+    id: string;
+    /** 协议名称 */
+    name: string;
+    /** 拓展配置信息 */
+    configuration: Recordable;
+    /** 说明 */
+    description: string;
+  }
+
+  export interface ProtocolLoaderInfo {
+    name: string;
+    provider: string;
+    document: string;
+  }
+
   const BASE_URL = '/iot/protocol';
   export const Apis = {
     detail: `${BASE_URL}/{id}/detail`,
@@ -91,6 +108,8 @@ export namespace IotProtocolApi {
     // 协议默认物模型
     defaultDeviceMetadata: `${BASE_URL}/{id}/{transport}/metadata`,
     upload: `${BASE_URL}/upload`,
+    supports: `${BASE_URL}/supports`,
+    supportTransportProtocols: `${BASE_URL}/supports/{transport}`,
   };
 
   // 继承基础增删改查接口
@@ -101,8 +120,32 @@ export namespace IotProtocolApi {
  * @description:  获取协议加载器提供列表
  */
 export const getProtocolSupportLoaderProviders = () =>
-  requestClient.get<{ document: string; name: string; provider: string }[]>(
+  requestClient.get<IotProtocolApi.ProtocolLoaderInfo[]>(
     IotProtocolApi.Apis.LoaderProvidersApi,
+  );
+
+/**
+ * @description: 获取支持指定传输协议的消息协议
+ * @param transport 传输协议
+ * @param query 查询参数
+ */
+export const getSupportTransportProtocols = (
+  transport: string,
+  query?: QueryParamEntity,
+) =>
+  requestClient.post<IotProtocolApi.ProtocolInfo[]>(
+    parseTemplate(IotProtocolApi.Apis.supportTransportProtocols, { transport }),
+    query,
+  );
+
+/**
+ * @description: 获取当前支持的协议
+ * @param query 查询参数
+ */
+export const getAllProtocols = (query?: QueryParamEntity) =>
+  requestClient.post<IotProtocolApi.ProtocolInfo[]>(
+    IotProtocolApi.Apis.supports,
+    query,
   );
 
 /**

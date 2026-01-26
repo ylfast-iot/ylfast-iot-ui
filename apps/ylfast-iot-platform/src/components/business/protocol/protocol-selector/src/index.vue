@@ -51,6 +51,7 @@ function handleOpen(options: any = {}) {
   modalRef.value?.open({
     displayMode: props.displayMode,
     multiple: props.multiple,
+    paramsTerms: props.paramsTerms,
     defaultSelectedRows: selectedRows.value,
     showPager: props.showPager,
     showSearchForm: props.showSearchForm,
@@ -114,6 +115,7 @@ defineExpose({
       :display-mode="displayMode"
       :modal-title="$t('protocol.selectTitle', '选择协议')"
       :multiple="multiple"
+      :params-terms="paramsTerms"
       :query-api="queryProtocolList"
       :search-form-schemas="searchFormSchemas"
       :show-pager="showPager"

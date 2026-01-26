@@ -232,11 +232,11 @@ export const getAliveNetworkInfo = (
   include?: string,
   query?: QueryParamEntity,
 ) =>
-  requestClient.get<IotNetCompApi.ChannelInfo[]>(
+  requestClient.post<IotNetCompApi.ChannelInfo[]>(
     parseTemplate(IotNetCompApi.Apis.aliveByType, { networkType }),
+    query,
     {
       params: {
-        ...query,
         include,
       },
     },

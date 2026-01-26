@@ -53,6 +53,7 @@ function handleOpen(options: any = {}) {
     defaultSelectedRows: selectedRows.value,
     displayMode: props.displayMode,
     multiple: props.multiple,
+    paramsTerms: props.paramsTerms,
     showPager: props.showPager,
     showSearchForm: props.showSearchForm,
     ...options,
@@ -117,6 +118,7 @@ defineExpose({
       :display-mode="displayMode"
       :modal-title="$t('network.selectTitle')"
       :multiple="multiple"
+      :params-terms="paramsTerms"
       :query-api="queryNetworkList"
       :search-form-schemas="searchFormSchemas"
       :show-pager="showPager"

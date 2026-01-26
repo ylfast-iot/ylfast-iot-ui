@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -17,6 +19,7 @@ import {
 } from '../config';
 import CertificateCardItem from './CertificateCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useCertificateSelectorConfig();
@@ -44,6 +47,7 @@ defineExpose({ close, open });
     id-field="id"
     :modal-title="$t('certificate.selector.title')"
     name-field="name"
+    :params-terms="paramsTerms"
     :query-api="queryCertificateList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

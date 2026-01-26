@@ -78,5 +78,9 @@
   "no": "否",
   "tips": {
     "selectData": "请选择数据"
-  }
+  },
+  "methods": "接入方式",
+  "back": "返回",
+  "group": "分组",
+  "address": "地址"
 }

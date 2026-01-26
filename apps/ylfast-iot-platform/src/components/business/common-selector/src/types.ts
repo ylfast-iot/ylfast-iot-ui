@@ -1,6 +1,6 @@
 import type { DefineComponent } from 'vue';
 
-import type { QueryParamEntity } from '#/adapter';
+import type { QueryParamEntity, Term } from '#/adapter';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 import type { PagerResult } from '#/api/basic';
 import type { YlDcFormSchema } from '#/components/yl-dc-form';
@@ -59,6 +59,8 @@ export interface BaseSelectorProps<T = any> {
   beforeFetch?: (
     params: QueryParamEntity,
   ) => Promise<QueryParamEntity> | QueryParamEntity;
+  /** 外部传入的查询条件 */
+  paramsTerms?: Term[];
   /** 查询后置拦截 */
   afterFetch?: (result: {
     data: T[];

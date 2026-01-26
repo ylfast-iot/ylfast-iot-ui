@@ -50,6 +50,7 @@ function handleOpen(options: any = {}) {
     defaultSelectedRows: selectedRows.value,
     displayMode: props.displayMode,
     multiple: props.multiple,
+    paramsTerms: props.paramsTerms,
     showPager: props.showPager,
     showSearchForm: props.showSearchForm,
     ...options,
@@ -114,6 +115,7 @@ defineExpose({
       :display-mode="displayMode"
       modal-title="选择用户"
       :multiple="multiple"
+      :params-terms="paramsTerms"
       :query-api="queryUserList"
       :search-form-schemas="searchFormSchemas"
       :show-pager="showPager"

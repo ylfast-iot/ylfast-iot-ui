@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CommonSelectorProps } from '../types';
 
-import type { QueryParamEntity } from '#/adapter';
+import type { QueryParamEntity, Term } from '#/adapter';
 
 import { onMounted, reactive, ref, watch } from 'vue';
 
@@ -32,7 +32,7 @@ const pagination = reactive({
 });
 
 // Cache current search terms
-const currentTerms = ref<any[]>([]);
+const currentTerms = ref<Term[]>([]);
 
 // Search Form
 const [DynamicSearchForm] = useYlDcForm({
@@ -49,10 +49,15 @@ async function fetchData() {
   loading.value = true;
   try {
     if (props.queryApi) {
+      const terms = [...currentTerms.value];
+      if (props.paramsTerms && props.paramsTerms.length > 0) {
+        terms.push(...props.paramsTerms);
+      }
+
       let queryParams: QueryParamEntity = {
         pageIndex: pagination.current - 1,
         pageSize: pagination.pageSize,
-        terms: currentTerms.value,
+        terms,
       };
 
       // Hook: beforeFetch
@@ -146,6 +151,15 @@ watch(
     setSelection(rows || []);
   },
   { immediate: true, deep: true },
+);
+
+watch(
+  () => props.paramsTerms,
+  () => {
+    pagination.current = 1;
+    fetchData();
+  },
+  { deep: true },
 );
 
 // Pagination

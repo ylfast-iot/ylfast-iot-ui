@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -15,6 +17,7 @@ import {
 } from '../config';
 import NetworkCardItem from './NetworkCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useNetworkSelectorConfig();
@@ -50,6 +53,7 @@ defineExpose({ clearSelection, close, open, setSelection });
     id-field="id"
     :modal-title="$t('network.selectTitle')"
     name-field="name"
+    :params-terms="paramsTerms"
     :query-api="queryNetworkList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

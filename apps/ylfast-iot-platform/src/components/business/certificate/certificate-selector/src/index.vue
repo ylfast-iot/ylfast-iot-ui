@@ -38,6 +38,7 @@ function handleOpen(options: any = {}) {
     defaultSelectedRows: selectedRows.value,
     displayMode: props.displayMode,
     multiple: props.multiple,
+    paramsTerms: props.paramsTerms,
     showPager: props.showPager,
     showSearchForm: props.showSearchForm,
     ...options,
@@ -101,6 +102,7 @@ defineExpose({
       ref="modalRef"
       :display-mode="displayMode"
       :multiple="multiple"
+      :params-terms="paramsTerms"
       :show-pager="showPager"
       :show-search-form="showSearchForm"
       @confirm="handleConfirm"

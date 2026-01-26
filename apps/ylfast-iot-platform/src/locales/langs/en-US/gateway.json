@@ -1,0 +1,126 @@
+{
+  "name": "Gateway Name",
+  "title": "Device Gateway",
+  "description": "Description",
+  "provider": "Provider",
+  "channel": "Channel Type",
+  "channelId": "Channel ID",
+  "transport": "Transport",
+  "protocol": "Protocol",
+  "state": "Status",
+  "configuration": "Configuration",
+  "states": {
+    "enabled": "Running",
+    "disabled": "Stopped",
+    "paused": "Paused"
+  },
+  "channels": {
+    "network": "Network Component",
+    "channel": "Collection Channel",
+    "plugin": "Plugin Instance",
+    "sub": "Child Device"
+  },
+  "action": {
+    "startup": "Start",
+    "pause": "Pause",
+    "shutdown": "Stop",
+    "confirmStartup": "Are you sure you want to start this gateway?",
+    "confirmPause": "Are you sure you want to pause this gateway?",
+    "confirmShutdown": "Are you sure you want to stop this gateway?"
+  },
+  "tips": {
+    "stopFirst": "Please stop the gateway first"
+  },
+  "session": {
+    "title": "Device Sessions",
+    "deviceId": "Device ID",
+    "serverId": "Server Node",
+    "address": "Device Address",
+    "connectTime": "Connect Time",
+    "lastCommTime": "Last Comm",
+    "pendingMessages": "Pending Messages",
+    "parentDeviceId": "Parent Device",
+    "remove": "Remove Session",
+    "confirmRemove": "Are you sure you want to remove this session?",
+    "removeSuccess": "Session removed",
+    "noSession": "No device sessions",
+    "total": "{count} sessions",
+    "sessionId": "Session ID",
+    "copyId": "Copy ID",
+    "sidebar": {
+      "clusterNodes": "Cluster Nodes",
+      "allNodes": "All Nodes"
+    }
+  },
+  "access": {
+    "selectionTitle": "Select Access Method",
+    "selectionSub": "Choose a gateway access component based on your device type",
+    "btn": "Access",
+    "wizard": "Selection Wizard"
+  },
+  "detail": {
+    "add": "Add Gateway",
+    "edit": "Edit Gateway",
+    "basicInfo": "Basic Info",
+    "basicInfoDesc": "Set gateway name, ID and optional description",
+    "id": "ID",
+    "name": "Name",
+    "desc": "Description",
+    "idPlaceholder": "Please enter unique ID",
+    "namePlaceholder": "Please enter name",
+    "descPlaceholder": "Please enter description",
+    "advConfig": "Advanced Config",
+    "advConfigDesc": "Configure advanced parameters for specific channel and protocol",
+    "configPreview": "Config Preview",
+    "docs": "Documentation",
+    "prev": "Previous",
+    "next": "Next",
+    "save": "Save Changes",
+    "create": "Create Now",
+    "updateSuccess": "Update Successful",
+    "createSuccess": "Create Successful",
+    "notFound": "Access Provider Not Found",
+    "validation": {
+      "select": "Please select {title}",
+      "nameRequired": "Please enter gateway name"
+    },
+    "network": {
+      "title": "Network Component",
+      "alert": "Please select the corresponding network component for access",
+      "loading": "Loading network components...",
+      "empty": "No matching network components found",
+      "noAddress": "No Running Address"
+    },
+    "protocol": {
+      "title": "Protocol",
+      "alert": "Please select a message protocol for encoding and decoding network data",
+      "loading": "Loading protocols...",
+      "empty": "No matching protocols found",
+      "noDesc": "No detailed description available. This protocol is used to parse and construct messages for the transport protocol."
+    },
+    "plugin": {
+      "title": "Plugin Selection",
+      "alert": "Please select the corresponding driver plugin for access",
+      "loading": "Loading driver plugins...",
+      "empty": "No matching plugins found",
+      "driverDesc": "This plugin provides standard physical layer connectivity and protocol parsing capabilities, supporting out-of-the-box device access solutions."
+    },
+    "gatewayBasicConfig": "Gateway Basic Config",
+    "pluginRuntimeConfig": "Plugin Runtime Config",
+    "transportDetails": "Transport Details",
+    "features": "Protocol Features",
+    "routes": "Route List",
+    "direction": "Direction",
+    "upstream": "Upstream",
+    "downstream": "Downstream"
+  },
+  "plugin": {
+    "runMode": "Run Mode",
+    "runModeSingle": "Single Node",
+    "runModeMulti": "Multi Node",
+    "sharedConfig": "Shared Config",
+    "sharedEnabled": "All nodes share the same configuration",
+    "sharedDisabled": "Each node has independent configuration",
+    "globalConfig": "Global Shared Configuration"
+  }
+}

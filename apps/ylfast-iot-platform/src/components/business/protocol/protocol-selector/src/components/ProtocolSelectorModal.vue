@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -14,6 +16,7 @@ import {
 } from '../config';
 import ProtocolCardItem from './ProtocolCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useProtocolSelectorConfig();
@@ -41,6 +44,7 @@ defineExpose({ open, close });
     id-field="protocolId"
     :modal-title="$t('protocol.selectTitle', '选择协议')"
     name-field="protocolName"
+    :params-terms="paramsTerms"
     :query-api="queryProtocolList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

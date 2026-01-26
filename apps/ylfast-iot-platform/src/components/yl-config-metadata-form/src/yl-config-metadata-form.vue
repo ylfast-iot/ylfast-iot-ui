@@ -23,7 +23,7 @@ import {
 
 import { $t } from '@vben/locales';
 
-import { Button, Form } from 'ant-design-vue';
+import { Button as AButton, Form as AForm } from 'ant-design-vue';
 
 import { renderConfigMetadataFormItems } from './renderConfigMetadataFormItems';
 
@@ -239,7 +239,7 @@ defineExpose(action);
 
 <template>
   <div class="yl-config-metadata-form w-full">
-    <Form v-bind="getFormProps" ref="formRef" :model="formModel">
+    <AForm v-bind="getFormProps" ref="formRef" :model="formModel">
       <ConfigItemsRenderer
         :metadata="groups"
         :model="formModel"
@@ -247,22 +247,22 @@ defineExpose(action);
         :hide-root-header="props.hideRootHeader"
         :hide-nested-header="props.hideNestedHeader"
       />
-    </Form>
+    </AForm>
 
     <!-- Action Footer -->
     <div v-if="props.showAction" class="mt-4 w-full">
       <slot name="action" :submit="handleSubmit" :reset="handleReset">
         <div class="flex justify-end gap-2">
-          <Button v-if="props.showResetButton !== false" @click="handleReset">
+          <AButton v-if="props.showResetButton !== false" @click="handleReset">
             {{ props.resetButtonText || $t('ylConfigMetadataForm.reset') }}
-          </Button>
-          <Button
+          </AButton>
+          <AButton
             v-if="props.showSubmitButton !== false"
             type="primary"
             @click="handleSubmit"
           >
             {{ props.submitButtonText || $t('ylConfigMetadataForm.submit') }}
-          </Button>
+          </AButton>
         </div>
       </slot>
     </div>

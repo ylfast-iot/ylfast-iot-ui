@@ -14,7 +14,6 @@ export default defineConfig(async () => {
             target: 'http://localhost:9000/api',
           },
 
-
           // '/api': {
           //   changeOrigin: true,
           //   ws: true,
@@ -22,7 +21,6 @@ export default defineConfig(async () => {
           //   // 真实后端服务地址
           //   target: 'http://localhost:8090',
           // },
-
 
           // '/socket': {
           //   changeOrigin: true,

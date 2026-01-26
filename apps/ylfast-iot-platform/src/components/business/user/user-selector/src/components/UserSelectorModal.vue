@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { Badge, Tag } from 'ant-design-vue';
@@ -13,6 +15,7 @@ import {
 } from '../config';
 import UserCardItem from './UserCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useUserSelectorConfig();
@@ -48,6 +51,7 @@ defineExpose({ clearSelection, close, open, setSelection });
     id-field="id"
     modal-title="选择用户"
     name-field="name"
+    :params-terms="paramsTerms"
     :query-api="queryUserList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

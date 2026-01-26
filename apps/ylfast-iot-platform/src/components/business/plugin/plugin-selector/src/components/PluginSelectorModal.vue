@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { onMounted, ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -11,6 +13,7 @@ import { CommonModal } from '#/components/business/common-selector';
 import { queryPluginList, usePluginSelectorConfig } from '../config';
 import PluginCardItem from './PluginCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = usePluginSelectorConfig();
@@ -52,6 +55,7 @@ defineExpose({ open, close });
     id-field="id"
     :modal-title="$t('plugin.selectTitle', '选择插件')"
     name-field="name"
+    :params-terms="paramsTerms"
     :query-api="queryPluginList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -15,6 +17,7 @@ import {
 } from '../config';
 import DeviceCardItem from './DeviceCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useDeviceSelectorConfig();
@@ -42,6 +45,7 @@ defineExpose({ close, open });
     id-field="id"
     :modal-title="$t('device.instance.selector.title')"
     name-field="deviceName"
+    :params-terms="paramsTerms"
     :query-api="queryDeviceList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"

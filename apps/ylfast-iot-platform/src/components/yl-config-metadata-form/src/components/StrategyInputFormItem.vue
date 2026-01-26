@@ -5,7 +5,7 @@ import { computed, ref } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
 
-import { FormItem, Tooltip } from 'ant-design-vue';
+import { FormItem as AFormItem, Tooltip } from 'ant-design-vue';
 
 import { getFormItemComponent } from '#/components/yl-data-type-strategies/value-input';
 import UnsupportedInput from '#/components/yl-data-type-strategies/value-input/UnsupportedInput.vue';
@@ -55,7 +55,7 @@ defineExpose({
 </script>
 
 <template>
-  <FormItem :name="prop.property" :rules="getRules(prop)">
+  <AFormItem :name="prop.property" :rules="getRules(prop)">
     <template #label>
       <div class="flex items-center">
         {{ prop.name }}
@@ -75,5 +75,5 @@ defineExpose({
       :prop="prop"
       v-model:value="innerValue"
     />
-  </FormItem>
+  </AFormItem>
 </template>

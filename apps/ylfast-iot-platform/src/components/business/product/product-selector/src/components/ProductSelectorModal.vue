@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CommonSelectorProps } from '#/components/business/common-selector';
+
 import { ref } from 'vue';
 
 import { $t } from '@vben/locales';
@@ -10,6 +12,7 @@ import { CommonModal } from '#/components/business/common-selector';
 import { queryProductList, useProductSelectorConfig } from '../config';
 import ProductCardItem from './ProductCardItem.vue';
 
+defineProps<CommonSelectorProps>();
 const emit = defineEmits(['confirm']);
 
 const { searchFormSchemas, tableColumns } = useProductSelectorConfig();
@@ -37,6 +40,7 @@ defineExpose({ open, close });
     id-field="id"
     :modal-title="$t('device.product.selectorTitle', '选择产品')"
     name-field="productName"
+    :params-terms="paramsTerms"
     :query-api="queryProductList"
     :search-form-schemas="searchFormSchemas"
     :table-columns="tableColumns"
