@@ -548,6 +548,7 @@ onMounted(() => {
 
     <!-- 趋势图区域 -->
     <YlTrendChart
+      class="h-[800px]"
       :api="fetchTrendData"
       :option-generator="trendOptionGenerator"
       :show-date-shortcuts="true"

@@ -293,6 +293,7 @@ export function renderConfigMetadataDescItems(props: RenderProps) {
                       ) : (
                         <DescItem
                           editMode={props.editMode}
+                          formModel={formModel.value}
                           onUpdate:value={(val: any) =>
                             (formModel.value[prop.property] = val)
                           }

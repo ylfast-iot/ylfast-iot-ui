@@ -72,9 +72,15 @@ export namespace IotProtocolApi {
     name: string;
   }
 
-  export interface ProtocolUploadResult {
-    fileUploadRes: any;
-    protocols: ProtocolSupport[];
+  export interface ProtocolUploadInfo {
+    /** 文件名 */
+    filename: string;
+    /** 文件ID */
+    fileId: string;
+    /** 访问URL */
+    accessUrl: string;
+    /** 协议信息 */
+    protocolInfo: ProtocolInfo;
   }
 
   export interface ProtocolInfo {
@@ -218,10 +224,10 @@ export const getRegisteredProtocols = () =>
 /**
  * @description: 上传协议
  * @param file 协议文件
- * @returns IotProtocolApi.ProtocolUploadResult
+ * @returns IotProtocolApi.ProtocolUploadInfo
  */
 export const uploadProtocol = (file: File) => {
-  return requestClient.upload<IotProtocolApi.ProtocolUploadResult>(
+  return requestClient.upload<IotProtocolApi.ProtocolUploadInfo>(
     IotProtocolApi.Apis.upload,
     { file },
   );

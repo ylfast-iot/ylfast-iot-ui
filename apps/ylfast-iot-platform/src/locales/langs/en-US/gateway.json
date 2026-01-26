@@ -122,5 +122,68 @@
     "sharedEnabled": "All nodes share the same configuration",
     "sharedDisabled": "Each node has independent configuration",
     "globalConfig": "Global Shared Configuration"
+  },
+  "deviceAccess": {
+    "accessGateway": "Access Gateway",
+    "switchGateway": "Switch Gateway",
+    "selectGateway": "Please select Access Gateway",
+    "selectNow": "Select Now",
+    "pluginProduct": "Plugin Product",
+    "selectPluginProduct": "Select Plugin Product",
+    "saveConfig": "Save Configuration",
+    "channelInfo": "Channel Info",
+    "protocolInfo": "Protocol Info",
+    "noAddress": "No address info",
+    "noDesc": "No description",
+    "noProtocolDetail": "No protocol details",
+    "selectGatewayFirst": "Please select access gateway on the left first",
+    "loadFailed": "Failed to load gateway info",
+    "selectorInitFailed": "Gateway selector init failed",
+    "saveSuccess": "Save successful",
+    "saveFailed": "Save failed",
+    "disableSwitch": "Active devices exist, switching prohibited",
+    "tsl": {
+      "conflictTitle": "TSL Merge Strategy",
+      "pluginVsTransport": "Conflict detected: Plugin TSL vs Transport TSL",
+      "newVsExisting": "Conflict detected: New TSL vs Existing Product TSL",
+      "step1Title": "Step 1: Choose Strategy",
+      "step2Title": "Step 2: Merge with Existing",
+      "confirmMerge": "Confirm Merge",
+      "mergeSteps": {
+        "transport": {
+          "name": "Transport TSL Merge",
+          "description": "Merge transport protocol TSL with existing product TSL"
+        },
+        "plugin": {
+          "name": "Plugin TSL Merge",
+          "description": "Further merge plugin TSL with the current merged TSL"
+        }
+      },
+      "comparison": {
+        "metric": "Metric",
+        "itemName": "Item Name",
+        "source": "Current TSL",
+        "target": "Base TSL",
+        "preview": "After Merge",
+        "properties": "Properties",
+        "functions": "Functions",
+        "events": "Events",
+        "tags": "Tags",
+        "expands": "Expands"
+      },
+      "diff": {
+        "added": "Added",
+        "removed": "Removed",
+        "unchanged": "Unchanged"
+      },
+      "merge": "Merge",
+      "mergeDesc": "Keep all attributes, prefer new on conflict",
+      "intersect": "Intersect",
+      "intersectDesc": "Keep only common attributes (match by ID)",
+      "overwrite": "Overwrite",
+      "overwriteDesc": "Replace completely with new TSL",
+      "ignore": "Ignore",
+      "ignoreDesc": "Keep original TSL, ignore new attributes"
+    }
   }
 }

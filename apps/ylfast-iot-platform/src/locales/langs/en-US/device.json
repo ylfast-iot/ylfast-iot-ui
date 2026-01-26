@@ -1,7 +1,7 @@
 {
   "instance": {
     "name": "Device Name",
-    "sn": "Serial Number",
+    "sn": "Device SN",
     "id": "Device ID",
     "status": "Status",
     "product": "Product",
@@ -16,68 +16,70 @@
     "transport": "Transport",
     "gateway": "Gateway",
     "registerTime": "Register Time",
-    "onlineTime": "Last Online Time",
-    "offlineTime": "Last Offline Time",
+    "onlineTime": "Online Time",
+    "offlineTime": "Offline Time",
     "copyId": "Copy ID",
     "stateMessage": {
-      "online": "Device is online",
-      "offline": "Device is offline",
-      "unActive": "Device is now inactive"
+      "online": "Device online successfully",
+      "offline": "Device offline",
+      "unActive": "Device became inactive"
     },
-    "config": "Device Configuration",
-    "configUpdateSuccess": "Configuration updated successfully",
+    "config": "Device Config",
+    "configUpdateSuccess": "Config updated successfully",
     "confirmTitle": {
-      "modify": "Confirm Modification",
-      "override": "Confirm Override",
-      "overrideMetadata": "Confirm Override Metadata"
+      "modify": "Confirm Config Modification",
+      "override": "Confirm Configuration Override",
+      "overrideMetadata": "Confirm Metadata Override"
     },
     "confirmContent": {
-      "modify": "Are you sure you want to modify the device configuration?",
-      "override": "The current configuration is inherited from the product. Modifying it will break the inheritance. Future product updates will no longer apply to this device. Are you sure?",
-      "overrideMetadata": "The current device metadata is inherited from the product. Modifying it will make it an independent metadata. Future product metadata updates will no longer apply to this device. Are you sure?"
+      "modify": "Are you sure you want to modify the device configuration info?",
+      "override": "Current device config is inherited from product. Modify will override the inheritance. Once overridden, subsequent product config updates will no longer be applied automatically. Continue?",
+      "overrideMetadata": "Current device metadata is inherited from product. Modify will make it independent, and subsequent product metadata changes will not apply to this device. Continue?"
     },
     "tab": {
-      "info": "Device Information",
-      "monitor": "Monitor",
+      "info": "Device Info",
+      "property": "Properties",
+      "monitor": "Device Monitor",
       "thingModel": "Thing Model",
       "history": "History Data",
       "logs": "Device Logs",
       "attrMapping": "Attr Mapping",
       "functions": "Functions",
       "dataMapping": "Data Mapping",
-      "subDevice": "Sub Devices",
-      "passthrough": "Passthrough"
+      "subDevice": "Sub Device",
+      "passthrough": "Transparent Parsing",
+      "debugDiagnosis": "Debug & Diagnosis"
     },
     "monitor": {
-      "realTimeProperty": "Real-time Property",
+      "realTimeProperty": "Real-time Properties",
       "propertyMonitor": "Property Monitor",
       "eventMonitor": "Event Monitor",
-      "searchProperty": "Search Property",
+      "searchProperty": "Search Properties",
       "historyTrend": "History Trend",
       "readProperty": "Read Property",
       "writeProperty": "Write Property",
       "updateTime": "Update Time",
       "neverUpdated": "Never Updated",
-      "noProperty": "No Properties",
-      "inputValue": "Please input value for",
+      "noProperty": "No Property",
+      "inputValue": "Please input",
       "eventInfo": "Info Event",
       "eventAlarm": "Alarm Event",
-      "clearLog": "Clear Logs"
+      "clearLog": "Clear Log"
     },
     "history": {
-      "noStrategy": "No storage strategy exists. Please configure a storage strategy to view history data.",
-      "currentStrategy": "Current Storage Strategy:",
+      "noStrategy": "No storage strategy currently exists. Please configure a storage strategy to view historical data.",
+      "currentStrategy": "Current Strategy Mode:",
       "columnModeDesc": "Column Mode: Supports parallel multi-property queries",
-      "rowModeDesc": "Row Mode: Single-property trajectory query",
+      "rowModeDesc": "Row Mode: Single property trajectory query",
       "queryType": "Query Type",
       "deviceProperty": "Device Property",
       "deviceEvent": "Device Event",
       "selectProperty": "Select Property",
       "selectQueryItem": "Select Query Item",
-      "selectEventPlaceholder": "Select an event",
-      "searchPlaceholder": "Search Name or ID...",
+      "selectEventPlaceholder": "Please select event",
+      "searchPlaceholder": "Search name or ID...",
       "selectAll": "Select All / Inverse",
-      "selectedCount": "Selected {count} items",
+      "selectedCount": "{count} items selected",
       "noMatch": "No matching items found",
       "timeRange": "Time Range",
       "startQuery": "Start Query",
@@ -86,12 +88,12 @@
       "propertyValue": "Property Value",
       "formatValue": "Formatted Value",
       "dataValue": "Data Value",
-      "emptyHistory": "Cannot fetch history data: No active storage strategy detected"
+      "emptyHistory": "Unable to fetch history data: No active storage strategy detected"
     },
     "logs": {
-      "time": "Log Time",
+      "time": "Time",
       "type": "Type",
-      "content": "Content",
+      "content": "Log Content",
       "detail": "Log Detail"
     },
     "attrMapping": {
@@ -99,23 +101,21 @@
       "propertyId": "Property ID",
       "propertyName": "Property Name",
       "mappingId": "Mapping ID",
-      "mappingIdPlaceholder": "Enter Mapping ID",
-      "helpTitle": "Function Description",
-      "helpDesc": "When the property identifier reported by the device differs from the standard property identifier defined in the platform Thing Model, use Attribute Mapping to associate them.",
-      "helpPlatformId": "Standard Property ID defined in the platform Thing Model.",
-      "helpMappingId": "Actual Property ID or register address used in device reports.",
+      "mappingIdPlaceholder": "Please enter mapping ID",
+      "helpTitle": "Help Info",
+      "helpDesc": "When the property ID reported by the device is inconsistent with the property ID defined in the thing model, you can use the attribute mapping function to associate them.",
+      "helpPlatformId": "Standard Property ID defined in the thing model.",
+      "helpMappingId": "Property ID or register address used in the actual report message from device.",
       "example": "Example",
       "examplePlatform": "Platform Property",
       "exampleDevice": "Device Report",
-      "exampleConfig": "Config Mapping"
+      "exampleConfig": "Mapping Config"
     },
     "action": {
-      "activate": "Activate",
-      "refresh": "Refresh",
       "add": "Add Device",
       "enable": "Enable Device",
       "disable": "Disable Device",
-      "batch": "Batch Operations",
+      "batch": "Batch Action",
       "batchAdd": "Batch Add",
       "batchDelete": "Batch Delete",
       "addAndBind": "Add and Bind",
@@ -127,27 +127,71 @@
       "coverUrl": "Please enter image URL"
     },
     "tips": {
-      "batchAddNotImplemented": "Batch add feature pending implementation",
+      "batchAddNotImplemented": "Batch add functionality to be implemented",
       "disableBeforeDelete": "Please disable the device before deleting"
     },
     "function": {
-      "searchPlaceholder": "Search Function Name/ID",
-      "noMatch": "No matching functions found",
-      "noDescription": "No description available",
+      "searchPlaceholder": "Search function name/ID",
+      "noMatch": "No matching functions",
+      "noDescription": "No description",
       "params": "Parameters",
-      "noParams": "No input parameters required",
+      "noParams": "This function requires no input parameters",
       "result": "Execution Result",
-      "executeTime": "Timestamp",
+      "executeTime": "Execute Time",
       "responseData": "Response Data",
       "responseTime": "Response Time",
-      "execute": "Execute",
-      "waiting": "Ready / Waiting for Execution",
-      "selectTip": "Select a function from the left sidebar",
-      "invoked": "Command sent successfully",
+      "execute": "Execute Function",
+      "waiting": "Ready / Waiting",
+      "selectTip": "Please select function from the left",
+      "invoked": "Command dispatched",
       "required": "is required"
     },
     "selector": {
       "title": "Select Device"
+    },
+    "transparentParser": {
+      "title": "Transparent Message Parsing",
+      "scriptLanguage": "Script Language",
+      "platformMessage": "Platform Message",
+      "transparentMessage": "Transparent Message",
+      "header": "Header",
+      "headerTip": "Used for custom transparent protocol packages or official protocol package additional information, such as mqtt topic",
+      "headerKey": "Key",
+      "headerValue": "Value",
+      "payload": "Payload",
+      "payloadTip": "Starting with 0x is hexadecimal, otherwise it is a string",
+      "upstream": "Upstream (Decode Debug)",
+      "downstream": "Downstream (Encode Debug)",
+      "debugLog": "Debug Log",
+      "clearLog": "Clear Log",
+      "reload": "Reload",
+      "inheritProduct": "Inherit Product Parser",
+      "cancelInherit": "Cancel Inherit",
+      "reset": "Reset",
+      "inheritTip": "Current device parsing script has inherited from product. Cancel will detach from product, making it an independent script. Save to apply.",
+      "independentTip": "Current device parsing script is independent. Click Inherit to share the product's parser.",
+      "tips": {
+        "saveSuccess": "Saved successfully",
+        "resetSuccess": "Reset successfully",
+        "inheritSuccess": "Device parser reset to inherit product",
+        "cancelInheritSuccess": "Inheritance cancelled",
+        "decodeSuccess": "Decode success",
+        "decodeFailed": "Decode failed",
+        "selectScriptType": "Please select script type",
+        "inputPayload": "Please input payload",
+        "headerJsonError": "Header JSON error"
+      },
+      "confirmTitle": {
+        "inherit": "Inherit Product Parser",
+        "cancelInherit": "Cancel Inherit",
+        "reset": "Reset Parser"
+      },
+      "confirmContent": {
+        "inherit": "Are you sure you want to inherit from product parser? This will delete current independent config.",
+        "cancelInherit": "Are you sure you want to cancel inheritance? It will become an independent script.",
+        "resetProduct": "Are you sure you want to reset product parser?",
+        "resetDevice": "Are you sure you want to reset device parser?"
+      }
     }
   },
   "product": {
@@ -155,7 +199,7 @@
     "productType": "Product Type",
     "productName": "Product Name",
     "tips": {
-      "disableBeforeDelete": "Please disable the product before deleting"
+      "disableBeforeDelete": "Please disable product before deleting"
     },
     "action": {
       "confirmEnable": "Are you sure you want to enable this product?",
@@ -174,47 +218,235 @@
     "NONE": "None"
   },
   "types": {
-    "DIRECT": "Direct",
-    "GATEWAY": "Gateway",
-    "GATEWAY_CHILD": "Sub-Device"
+    "DIRECT": "Direct Device",
+    "GATEWAY": "Gateway Device",
+    "GATEWAY_CHILD": "Gateway Child Device"
   },
   "selector": {
     "title": "Select Device",
-    "placeholder": "Please select a device"
+    "placeholder": "Please select device"
   },
   "productType": {
-    "title": "Product Type",
+    "title": "Product Category",
     "name": "Category Name",
-    "key": "Category ID",
+    "key": "Category Key",
     "description": "Description"
   },
   "dashboard": {
-    "title": "Device Statistics Dashboard",
+    "title": "Statistics Dashboard",
     "product": {
-      "title": "Product Statistics",
+      "title": "Product Stats",
       "total": "Total Products",
       "enabled": "Enabled",
       "disabled": "Disabled"
     },
     "device": {
-      "title": "Device Statistics",
+      "title": "Device Stats",
       "total": "Total Devices",
       "online": "Online",
       "offline": "Offline"
     },
     "onlineData": {
-      "title": "Device Online Data",
+      "title": "Online Stats",
       "todayOnline": "Today Online",
       "yesterdayOnline": "Yesterday Online"
     },
     "message": {
-      "title": "Device Message Statistics",
-      "today": "Today Messages",
-      "yesterday": "Yesterday Messages",
-      "thisMonth": "This Month Messages"
+      "title": "Message Stats",
+      "today": "Today's Messages",
+      "yesterday": "Yesterday's Messages",
+      "thisMonth": "MOM Messages"
     },
     "trend": {
-      "title": "Device Message Trend"
+      "title": "Message Trend"
     }
+  },
+  "debug": {
+    "diagnosis": "Run Diagnosis",
+    "reDiagnose": "Re-diagnose",
+    "oneClickFix": "One-click Fix",
+    "startDiagnosis": "Start Diagnosis",
+    "status": "Status",
+    "message": "Message",
+    "fix": "Fix",
+    "fixAll": "One-click Fix",
+    "fixed": "Fixed",
+    "fixedSuccess": "Fixed successfully",
+    "messaging_disabled_tip": "There are exceptions or warnings in the diagnosis center. Please handle them first to ensure a stable communication debugging environment.",
+    "steps": {
+      "network": "Network Components",
+      "gateway": "Access Gateway",
+      "product": "Product Status",
+      "device": "Device Status",
+      "config": "Config Integrity",
+      "gateway_device": "Gateway Device"
+    },
+    "messaging": {
+      "title": "Messaging Debug",
+      "upstream": "Upstream",
+      "downstream": "Downstream",
+      "direction": {
+        "up": "Upstream",
+        "down": "Downstream"
+      },
+      "type": {
+        "report-property": "Property Report",
+        "read-property": "Property Read",
+        "write-property": "Property Set",
+        "event": "Event Report",
+        "reply": "Platform Reply",
+        "online": "Device Online",
+        "offline": "Device Offline",
+        "invoke-function": "Function Call",
+        "decode": "Decode Message",
+        "encode": "Encode Message"
+      },
+      "send_instruction": "Send Instruction",
+      "read": "Read",
+      "write": "Write",
+      "propertyRead": "Property Read",
+      "propertyWrite": "Property Write",
+      "functionCall": "Function Call",
+      "invoke": "Invoke",
+      "placeholder": "Waiting for message...",
+      "commandTip": "Select function or property from the left to generate instructions",
+      "selectThingModel": "Select Thing Model",
+      "select_tip": "Please select a thing model item from the left",
+      "query_sent": "Query instruction sent",
+      "set_sent": "Set instruction sent",
+      "invoke_sent": "Invoke instruction sent",
+      "read_instruction": "This action will send a read instruction",
+      "write_value": "Write value",
+      "input_placeholder": "Please enter value",
+      "params_input": "Input Parameters (JSON)",
+      "params_placeholder": "Please enter JSON parameters",
+      "param_config": "Parameter Config",
+      "exec_failed": "Execution failed"
+    },
+    "diagnosis_loading": "Checking {step} status...",
+    "network_normal": "Network component {transport} is running normally",
+    "network_not_found": "No available {transport} network component detected",
+    "no_network_needed": "No specific network component needed",
+    "gateway_loading": "Checking gateway status...",
+    "gateway_enabled": "Parent gateway [{name}] is enabled",
+    "gateway_disabled": "Parent gateway [{name}] is disabled",
+    "no_gateway_needed": "Current device is not a sub-device, no gateway check needed",
+    "product_loading": "Checking product status...",
+    "product_enabled": "Product is enabled",
+    "product_disabled": "Product is disabled",
+    "device_loading": "Checking device status...",
+    "device_active": "Device is active",
+    "device_inactive": "Device is inactive",
+    "config_loading": "Verifying configuration integrity...",
+    "steps_loading": {
+      "network": "Probing gateway access channel and network service status...",
+      "gateway": "Checking gateway and runtime status...",
+      "product": "Checking thing model definition and registration status...",
+      "device": "Checking device activation and online tokens...",
+      "config": "Checking required/optional configuration items...",
+      "gateway_device": "Checking parent gateway device connection status..."
+    },
+    "config_completed": "Basic configuration completed",
+    "config_missing": "No specific configuration items detected. Ensure necessary parameters are filled.",
+    "diagnosis_failed": "Diagnosis failed: {error}",
+    "check_passed": "Normal",
+    "wait_check": "Waiting for check",
+    "possible_issue": "Possible anomaly",
+    "anomaly_details": "Anomaly Details",
+    "config_error_count": "{count} missing required parameters detected",
+    "config_warning_count": "{count} incomplete optional parameters detected",
+    "device_config_error_count": "Device required parameters missing ({count})",
+    "device_config_warning_count": "Device optional parameters not entered ({count})",
+    "diagnosis_report": "Connection Details",
+    "ignore": "Ignore hint",
+    "manual_check": "Manual check",
+    "one_click_process": "One-click process",
+    "status_header": {
+      "success": "Connection status normal",
+      "success_desc": "Now ready for messaging debug",
+      "error": "Connection issues found",
+      "error_desc": "Please handle the anomaly items below",
+      "warning": "Possible connection risks",
+      "warning_desc": "Some items are recommended for manual check",
+      "wait": "Diagnosing",
+      "wait_desc": "System is automatically diagnosing the connection status..."
+    },
+    "steps_help": {
+      "network": "Diagnose if network component config is correct. Wrong config will lead to connection failure.",
+      "gateway": "Diagnose if gateway status is normal. Disability will lead to connection failure.",
+      "product": "Diagnose if product status is normal. Disability will lead to registration failure.",
+      "device": "Diagnose if device status is normal. Disability will lead to connection failure.",
+      "config": "Diagnose if product/device auth config is correct. Wrong config will lead to connection failure."
+    },
+    "fix_failed": "Fix failed",
+    "config_info": "Config Info",
+    "channel_health_checking": "Checking channel health...",
+    "invalid_network_address": "Invalid network access address detected",
+    "channel_config_check_manual": "Channel address config may be incorrect. Check gateway access config manually.",
+    "network_stopped": "The network transport component is currently stopped",
+    "network_stopped_ignored": "Network status warning ignored",
+    "no_valid_network_address": "No valid server/client address found in config",
+    "address_missing_ignored": "Address missing warning ignored",
+    "channel_link_normal": "Mesh channel link status normal",
+    "network_service_ready": "Basic network service is ready",
+    "network_service_unreachable": "Network service for the corresponding transport protocol is unreachable",
+    "network_service_check_manual": "Check transport protocol config or if network service is running normally",
+    "network_service_unreachable_ignored": "Network service unreachable warning ignored",
+    "address_status": {
+      "running": "Running",
+      "stopped": "Stopped",
+      "faulty": "Faulty"
+    },
+    "gateway_status_checking": "Checking gateway operational status...",
+    "gateway_running": "Gateway [{name}] running",
+    "gateway_disabled_status": "Gateway [{name}] is disabled",
+    "gateway_disabled_manual": "Disabled gateway will prevent device connection. Please enable the gateway.",
+    "gateway_disabled_ignored": "Gateway disabled warning ignored",
+    "no_parent_device": "Current device is not bound to a parent device. Only after binding can it receive data.",
+    "no_parent_device_suggestion": "Please bind valid gateway device for this sub-device",
+    "parent_device_offline": "Parent device offline. Check the connection status of the gateway device.",
+    "parent_device_offline_suggestion": "Check if parent device is powered on and connected to network",
+    "gateway_device_normal": "Gateway device status and communication normal",
+    "bind_parent": "Bind parent device",
+    "product_status_checking": "Checking product registration status...",
+    "product_enabled_status": "Product enabled",
+    "product_disabled_status": "Belonging product is currently disabled",
+    "product_disabled_manual": "Disabled product will lead to registration/connection failure. Please enable the product.",
+    "product_disabled_ignored": "Product disabled warning ignored",
+    "device_token_checking": "Verifying device token...",
+    "device_enabled_status": "Device status is enabled",
+    "device_not_enabled": "Device not enabled. Please enable the device.",
+    "device_not_enabled_manual": "Device can only connect to the platform when it is enabled. Please enable the device.",
+    "device_not_enabled_ignored": "Device not enabled warning ignored",
+    "device_offline_warning": "Device is currently offline",
+    "device_offline_manual": "Check the network connection and reporting logic of this device.",
+    "device_offline_ignored": "Device offline hint ignored",
+    "config_integrity_passed": "Config integrity check passed",
+    "required_fields": "Required Fields",
+    "optional_fields": "Optional Fields",
+    "device_independent_config_passed": "Device independent config check passed",
+    "missing_properties": "Missing Properties",
+    "system_anomaly": "System Anomaly",
+    "diagnosis_error": "Unexpected error during diagnosis: {error}",
+    "product_prefix": "Product",
+    "device_prefix": "Device",
+    "status_error": "Error",
+    "status_warning": "Warning",
+    "fix_labels": {
+      "start_network": "Start Network Components",
+      "start_gateway": "Start Gateway",
+      "enable_product": "Enable Product",
+      "enable_device": "Enable Device"
+    },
+    "diagnosis_exception": "Diagnosis Exception",
+    "fix_required_config": "Fix Required Config",
+    "modify_config": "Modify Config",
+    "update_param_config": "Update Parameters",
+    "check_param_definition": "Check following parameter definitions and ensure accurate entry",
+    "field_id": "Field ID",
+    "no_description_tip": "No detailed description. Consult thing model standard documentation for exact meaning.",
+    "no_detailed_suggestion": "No detailed suggestion",
+    "config_warning_tip": "Incorrect or incomplete configuration will lead to instruction dispatch failure or data parsing anomaly. System will re-register after modification.",
+    "ignored_tip": "This hint has been ignored"
   }
 }

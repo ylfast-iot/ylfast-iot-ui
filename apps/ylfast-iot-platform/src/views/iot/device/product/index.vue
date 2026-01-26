@@ -151,6 +151,14 @@ function handleAdd() {
   formType.value = 'add';
   currentId.value = '';
   formApi.resetForm();
+  formApi.updateSchema([
+    {
+      componentProps: {
+        disabled: false,
+      },
+      fieldName: 'id',
+    },
+  ]);
   modalApi.open();
 }
 
@@ -159,6 +167,14 @@ function handleEdit(row: Recordable<any>) {
   currentId.value = row.id;
   formApi.resetForm();
   formApi.setValues(row);
+  formApi.updateSchema([
+    {
+      componentProps: {
+        disabled: true,
+      },
+      fieldName: 'id',
+    },
+  ]);
   modalApi.open();
 }
 

@@ -229,6 +229,7 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                     <ConfigFormItem prop={prop}>
                       <div class="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/50">
                         <YlConfigMetadataForm
+                          {...props.parentProps.value}
                           hideNestedHeader={props.hideNestedHeader}
                           hideRootHeader={props.hideRootHeader}
                           isNested={true}
@@ -244,6 +245,7 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                     </ConfigFormItem>
                   ) : (
                     <StrategyInputFormItem
+                      formModel={formModel.value}
                       onUpdate:value={(val: any) =>
                         (formModel.value[prop.property] = val)
                       }

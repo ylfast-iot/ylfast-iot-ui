@@ -1,4 +1,4 @@
-{
+﻿{
   "tabs": {
     "property": "Properties",
     "function": "Functions",
@@ -42,7 +42,7 @@
     "sourceRule": "Rule Calc",
     "accessMode": "Access Mode",
     "accessRead": "Read Only",
-    "accessWrite": "Read Write",
+    "accessWrite": "Write Only",
     "accessReport": "Report",
     "group": "Group",
     "allGroups": "All",

@@ -16,6 +16,7 @@ import {
   Spin,
   TabPane,
   Tabs,
+  Tooltip,
 } from 'ant-design-vue';
 
 import {
@@ -23,7 +24,12 @@ import {
   registerProduct,
   unregisterProduct,
 } from '#/api/iot/device/product';
+import { TransparentParser } from '#/components/business/transparent-parser';
+import { ProtocolFeatures } from '#/enums/features';
+import { hasProtocolFeature } from '#/utils/iot';
 
+import AttrMapping from './components/AttrMapping/index.vue';
+import DeviceAccess from './components/DeviceAccess/index.vue';
 import Info from './components/Info.vue';
 import ThingModel from './components/ThingModel.vue';
 
@@ -39,6 +45,7 @@ const RefreshIcon = createIconifyIcon('lucide:refresh-cw');
 const PowerIcon = createIconifyIcon('lucide:power');
 const PackageIcon = createIconifyIcon('lucide:package');
 const BackIcon = createIconifyIcon('lucide:chevron-left');
+const CloudUploadIcon = createIconifyIcon('lucide:cloud-upload');
 
 const route = useRoute();
 const router = useRouter();
@@ -48,6 +55,7 @@ const loading = ref(false);
 const initialLoading = ref(true);
 const product = ref<IotDeviceProductApi.ProductDetail | null>(null);
 const activeTab = ref('info');
+const showPassthrough = ref(false);
 
 // 状态样式逻辑
 const statusStyle = computed(() => {
@@ -80,6 +88,22 @@ const tabConfigs: TabConfig[] = [
     title: $t('device.instance.tab.thingModel'),
     component: ThingModel,
   },
+  {
+    key: 'attrMapping',
+    title: $t('device.instance.tab.attrMapping'),
+    component: AttrMapping,
+  },
+  {
+    key: 'passthrough',
+    title: $t('device.instance.transparentParser.title'),
+    component: TransparentParser,
+    show: () => showPassthrough.value,
+  },
+  {
+    key: 'deviceAccess',
+    title: $t('gateway.deviceAccess.accessGateway'),
+    component: DeviceAccess,
+  },
 ];
 
 const visibleTabs = computed(() => {
@@ -98,11 +122,32 @@ async function fetchInfo() {
   try {
     const data = await getProductDetail(productId);
     product.value = data;
+
+    // 检查是否显示透传解析页签
+    showPassthrough.value = await hasProtocolFeature(
+      data.protocolId,
+      data.transport,
+      ProtocolFeatures.transparentCodec,
+    );
   } catch (error) {
     console.error(error);
   } finally {
     loading.value = false;
     initialLoading.value = false;
+  }
+}
+
+async function handleRegister() {
+  if (!product.value) return;
+  try {
+    loading.value = true;
+    await registerProduct(product.value.id);
+    message.success('注册成功');
+    await fetchInfo();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
   }
 }
 
@@ -211,12 +256,28 @@ onMounted(fetchInfo);
                   </div>
                   <div class="flex items-center gap-2 text-xs text-gray-400">
                     <span class="font-mono">{{ product.id }}</span>
+                    <div class="h-3 w-[1px] bg-gray-200 dark:bg-gray-700"></div>
+                    <span>设备数量: {{ product.deviceCount || 0 }}</span>
                   </div>
                 </div>
               </div>
 
               <!-- Right: Custom Actions -->
               <div class="flex items-center gap-1">
+                <!-- Re-register Action -->
+                <Tooltip title="重新注册">
+                  <Popconfirm
+                    title="确认要重新注册该产品吗？"
+                    @confirm="handleRegister"
+                  >
+                    <div
+                      class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-orange-500 transition-all hover:bg-orange-50 dark:text-orange-400 dark:hover:bg-orange-500/20"
+                    >
+                      <CloudUploadIcon class="size-4" />
+                    </div>
+                  </Popconfirm>
+                </Tooltip>
+
                 <!-- Refresh Action -->
                 <Tooltip :title="$t('common.refresh')">
                   <div

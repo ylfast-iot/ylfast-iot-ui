@@ -5,6 +5,7 @@ import { replaceVariables } from '#/utils';
 export type SubscribeType =
   | 'DASHBOARD'
   | 'DATA_COLLECT_SUB'
+  | 'DEVICE_DEBUG_TRACE_MESSAGE'
   | 'DEVICE_FIRMWARE_PROGRESS_MESSAGE'
   | 'DEVICE_FIRMWARE_UPGRADE_RESPONSE_MESSAGE'
   | 'DEVICE_MESSAGE_SUB'
@@ -107,5 +108,15 @@ export const SubscribeType: SubscribeTypeEnum = {
     },
     label: '设备固件进度消息',
     text: '设备固件进度消息',
+  },
+  DEVICE_DEBUG_TRACE_MESSAGE: {
+    value: '/debug/device/{deviceId}/trace',
+    formatTopicValue(deviceId: string) {
+      return replaceVariables(this.value, {
+        deviceId,
+      });
+    },
+    label: '设备调试轨迹消息',
+    text: '设备调试轨迹消息',
   },
 };

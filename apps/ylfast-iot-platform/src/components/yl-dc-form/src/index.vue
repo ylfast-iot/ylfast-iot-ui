@@ -129,7 +129,7 @@ const innerProps = ref<Partial<YlDcFormProps>>({
 });
 
 const getProps = computed(() => {
-  return { ...props, ...innerProps.value };
+  return { ...innerProps.value, ...props };
 });
 
 const gridCols = computed(() => {

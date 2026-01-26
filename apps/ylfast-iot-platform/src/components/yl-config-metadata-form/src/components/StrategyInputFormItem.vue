@@ -12,6 +12,7 @@ import UnsupportedInput from '#/components/yl-data-type-strategies/value-input/U
 import { getRules } from '#/utils/config-metadata';
 
 const props = defineProps<{
+  formModel?: any;
   prop: ConfigPropertyMetadata;
   value: any;
 }>();
@@ -72,6 +73,7 @@ defineExpose({
     <component
       :is="inputComponent"
       ref="strategyRef"
+      :form-model="formModel"
       :prop="prop"
       v-model:value="innerValue"
     />

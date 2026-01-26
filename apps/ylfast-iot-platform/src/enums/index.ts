@@ -6,6 +6,14 @@ export type CommonState = 'ENABLE' | 'FORBIDDEN' | 'PAUSE';
 export type GeneralState = 'disabled' | 'enabled' | 'paused';
 export type CommonStateNumber = 0 | 1 | 2;
 
+export const GENERAL_STATE: {
+  [key in GeneralState]: GeneralState;
+} = {
+  disabled: 'disabled',
+  enabled: 'enabled',
+  paused: 'paused',
+} as const;
+
 export const COMMON_STATE: {
   [key in CommonState]: EnumDict<CommonStateNumber>;
 } = {

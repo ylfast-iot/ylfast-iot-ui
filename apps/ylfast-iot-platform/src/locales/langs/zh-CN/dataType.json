@@ -3,6 +3,7 @@
   "types": {
     "STRING": "字符串",
     "PASSWORD": "密码",
+    "BYTE": "字节",
     "INTEGER": "整数",
     "LONG": "长整数",
     "SHORT": "短整数",

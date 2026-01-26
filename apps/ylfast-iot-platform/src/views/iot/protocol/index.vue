@@ -42,9 +42,11 @@ onMounted(async () => {
   try {
     const res = await getProtocolSupportLoaderProviders();
     providerOptions.value = res.map((item) => {
+      const provider = item.provider || 'jar'; // Fallback to 'jar' if provider is null
       let icon = 'lucide:box';
       let color = 'default';
-      switch (item.provider) {
+
+      switch (provider) {
         case 'jar': {
           icon = 'mdi:language-java';
           color = 'blue';
@@ -61,10 +63,24 @@ onMounted(async () => {
           break;
         }
       }
+
+      // Get translated label or fallback to name/provider
+      const translationKey = `protocol.${provider}`;
+      let label = item.name || provider;
+      try {
+        const translated = $t(translationKey);
+        // Check if translation exists (not returning the key itself)
+        if (translated && translated !== translationKey) {
+          label = translated;
+        }
+      } catch {
+        // Use fallback
+      }
+
       return {
-        label: $t(`protocol.${item.provider}`) || item.name,
-        value: item.provider,
-        description: item.provider,
+        label,
+        value: provider,
+        description: provider,
         helpDoc: item.document,
         icon,
         color,

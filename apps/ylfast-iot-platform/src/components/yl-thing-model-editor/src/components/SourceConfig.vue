@@ -5,15 +5,9 @@ import { useVbenModal } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
-import {
-  Form,
-  FormItem,
-  Popover,
-  Radio,
-  RadioGroup,
-  Select,
-  Textarea,
-} from 'ant-design-vue';
+import { Popover, Select, TabPane, Tabs, Tooltip } from 'ant-design-vue';
+
+import { YlMonacoEditor } from '#/components/yl-monaco-editor';
 
 import AccessTypeSelector from './AccessTypeSelector.vue';
 
@@ -42,6 +36,9 @@ const props = defineProps<{
 const emit = defineEmits(['update:value', 'change']);
 
 const SettingOutlined = createIconifyIcon('ant-design:setting-outlined');
+const QuestionCircleOutlined = createIconifyIcon(
+  'ant-design:question-circle-outlined',
+);
 
 // Local state for the value to allow immediate updates
 const localValue = computed({
@@ -61,7 +58,7 @@ const [RuleModal, modalApi] = useVbenModal({
   draggable: true,
   closeOnClickModal: false,
   destroyOnClose: false,
-  class: 'w-3/5',
+  class: 'w-4/5',
   onConfirm: () => {
     modalApi.close();
   },
@@ -74,11 +71,34 @@ function handleSettingClick() {
     // Initialize rule structure if missing
     if (!localValue.value.rule) {
       localValue.value.rule = {
-        mode: 'simple',
+        mode: 'advanced',
         configuration: {
           scriptEngineType: 'javascript',
           scriptType: 'javascript',
-          convertScripts: { decode: '', encode: '' },
+          convertScripts: {
+            decode: `handler
+  /** @description: 解码
+   * （设备上报的属性值进行转换）
+   * @param context 上下文
+   * @param val 属性值
+   * @returns 格式化后的值
+   */
+.onDecode(
+  function(context,val) {
+  return val;
+})`,
+            encode: `handler
+/**
+ * @description: 编码
+ * （平台下发属性值到设备时进行转换）
+ * @param context 上下文
+ * @param val 属性值
+ * @returns 格式化后的值
+ */
+.onEncode(function(context,val) {
+  return val;
+})`,
+          },
         },
       };
     }
@@ -90,10 +110,12 @@ function handleSettingClick() {
 <template>
   <div class="flex w-full items-center gap-1">
     <RuleModal>
-      <div class="flex flex-col gap-4 p-4">
-        <!-- Reused Access Selector in Modal -->
-        <div>
-          <div class="mb-2 text-sm font-medium">
+      <div class="flex flex-col">
+        <!-- Access Mode Section -->
+        <div class="border-b border-slate-200 p-4 dark:border-slate-700">
+          <div
+            class="mb-3 text-sm font-medium text-slate-700 dark:text-slate-300"
+          >
             {{ $t('thingModel.property.accessMode') }}
           </div>
           <AccessTypeSelector
@@ -102,45 +124,112 @@ function handleSettingClick() {
           />
         </div>
 
-        <!-- Rule Config -->
-        <Form layout="vertical" v-if="localValue.rule">
-          <FormItem :label="$t('thingModel.property.ruleMode')">
-            <RadioGroup
-              v-model:value="localValue.rule.mode"
-              :disabled="disabled"
-            >
-              <Radio value="simple">
-                {{ $t('thingModel.property.ruleSimple') }}
-              </Radio>
-              <Radio value="advanced">
-                {{ $t('thingModel.property.ruleAdvanced') }}
-              </Radio>
-            </RadioGroup>
-          </FormItem>
+        <!-- Tabs for Simple/Advanced Mode -->
+        <div class="flex-1 px-4 pb-4 pt-2">
+          <Tabs
+            v-if="localValue.rule"
+            v-model:active-key="localValue.rule.mode"
+            class="[&_.ant-tabs-nav]:mb-4 [&_.ant-tabs-tab]:px-4 [&_.ant-tabs-tab]:py-2"
+          >
+            <!-- Simple Mode Tab - Placeholder -->
+            <TabPane key="simple" :tab="$t('thingModel.property.ruleSimple')">
+              <div class="flex flex-col items-center justify-center py-16">
+                <div class="mb-4 text-6xl opacity-20">🚧</div>
+                <div
+                  class="text-lg font-medium text-slate-600 dark:text-slate-400"
+                >
+                  {{ $t('common.developing') }}
+                </div>
+                <div class="mt-2 text-sm text-slate-500">
+                  普通规则模式暂未开放，请使用高级规则
+                </div>
+              </div>
+            </TabPane>
 
-          <template v-if="localValue.rule.configuration.convertScripts">
-            <FormItem :label="$t('thingModel.property.ruleEncode')">
-              <Textarea
-                v-model:value="
-                  localValue.rule.configuration.convertScripts.encode
-                "
-                :rows="4"
-                placeholder="function encode(value) { ... }"
-                :disabled="disabled"
-              />
-            </FormItem>
-            <FormItem :label="$t('thingModel.property.ruleDecode')">
-              <Textarea
-                v-model:value="
-                  localValue.rule.configuration.convertScripts.decode
-                "
-                :rows="4"
-                placeholder="function decode(value) { ... }"
-                :disabled="disabled"
-              />
-            </FormItem>
-          </template>
-        </Form>
+            <!-- Advanced Mode Tab -->
+            <TabPane
+              key="advanced"
+              :tab="$t('thingModel.property.ruleAdvanced')"
+            >
+              <div class="grid grid-cols-2 gap-4">
+                <!-- Left: Decode Editor -->
+                <div class="flex flex-col">
+                  <div class="mb-2 flex items-center gap-2">
+                    <span
+                      class="inline-block size-2 rounded-full bg-blue-500"
+                    ></span>
+                    <span
+                      class="text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      属性接收转换
+                    </span>
+                    <Tooltip placement="top">
+                      <template #title>
+                        <div class="text-xs">设备上报的属性值进行转换</div>
+                      </template>
+                      <QuestionCircleOutlined
+                        class="cursor-help text-slate-400"
+                      />
+                    </Tooltip>
+                  </div>
+                  <div
+                    class="flex-1 overflow-hidden rounded border border-slate-200 dark:border-slate-700"
+                  >
+                    <YlMonacoEditor
+                      v-if="localValue.rule.configuration.convertScripts"
+                      v-model="
+                        localValue.rule.configuration.convertScripts.decode
+                      "
+                      language="javascript"
+                      theme="auto"
+                      scope="metadata-rule-property"
+                      :read-only="disabled"
+                      height="400px"
+                    />
+                  </div>
+                </div>
+
+                <!-- Right: Encode Editor -->
+                <div class="flex flex-col">
+                  <div class="mb-2 flex items-center gap-2">
+                    <span
+                      class="inline-block size-2 rounded-full bg-green-500"
+                    ></span>
+                    <span
+                      class="text-sm font-medium text-slate-700 dark:text-slate-300"
+                    >
+                      属性发送转换
+                    </span>
+                    <Tooltip placement="top">
+                      <template #title>
+                        <div class="text-xs">
+                          平台下发属性值到设备时进行转换
+                        </div>
+                      </template>
+                      <QuestionCircleOutlined
+                        class="cursor-help text-slate-400"
+                      />
+                    </Tooltip>
+                  </div>
+                  <div
+                    class="flex-1 overflow-hidden rounded border border-slate-200 dark:border-slate-700"
+                  >
+                    <YlMonacoEditor
+                      v-if="localValue.rule.configuration.convertScripts"
+                      v-model="
+                        localValue.rule.configuration.convertScripts.encode
+                      "
+                      language="javascript"
+                      theme="auto"
+                      :read-only="disabled"
+                      height="400px"
+                    />
+                  </div>
+                </div>
+              </div>
+            </TabPane>
+          </Tabs>
+        </div>
       </div>
     </RuleModal>
 

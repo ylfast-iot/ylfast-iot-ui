@@ -46,9 +46,9 @@ async function handleUpload() {
 
   try {
     const res = await uploadProtocol(file);
-    // res contains fileUploadRes and protocols.
-    const names = res.protocols.map((p) => p.name).join(', ');
-    message.success(`${$t('common.uploadSuccess')}: ${names}`);
+    // res contains filename, fileId, accessUrl and protocolInfo
+    const protocolName = res.protocolInfo.name;
+    message.success(`${$t('common.uploadSuccess')}: ${protocolName}`);
     emit('success');
     fileList.value = [];
     modalApi.close();

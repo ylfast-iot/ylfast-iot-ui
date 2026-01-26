@@ -1,7 +1,7 @@
 import type { QueryParamEntity } from '#/adapter';
 import type { BasicModel, PagerResult } from '#/api/basic';
 // 设备产品
-import type { CommonState } from '#/enums';
+import type { CommonStateNumber } from '#/enums';
 import type { DeviceType } from '#/enums/device';
 import type { EnumDict } from '#/types/global';
 
@@ -157,7 +157,7 @@ export namespace IotDeviceProductApi {
     /** 设备类型（直连设备\网关设备\网关子设备） */
     deviceType: EnumDict<DeviceType>;
     /** 产品状态（1启用，0禁用） */
-    state: CommonState; // Byte → number
+    state: CommonStateNumber; // Byte → number
     /** 协议id (非协议记录id) */
     protocolId: string;
     /** 网关id */

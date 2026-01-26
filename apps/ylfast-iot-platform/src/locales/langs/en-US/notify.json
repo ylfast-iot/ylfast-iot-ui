@@ -1,0 +1,104 @@
+{
+  "types": {
+    "dingTalk": "DingTalk",
+    "email": "Email",
+    "sms": "SMS",
+    "webhook": "Webhook",
+    "wechat": "WeChat",
+    "voice": "Voice"
+  },
+  "providers": {
+    "dingTalkMessage": "DingTalk Message",
+    "dingTalkRobotWebHook": "DingTalk Robot",
+    "simple": "Email",
+    "aliYunSms": "Aliyun SMS",
+    "aliyun": "Aliyun",
+    "httpWebhook": "HTTP Webhook",
+    "corpMessage": "WeChat Corp Message"
+  },
+  "config": {
+    "title": "Notification Config",
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "provider": "Provider",
+      "description": "Description"
+    },
+    "list": {
+      "add": "Add Config",
+      "empty": "No notification configuration"
+    },
+    "save": {
+      "title": "Configure Notification",
+      "basicInfo": "Basic Info",
+      "configInfo": "Configuration",
+      "docInfo": "Documentation",
+      "noConfig": "This provider requires no additional configuration",
+      "noProvider": "Please select a provider above to load configuration items",
+      "noDoc": "No documentation available",
+      "selectProvider": "Please select a provider first"
+    }
+  },
+  "template": {
+    "title": "Notification Template",
+    "fields": {
+      "name": "Name",
+      "type": "Type",
+      "provider": "Provider",
+      "config": "Config",
+      "description": "Description"
+    },
+    "list": {
+      "add": "Add Template",
+      "empty": "No notification template"
+    },
+    "save": {
+      "title": "Configure Template",
+      "basicInfo": "Basic Info",
+      "templateInfo": "Template Configuration",
+      "varDefInfo": "Variable Definition",
+      "docInfo": "Documentation"
+    },
+    "vars": {
+      "title": "Variable Definition",
+      "add": "Add Variable",
+      "id": "ID",
+      "name": "Name",
+      "type": "Type",
+      "defaultValue": "Default Value",
+      "required": "Required",
+      "idPlaceholder": "Variable ID",
+      "namePlaceholder": "Display Name",
+      "typePlaceholder": "Select Type",
+      "defaultPlaceholder": "Default Value",
+      "extractMsg": "Automatically extracted and added {count} variables",
+      "noMetadata": "This provider requires no template configuration",
+      "noProvider": "Please select a notification provider first",
+      "noDoc": "No documentation available"
+    }
+  },
+  "debug": {
+    "title": "Debug Notification",
+    "send": "Send Debug",
+    "history": "Notification History",
+    "refresh": "Refresh",
+    "historyTitle": "Notification History (Latest First)",
+    "status": "Status",
+    "notifyType": "Mode",
+    "provider": "Provider",
+    "time": "Time",
+    "error": "Error Message",
+    "success": "Success",
+    "fail": "Failed",
+    "historyEmpty": "No notification history",
+    "templatePlaceholder": "Please select a template",
+    "varInput": "Variable Input",
+    "configInfo": "Configuration",
+    "stackTitle": "Error Stack Detail",
+    "sendSuccess": "Send successful",
+    "sendFail": "Send failed",
+    "requireTemplate": "Please select a notification template",
+    "requireVar": "Please enter mandatory variable: {name}",
+    "noVar": "This template requires no variable input"
+  }
+}

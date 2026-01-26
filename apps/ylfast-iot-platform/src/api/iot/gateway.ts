@@ -1,3 +1,5 @@
+import type { IotNetCompApi } from './network-config';
+
 import type { QueryParamEntity, Recordable } from '#/adapter';
 import type { BasicModel, PagerResult } from '#/api/basic';
 import type { GeneralState } from '#/enums';
@@ -86,18 +88,6 @@ export namespace IotGatewayApi {
   }
 
   /**
-   * 通道信息
-   */
-  export interface ChannelInfo {
-    id: string;
-    name: string;
-    description?: string;
-    // health = 1 正常 0 已禁用 -1 无法访问
-    addresses?: { address: string; health: number }[];
-    others?: Recordable;
-  }
-
-  /**
    * 设备网关实体
    */
   export interface DeviceGateway extends BasicModel {
@@ -150,7 +140,7 @@ export namespace IotGatewayApi {
     /**
      * 通道信息
      */
-    channelInfo?: ChannelInfo;
+    channelInfo?: IotNetCompApi.ChannelInfo;
     /**
      * 协议详情
      */

@@ -28,15 +28,18 @@ import {
   unregister as unregisterDevice,
 } from '#/api/iot/device/instance';
 import { getProtocolDetail } from '#/api/iot/protocol';
+import { TransparentParser } from '#/components/business/transparent-parser';
+import { ProtocolFeatures } from '#/enums/features';
+import { hasProtocolFeature } from '#/utils/iot';
 
 import AttrMapping from './components/AttrMapping/index.vue';
 import DataMapping from './components/DataMapping/index.vue';
+import DebugDiagnosis from './components/DebugDiagnosis/index.vue';
 import DeviceLogs from './components/DeviceLogs/index.vue';
 import Functions from './components/Functions/index.vue';
 import History from './components/History/index.vue';
 import Info from './components/Info/index.vue';
 import Monitor from './components/Monitor/index.vue';
-import Passthrough from './components/Passthrough/index.vue';
 import SubDevice from './components/SubDevice/index.vue';
 import ThingModel from './components/ThingModel/index.vue';
 
@@ -61,6 +64,7 @@ const loading = ref(false);
 const initialLoading = ref(true);
 const device = ref<IotDeviceInstanceApi.DeviceDetail | null>(null);
 const activeTab = ref('info');
+const showPassthrough = ref(false);
 
 // isActive: true if state value is NOT unActive.
 const isActive = computed(
@@ -160,9 +164,15 @@ const tabConfigs: TabConfig[] = [
     title: $t('device.instance.tab.subDevice'),
   },
   {
-    component: Passthrough,
+    component: TransparentParser,
     key: 'passthrough',
-    title: $t('device.instance.tab.passthrough'),
+    title: $t('device.instance.transparentParser.title'),
+    show: () => showPassthrough.value,
+  },
+  {
+    component: DebugDiagnosis,
+    key: 'debugDiagnosis',
+    title: $t('device.instance.tab.debugDiagnosis'),
   },
 ];
 
@@ -187,6 +197,13 @@ async function fetchInfo() {
       data.protocolDetail = await getProtocolDetail(data.protocolId);
     }
     device.value = data;
+
+    // 检查是否显示透传解析页签
+    showPassthrough.value = await hasProtocolFeature(
+      data.protocolId,
+      data.transport,
+      ProtocolFeatures.transparentCodec,
+    );
 
     if (sub) {
       sub.unsubscribe();
@@ -227,11 +244,25 @@ async function handleToggleStatus() {
   }
 }
 
+function handleGoToProduct() {
+  if (device.value?.productId) {
+    router.push({
+      path: '/iot/device/product/detail',
+      query: { id: device.value.productId },
+    });
+  }
+}
+
 function handleBack() {
   router.back();
 }
 
-onMounted(fetchInfo);
+onMounted(async () => {
+  await fetchInfo();
+  if (route.query.tab) {
+    activeTab.value = route.query.tab as string;
+  }
+});
 onUnmounted(() => {
   if (sub) {
     sub.unsubscribe();
@@ -325,7 +356,8 @@ onUnmounted(() => {
                     <span class="font-mono">{{ device.id }}</span>
                     <span class="text-gray-300">|</span>
                     <a
-                      class="text-gray-500 hover:text-primary dark:text-gray-400"
+                      class="cursor-pointer font-medium text-primary hover:underline hover:opacity-80"
+                      @click="handleGoToProduct"
                     >
                       {{ device.productName }}
                     </a>
@@ -393,7 +425,11 @@ onUnmounted(() => {
                 class="h-full"
               >
                 <div class="h-full overflow-y-auto">
-                  <component :is="tab.component" v-model:device="device" />
+                  <component
+                    :is="tab.component"
+                    v-model:device="device"
+                    @reload="fetchInfo"
+                  />
                 </div>
               </TabPane>
             </Tabs>

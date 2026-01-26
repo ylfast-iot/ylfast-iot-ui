@@ -9,6 +9,7 @@ export interface YlConfigMetadataFormActionType {
   resetFields: () => Promise<void>;
   setFieldsValue: (values: Recordable) => void;
   getFieldsValue: () => Recordable;
+  setContextToConfigMetadataValues: (ctx: Recordable) => void;
 }
 
 export interface Validator {

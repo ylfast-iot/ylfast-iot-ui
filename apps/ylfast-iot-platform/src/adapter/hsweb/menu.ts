@@ -160,7 +160,7 @@ export function adaptHswebMenu(
 
     const vbenMenu: RouteRecordStringComponent = {
       path: menu.url,
-      name: menu.path, // 使用 ID 作为路由名称，确保唯一
+      name: menu.code, // 使用 ID 作为路由名称，确保唯一
       component, // 默认为 Layout，具体根据层级调整
       meta: {
         title: menu.i18nName || menu.name,

@@ -7,6 +7,8 @@ import { $t } from '@vben/locales';
 import {
   Button as AButton,
   Card as ACard,
+  Collapse as ACollapse,
+  CollapsePanel as ACollapsePanel,
   Empty as AEmpty,
   Popconfirm as APopconfirm,
   Select as ASelect,
@@ -28,6 +30,7 @@ const emit = defineEmits(['update:modelValue', 'register']);
 const PlusIcon = createIconifyIcon('lucide:plus');
 const TrashIcon = createIconifyIcon('lucide:trash-2');
 const ServerIcon = createIconifyIcon('lucide:server');
+const CopyIcon = createIconifyIcon('lucide:copy');
 
 // --- Types & Defaults ---
 interface Configuration {
@@ -163,6 +166,28 @@ const notifyChange = () => {
 
 watch([gatewayConfig, pluginGateway], notifyChange, { deep: true });
 
+// Watch for shared config toggle - inherit config when switching to independent
+watch(
+  () => pluginGateway.sharedConfigEnabled,
+  (newVal, oldVal) => {
+    // When switching from shared (true) to independent (false)
+    if (
+      oldVal === true &&
+      newVal === false && // If shared config has data and no node configs exist yet
+      pluginGateway.sharedConfig.props &&
+      Object.keys(pluginGateway.sharedConfig.props).length > 0 &&
+      pluginGateway.nodeConfigs.length === 0
+    ) {
+      // Create first node config based on shared config
+      pluginGateway.nodeConfigs.push({
+        serverId: pluginGateway.sharedConfig.serverId,
+        tags: { ...pluginGateway.sharedConfig.tags },
+        props: structuredClone(pluginGateway.sharedConfig.props),
+      });
+    }
+  },
+);
+
 // --- Methods ---
 async function fetchNodes() {
   try {
@@ -200,6 +225,18 @@ function addNodeConfig() {
   pluginGateway.nodeConfigs.push(createEmptyConfig());
 }
 
+function copyNodeConfig(index: number) {
+  const sourceConfig = pluginGateway.nodeConfigs[index];
+  if (sourceConfig) {
+    const copiedConfig: Configuration = {
+      serverId: undefined, // Don't copy serverId, user should select new node
+      tags: structuredClone(sourceConfig.tags || {}),
+      props: structuredClone(sourceConfig.props || {}),
+    };
+    pluginGateway.nodeConfigs.push(copiedConfig);
+  }
+}
+
 function removeNodeConfig(index: number) {
   pluginGateway.nodeConfigs.splice(index, 1);
   nodeFormRefs.value.delete(index);
@@ -215,11 +252,15 @@ async function validate() {
   }
 
   // 2. Plugin config
-  if (pluginGateway.runMode === 'single' || pluginGateway.sharedConfigEnabled) {
+  if (pluginGateway.runMode === 'single') {
+    // Single mode: serverId is required
     if (!pluginGateway.sharedConfig.serverId) {
-      message.error($t('gateway.validation.selectNode'));
+      message.error($t('gateway.detail.validation.selectNode'));
       throw new Error('Validation failed');
     }
+    tasks.push(sharedFormRef.value?.validate());
+  } else if (pluginGateway.sharedConfigEnabled) {
+    // Multi mode with shared config: serverId NOT required
     tasks.push(sharedFormRef.value?.validate());
   } else {
     // Check nodes serverId
@@ -434,7 +475,10 @@ defineExpose({ validate });
                       : $t('gateway.plugin.globalConfig')
                   }}
                 </span>
-                <div class="ml-4 flex items-center gap-2">
+                <div
+                  v-if="pluginGateway.runMode === 'single'"
+                  class="ml-4 flex items-center gap-2"
+                >
                   <span class="text-destructive">*</span>
                   <ASelect
                     v-model:value="pluginGateway.sharedConfig.serverId"
@@ -472,61 +516,80 @@ defineExpose({ validate });
             v-if="pluginGateway.nodeConfigs.length > 0"
             class="flex flex-col gap-4"
           >
-            <ACard
-              v-for="(node, index) in pluginGateway.nodeConfigs"
-              :key="index"
-              size="small"
-              class="relative overflow-visible border-slate-100 shadow-sm dark:border-slate-800"
-            >
-              <template #title>
-                <div class="flex items-center gap-2 py-0.5">
-                  <ServerIcon class="size-4 text-primary" />
-                  <span
-                    class="text-sm font-bold text-slate-700 dark:text-gray-300"
-                  >
-                    {{ $t('network.clusterConfig.nodePrefix') }}{{ index + 1 }}
-                  </span>
-                  <div class="ml-4 flex items-center gap-2">
-                    <span class="text-destructive">*</span>
-                    <ASelect
-                      v-model:value="node.serverId"
-                      :options="clusterNodes"
-                      :placeholder="$t('network.clusterConfig.assignNode')"
-                      size="small"
-                      class="w-[200px]"
-                      :bordered="false"
-                      :disabled="disabled"
-                    />
+            <ACollapse :bordered="false" class="bg-transparent">
+              <ACollapsePanel
+                v-for="(node, index) in pluginGateway.nodeConfigs"
+                :key="index"
+                class="mb-4 overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/50"
+              >
+                <template #header>
+                  <div class="flex items-center gap-2 py-0.5">
+                    <ServerIcon class="size-4 text-primary" />
+                    <span
+                      class="text-sm font-bold text-slate-700 dark:text-gray-300"
+                    >
+                      {{ $t('network.clusterConfig.nodePrefix')
+                      }}{{ index + 1 }}
+                    </span>
+                    <div class="ml-4 flex items-center gap-2" @click.stop>
+                      <span class="text-destructive">*</span>
+                      <ASelect
+                        v-model:value="node.serverId"
+                        :options="clusterNodes"
+                        :placeholder="$t('network.clusterConfig.assignNode')"
+                        size="small"
+                        class="w-[200px]"
+                        :bordered="false"
+                        :disabled="disabled"
+                      />
+                    </div>
                   </div>
-                </div>
-              </template>
-              <template #extra>
-                <APopconfirm
-                  :title="$t('common.action.confirmDelete')"
-                  @confirm="removeNodeConfig(index)"
-                >
-                  <AButton
-                    type="text"
-                    size="small"
-                    danger
-                    class="flex items-center"
-                  >
-                    <template #icon><TrashIcon class="size-3.5" /></template>
-                    <span class="ml-1 text-[11px]">{{
-                      $t('network.clusterConfig.removeNode')
-                    }}</span>
-                  </AButton>
-                </APopconfirm>
-              </template>
+                </template>
+                <template #extra>
+                  <div class="flex items-center gap-2">
+                    <AButton
+                      type="text"
+                      size="small"
+                      class="flex items-center text-primary hover:text-primary/80"
+                      @click.stop="copyNodeConfig(index)"
+                      :disabled="disabled"
+                    >
+                      <template #icon><CopyIcon class="size-3.5" /></template>
+                      <span class="ml-1 text-[11px]">{{
+                        $t('common.copy')
+                      }}</span>
+                    </AButton>
+                    <APopconfirm
+                      :title="$t('common.action.confirmDelete')"
+                      @confirm="removeNodeConfig(index)"
+                    >
+                      <AButton
+                        type="text"
+                        size="small"
+                        danger
+                        class="flex items-center"
+                        @click.stop
+                      >
+                        <template #icon>
+                          <TrashIcon class="size-3.5" />
+                        </template>
+                        <span class="ml-1 text-[11px]">{{
+                          $t('network.clusterConfig.removeNode')
+                        }}</span>
+                      </AButton>
+                    </APopconfirm>
+                  </div>
+                </template>
 
-              <YlConfigMetadataForm
-                v-model:model-value="node.props"
-                :register="(action: any) => handleNodeRegister(index, action)"
-                :metadata="pluginMetadata"
-                class="p-2"
-                :disabled="disabled"
-              />
-            </ACard>
+                <YlConfigMetadataForm
+                  v-model:model-value="node.props"
+                  :register="(action: any) => handleNodeRegister(index, action)"
+                  :metadata="pluginMetadata"
+                  class="p-4"
+                  :disabled="disabled"
+                />
+              </ACollapsePanel>
+            </ACollapse>
           </div>
 
           <div
@@ -553,5 +616,34 @@ defineExpose({ validate });
 
 .plugin-config-form :deep(.ant-form-item) {
   margin-bottom: 16px;
+}
+
+/* Collapse Panel Styling */
+.plugin-config-form :deep(.ant-collapse-item) {
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: 12px !important;
+}
+
+.plugin-config-form :deep(.ant-collapse-header) {
+  align-items: center !important;
+  padding: 12px 16px !important;
+  background: hsl(var(--muted) / 30%) !important;
+  border-bottom: 1px solid hsl(var(--border)) !important;
+}
+
+.plugin-config-form :deep(.ant-collapse-header .ant-collapse-arrow) {
+  display: flex;
+  align-items: center;
+  padding: 0 !important;
+  margin-top: 0 !important;
+}
+
+.plugin-config-form :deep(.ant-collapse-content) {
+  background: hsl(var(--background)) !important;
+}
+
+.plugin-config-form :deep(.ant-collapse-content-box) {
+  padding: 0 !important;
 }
 </style>

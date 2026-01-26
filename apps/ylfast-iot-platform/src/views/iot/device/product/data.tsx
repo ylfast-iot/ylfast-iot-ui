@@ -106,14 +106,6 @@ const deviceTypeOptions = DEVICE_TYPES.map((item) => ({
 
 export const getModalFormSchemas = (): VbenFormSchema[] => [
   {
-    fieldName: 'id',
-    component: 'Input',
-    dependencies: {
-      show: false,
-      triggerFields: ['id'],
-    },
-  },
-  {
     fieldName: 'productType',
     component: 'Input',
     dependencies: {
@@ -133,6 +125,15 @@ export const getModalFormSchemas = (): VbenFormSchema[] => [
       'col-span-1 row-span-2 h-full mb-0 [&>div]:h-full [&>div>div]:h-full [&>div>div>div]:h-full',
   },
   {
+    fieldName: 'id',
+    label: $t('common.id'),
+    component: 'Input',
+    formItemClass: 'col-span-3',
+    dependencies: {
+      triggerFields: ['id'],
+    },
+  },
+  {
     fieldName: 'productName',
     label: $t('device.product.productName'),
     component: 'Input',
@@ -147,7 +148,7 @@ export const getModalFormSchemas = (): VbenFormSchema[] => [
     label: $t('device.product.productType'),
     component: 'ApiTreeSelect',
     rules: 'required',
-    formItemClass: 'col-span-3',
+    formItemClass: 'col-span-4',
     componentProps: (value) => {
       return {
         api: getAllProductTypeTree.bind(null, {

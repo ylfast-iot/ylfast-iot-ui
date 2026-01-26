@@ -239,7 +239,12 @@ defineExpose(action);
 
 <template>
   <div class="yl-config-metadata-form w-full">
-    <AForm v-bind="getFormProps" ref="formRef" :model="formModel">
+    <AForm
+      v-bind="getFormProps"
+      ref="formRef"
+      :model="formModel"
+      :component="props.isNested ? 'div' : 'form'"
+    >
       <ConfigItemsRenderer
         :metadata="groups"
         :model="formModel"

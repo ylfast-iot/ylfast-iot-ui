@@ -8,6 +8,15 @@ type DataTypeEnum = {
 };
 
 export const DATA_TYPE_ENUM: DataTypeEnum = {
+  BYTE: {
+    value: 'BYTE',
+    get label() {
+      return $t('dataType.types.BYTE');
+    },
+    get text() {
+      return $t('dataType.types.BYTE');
+    },
+  },
   STRING: {
     value: 'STRING',
     get label() {

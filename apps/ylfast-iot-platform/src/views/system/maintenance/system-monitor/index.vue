@@ -433,6 +433,7 @@ const jvmOptionGenerator = (
     <div class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
       <!-- CPU Trend -->
       <YlTrendChart
+        class="h-[350px]"
         :key="serverId"
         :title="$t('dashboard.systemMonitor.cpu.trendTitle')"
         :api="getCpuTrend"
@@ -442,6 +443,7 @@ const jvmOptionGenerator = (
 
       <!-- JVM Trend -->
       <YlTrendChart
+        class="h-[350px]"
         :key="serverId"
         :title="$t('dashboard.systemMonitor.jvm.trendTitle')"
         :api="getJvmTrend"

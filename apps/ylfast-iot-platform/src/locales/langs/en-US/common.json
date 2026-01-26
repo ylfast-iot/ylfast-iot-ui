@@ -1,4 +1,4 @@
-{
+﻿{
   "action": {
     "label": "Action",
     "action": "Action",
@@ -14,13 +14,16 @@
     "upload": "Upload",
     "confirm": "Confirm",
     "cancel": "Cancel",
+    "next": "Next",
+    "previous": "Previous",
     "confirmDelete": "Are you sure you want to delete?",
     "confirmEnable": "Are you sure you want to enable?",
     "confirmDisable": "Are you sure you want to disable?",
     "unbind": "Unbind",
     "batchUnbind": "Batch Unbind",
     "batchDelete": "Batch Delete",
-    "addSub": "Add Sub"
+    "addSub": "Add Sub",
+    "debug": "Debug"
   },
   "autoGenerate": "Auto Generate",
   "basicInfo": "Basic Information",
@@ -39,6 +42,7 @@
   "deleteSuccess": "Delete Success",
   "saveSuccess": "Save Success",
   "uploadSuccess": "Upload Success",
+  "copy": "Copy",
   "copySuccess": "Copied to clipboard",
   "success": "Success",
   "createSuccess": "Create Success",
@@ -49,6 +53,7 @@
   "confirmUnbind": "Confirm unbind?",
   "confirmDeleteMsg": "Are you sure you want to delete this record? This action cannot be undone.",
   "comingSoon": "Coming Soon",
+  "developing": "Under Development",
   "noData": "No Data",
   "noDescription": "No Description",
   "selectFile": "Select File",
@@ -82,5 +87,6 @@
   "methods": "Methods",
   "back": "Back",
   "group": "Group",
-  "address": "Address"
+  "address": "Address",
+  "processing": "Processing"
 }

@@ -57,11 +57,17 @@ export interface DeviceEventMetadata extends EventMetadata {
   };
 }
 
+// 设备标签
+export interface TagMetadata extends Metadata {
+  [key: string]: any;
+}
+
 export type DeviceMetadataType =
   | 'events'
   | 'expands'
   | 'functions'
-  | 'properties';
+  | 'properties'
+  | 'tags';
 
 // 设备物模型
 export interface DeviceMetadata extends Metadata {
@@ -71,6 +77,9 @@ export interface DeviceMetadata extends Metadata {
   events: DeviceEventMetadata[];
   // 设备功能
   functions: FunctionMetadata[];
+
+  // 标签
+  tags: TagMetadata[];
 
   // 扩展配置
   expands?: {

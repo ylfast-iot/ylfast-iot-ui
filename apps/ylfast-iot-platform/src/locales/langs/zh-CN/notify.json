@@ -1,0 +1,104 @@
+{
+  "types": {
+    "dingTalk": "钉钉",
+    "email": "邮箱",
+    "sms": "短信",
+    "webhook": "网络钩子",
+    "wechat": "微信",
+    "voice": "语音"
+  },
+  "providers": {
+    "dingTalkMessage": "钉钉消息通知",
+    "dingTalkRobotWebHook": "钉钉机器人通知",
+    "simple": "邮箱",
+    "aliYunSms": "阿里云短信",
+    "aliyun": "阿里云",
+    "httpWebhook": "http网络钩子",
+    "corpMessage": "微信企业消息通知"
+  },
+  "config": {
+    "title": "通知配置",
+    "fields": {
+      "name": "配置名称",
+      "type": "通知类型",
+      "provider": "服务商",
+      "description": "说明"
+    },
+    "list": {
+      "add": "新增配置",
+      "empty": "暂无通知配置"
+    },
+    "save": {
+      "title": "配置通知",
+      "basicInfo": "基础信息",
+      "configInfo": "配置信息",
+      "docInfo": "文档说明",
+      "noConfig": "该服务商无须额外配置",
+      "noProvider": "请在上方选择通知提供商以加载配置项",
+      "noDoc": "无文档说明",
+      "selectProvider": "请先选择服务商"
+    }
+  },
+  "template": {
+    "title": "通知模板",
+    "fields": {
+      "name": "模板名称",
+      "type": "通知类型",
+      "provider": "服务商",
+      "config": "通知配置",
+      "description": "说明"
+    },
+    "list": {
+      "add": "新增模板",
+      "empty": "暂无通知模板"
+    },
+    "save": {
+      "title": "配置模板",
+      "basicInfo": "基础信息",
+      "templateInfo": "模板配置",
+      "varDefInfo": "变量定义",
+      "docInfo": "文档说明"
+    },
+    "vars": {
+      "title": "变量定义",
+      "add": "添加变量",
+      "id": "标识",
+      "name": "名称",
+      "type": "类型",
+      "defaultValue": "默认值",
+      "required": "必填",
+      "idPlaceholder": "变量ID",
+      "namePlaceholder": "显示名称",
+      "typePlaceholder": "选择类型",
+      "defaultPlaceholder": "默认值",
+      "extractMsg": "已自动提取并新增 {count} 个变量",
+      "noMetadata": "该提供商无须模版配置",
+      "noProvider": "请先选择通知提供商",
+      "noDoc": "无文档说明"
+    }
+  },
+  "debug": {
+    "title": "调试通知",
+    "send": "发送调试",
+    "history": "通知历史",
+    "refresh": "刷新记录",
+    "historyTitle": "通知历史 (按时间倒序)",
+    "status": "状态",
+    "notifyType": "通知方式",
+    "provider": "服务商",
+    "time": "时间",
+    "error": "错误信息",
+    "success": "成功",
+    "fail": "失败",
+    "historyEmpty": "暂无通知历史",
+    "templatePlaceholder": "请选择通知模板",
+    "varInput": "变量输入",
+    "configInfo": "配置信息",
+    "stackTitle": "异常堆栈详情",
+    "sendSuccess": "发送成功",
+    "sendFail": "发送失败",
+    "requireTemplate": "请选择通知模板",
+    "requireVar": "请输入必填变量: {name}",
+    "noVar": "该模板无需变量输入"
+  }
+}

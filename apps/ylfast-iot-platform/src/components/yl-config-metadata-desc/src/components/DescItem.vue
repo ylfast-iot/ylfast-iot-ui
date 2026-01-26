@@ -8,6 +8,7 @@ import { formatValue } from '#/utils/config-metadata';
 
 const props = defineProps<{
   editMode: boolean;
+  formModel: any;
   prop: ConfigPropertyMetadata;
   value: any;
 }>();
@@ -50,6 +51,7 @@ const ValueInputComponent = computed(() => {
         :is="ValueInputComponent"
         v-if="ValueInputComponent"
         v-model:value="currentValue"
+        :form-model="props.formModel"
         :prop="props.prop"
       />
       <!-- 不支持的类型 -->

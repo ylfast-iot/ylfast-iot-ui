@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import type { ConfigPropertyMetadata } from '#/types/config-metadata';
 import type { ArrayDef, DataType } from '#/types/data-type';
 
@@ -9,12 +9,15 @@ import { $t } from '@vben/locales';
 
 import { Button } from 'ant-design-vue';
 
-import { isDisabled } from '#/utils/config-metadata';
+import { selectRegistry } from '#/components/business/select-registry';
+import YlApiSelect from '#/components/yl-api-select';
+import { getComponentProps, isDisabled } from '#/utils/config-metadata';
 
 import { getFormItemComponent } from './registry';
 
 const props = defineProps<{
   disabled?: boolean;
+  formModel?: any;
   prop: ConfigPropertyMetadata;
   value: any;
 }>();
@@ -76,6 +79,25 @@ function getDefaultValue(type: DataType): any {
   }
 }
 
+type ComponentType = 'default' | 'range' | 'select';
+
+const componentType = computed(
+  () => getComponentProps(props.prop).type as ComponentType,
+);
+
+const apiSelectComponent = computed(() => {
+  const businessId =
+    getComponentProps(props.prop).businessId ||
+    props.prop.type?.expands?.businessId;
+  if (businessId) {
+    const selectComponent = selectRegistry.get(businessId);
+    if (selectComponent) {
+      return selectComponent;
+    }
+  }
+  return YlApiSelect;
+});
+
 function addItem() {
   const newItem = elementType.value
     ? getDefaultValue(elementType.value.type)
@@ -106,7 +128,53 @@ function getChildProp(): ConfigPropertyMetadata {
 </script>
 
 <template>
+  <div v-if="componentType === 'select'" class="array-input-multiple-select">
+    <component
+      :is="apiSelectComponent"
+      class="w-full"
+      v-bind="getComponentProps(prop)"
+      multiple
+      :disabled="disabled || isDisabled(prop)"
+      :value="innerValue"
+      :form-model="formModel"
+      @update:value="(val: any) => (innerValue = val)"
+    />
+  </div>
+
   <div
+    v-else-if="componentType === 'range'"
+    class="array-input-range flex items-center gap-2"
+    :class="{ 'opacity-60': disabled || isDisabled(prop) }"
+  >
+    <div class="flex-1">
+      <component
+        :is="getFormItemComponent(elementType.type)"
+        v-if="elementType && getFormItemComponent(elementType.type)"
+        :prop="getChildProp()"
+        :value="innerValue[0]"
+        :form-model="formModel"
+        :disabled="disabled || isDisabled(prop)"
+        @update:value="(val: any) => updateItem(0, val)"
+        @change="(val: any) => updateItem(0, val)"
+      />
+    </div>
+    <span class="text-muted-foreground">-</span>
+    <div class="flex-1">
+      <component
+        :is="getFormItemComponent(elementType.type)"
+        v-if="elementType && getFormItemComponent(elementType.type)"
+        :prop="getChildProp()"
+        :value="innerValue[1]"
+        :form-model="formModel"
+        :disabled="disabled || isDisabled(prop)"
+        @update:value="(val: any) => updateItem(1, val)"
+        @change="(val: any) => updateItem(1, val)"
+      />
+    </div>
+  </div>
+
+  <div
+    v-else
     class="array-input overflow-hidden rounded-md border border-border p-2"
     :class="{ 'opacity-60': disabled || isDisabled(prop) }"
   >
@@ -127,6 +195,7 @@ function getChildProp(): ConfigPropertyMetadata {
             v-if="elementType && getFormItemComponent(elementType.type)"
             :prop="getChildProp()"
             :value="item"
+            :form-model="formModel"
             :disabled="disabled || isDisabled(prop)"
             @update:value="(val: any) => updateItem(index, val)"
             @change="(val: any) => updateItem(index, val)"

@@ -337,7 +337,9 @@ export function buildBasicCrudApis<E = any, K = number | string>(
     },
     getById(id: K) {
       return requestClient.get(
-        `${baseUrl}/${BasicApiConstants.query.GET_BY_ID}/${id}`,
+        parseTemplate(`${baseUrl}/${BasicApiConstants.query.GET_BY_ID}`, {
+          id,
+        }),
       );
     },
     getQuery(params: QueryParamEntity) {

@@ -6,7 +6,7 @@ import UnifiedStrategyDemo from './components/UnifiedStrategyDemo.vue';
 
 <template>
   <Page title="数据类型策略演示 (Data Type Strategies)">
-    <div class="p-4">
+    <div class="flex flex-col gap-6 p-4">
       <UnifiedStrategyDemo />
     </div>
   </Page>

@@ -36,6 +36,10 @@ export function isVisible(prop: ConfigPropertyMetadata) {
   return prop.type.expands?.ifShow !== false;
 }
 
+export function hasSpan(prop: ConfigPropertyMetadata) {
+  return prop.type.expands?.span !== undefined;
+}
+
 export function isDisabled(prop: ConfigPropertyMetadata) {
   return (
     prop.type.expands?.disabled === true ||

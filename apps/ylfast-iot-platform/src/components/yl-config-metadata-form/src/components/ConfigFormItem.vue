@@ -3,7 +3,7 @@ import type { ConfigPropertyMetadata } from '#/types/config-metadata';
 
 import { createIconifyIcon } from '@vben/icons';
 
-import { FormItem as AFormItem, Tooltip } from 'ant-design-vue';
+import { FormItem, Tooltip } from 'ant-design-vue';
 
 import { getRules } from '#/utils/config-metadata';
 
@@ -17,7 +17,7 @@ const QuestionCircleOutlined = createIconifyIcon(
 </script>
 
 <template>
-  <AFormItem :name="prop.property" :rules="getRules(prop)">
+  <FormItem :name="prop.property" :rules="getRules(prop)">
     <template #label>
       <div class="flex items-center">
         {{ prop.name }}
@@ -31,5 +31,5 @@ const QuestionCircleOutlined = createIconifyIcon(
       </div>
     </template>
     <slot> </slot>
-  </AFormItem>
+  </FormItem>
 </template>

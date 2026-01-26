@@ -136,6 +136,24 @@ const routes: RouteRecordRaw[] = [
         component: () =>
           import('#/views/demos/components/YlStatisticCardDemo.vue'),
       },
+      {
+        meta: {
+          title: 'YlApiSelect 演示',
+        },
+        name: 'YlApiSelectDemo',
+        path: '/demos/yl-api-select',
+        component: () =>
+          import('#/views/demos/components/yl-api-select/index.vue'),
+      },
+      {
+        meta: {
+          title: '通知组件演示',
+        },
+        name: 'NotifySelectorsDemo',
+        path: '/demos/notify-selectors',
+        component: () =>
+          import('#/views/demos/components/notify-selectors/index.vue'),
+      },
     ],
   },
 ];

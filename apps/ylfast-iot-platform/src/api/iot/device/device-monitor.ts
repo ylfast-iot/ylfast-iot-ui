@@ -88,6 +88,36 @@ export namespace DeviceMonitorApi {
 
   export type DeviceStateMeasurementValue =
     DashboardApi.MeasurementValue<DeviceState>;
+
+  /**
+   * 调试轨迹数据类型
+   */
+  export type TraceDataType = 'data' | 'log';
+
+  /**
+   * 调试轨迹数据
+   */
+  export interface TraceData {
+    // 数据内容
+    detail: any;
+    // 结束时间 毫秒
+    endTime: number;
+    // 是否有错误信息
+    error: boolean;
+    /**
+     * @see DeviceTracer.SpanName
+     * 操作. encode,decode
+     */
+    operation: string;
+    // 开始时间 毫秒
+    startTime: number;
+    /**
+     * 跟踪数据类型
+     */
+    type: TraceDataType;
+    // 跟踪ID
+    traceId: string;
+  }
 }
 
 /**
@@ -295,5 +325,32 @@ export function subscribeDeviceOperationMessage(
     },
   ).subscribe((message) => {
     callback && callback(message);
+  });
+}
+
+/**
+ * 订阅设备调试轨迹消息
+ * @param deviceId 设备id
+ * @param callback 回调方法
+ */
+export function subscribeDeviceDebug(
+  deviceId: string,
+  callback?: DeviceMonitorApi.DeviceMessageReplyCallback<DeviceMonitorApi.TraceData>,
+) {
+  const topic =
+    SubscribeType.DEVICE_DEBUG_TRACE_MESSAGE.formatTopicValue(deviceId);
+  return getWebSocket<DeviceMonitorApi.TraceData>(
+    `device-debug-${deviceId}`,
+    topic,
+    {},
+    {
+      urlSuffix: '/messaging',
+    },
+  ).subscribe((message) => {
+    try {
+      callback && callback(message);
+    } catch (error) {
+      console.error('设备调试消息处理异常：', error, message);
+    }
   });
 }

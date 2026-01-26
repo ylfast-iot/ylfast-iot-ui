@@ -52,8 +52,23 @@ export interface ConfigPropertyMetadata {
   /**
    * 扩展配置 (Keep this for compatibility or other extra props not in type.expands)
    */
-  expands?: Recordable;
+  expands?: {
+    [key: string]: any;
+    // 是否为必填项
+    required?: boolean;
+    span?: number;
+  };
 }
+// 字符串类型输入类型
+type StringTypeInputType =
+  | 'code'
+  | 'markdown'
+  | 'richText'
+  | 'selector'
+  | string;
+// 数组类型输入类型
+// range为范围输入、select下拉选择输入
+type ArrayTypeInputType = 'range' | string;
 
 export interface PropertyValueType extends DataTypeDef {
   type: DataType;
@@ -65,7 +80,9 @@ export interface PropertyValueType extends DataTypeDef {
       // 选择器组件的配置
       selectorType?: SelectorType; // 选择器类型
       // 组件类型 code为编辑器、selector为选择器 (String类型生效)
-      type?: 'code' | 'selector' | string;
+      // 组件类型为range时，表示范围选择器
+      // select = 下拉框
+      type?: 'select' | ArrayTypeInputType | string | StringTypeInputType;
     } &
       // 选择器相关属性
       BaseSelectorProps; // 组件属性

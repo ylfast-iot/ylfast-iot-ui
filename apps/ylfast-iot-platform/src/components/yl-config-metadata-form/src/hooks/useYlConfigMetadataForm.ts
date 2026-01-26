@@ -38,6 +38,18 @@ export function useYlConfigMetadataForm(props?: YlConfigMetadataFormProps) {
     return action;
   }
 
+  async function setContextToConfigMetadataValues(ctx: Recordable<any>) {
+    const action = await getAction();
+    const _ctx = action.getFieldsValue()?._ctx || {};
+    action.setFieldsValue({
+      // 设置运行时上下文
+      _ctx: {
+        ..._ctx,
+        ...ctx,
+      },
+    });
+  }
+
   const methods: YlConfigMetadataFormActionType = {
     /**
      * 设置 Props
@@ -77,6 +89,10 @@ export function useYlConfigMetadataForm(props?: YlConfigMetadataFormProps) {
       }
       return action.getFieldsValue();
     },
+    /**
+     * 设置运行时上下文
+     */
+    setContextToConfigMetadataValues,
   };
 
   return [register, methods] as const;

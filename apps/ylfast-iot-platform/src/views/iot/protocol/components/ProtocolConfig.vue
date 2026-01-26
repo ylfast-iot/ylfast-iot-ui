@@ -69,11 +69,6 @@ const metadata = computed<ConfigMetadata[]>(() => {
                     message: `${$t('ylConfigMetadataForm.pleaseEnter')}${$t('protocol.location')}`,
                     trigger: ['change', 'blur'],
                   },
-                  {
-                    pattern: /\.jar$/,
-                    message: $t('protocol.validate.jarExtension'),
-                    trigger: ['change', 'blur'],
-                  },
                 ]
               : undefined,
             componentProps: {
@@ -130,19 +125,18 @@ async function handleUpload(file: File) {
   uploading.value = true;
   try {
     const res = await uploadProtocol(file);
-    if (res.fileUploadRes) {
-      // Auto-fill location
+
+    // Auto-fill location with accessUrl
+    if (res.accessUrl) {
       model.value = {
         ...model.value,
-        location:
-          typeof res.fileUploadRes === 'string'
-            ? res.fileUploadRes
-            : JSON.stringify(res.fileUploadRes),
+        location: res.accessUrl,
       };
     }
 
-    if (res.protocols && res.protocols.length > 0) {
-      emit('success', res.protocols[0]);
+    // Use protocolInfo instead of protocols array
+    if (res.protocolInfo) {
+      emit('success', res.protocolInfo);
       message.success($t('common.uploadSuccess'));
     } else {
       message.warning($t('protocol.uploadNoInfo'));

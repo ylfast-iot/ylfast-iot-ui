@@ -3,6 +3,8 @@ import type { Component } from 'vue';
 export type SelectorType =
   | 'cert'
   | 'device'
+  | 'gateway'
+  | 'mediaServer'
   | 'network'
   | 'plugin'
   | 'product'
@@ -46,11 +48,19 @@ export async function registerSelectors() {
     import('./network/network-selector').then(({ NetworkSelector }) => {
       selectorRegistry.add('network', NetworkSelector);
     }),
+    import('./gateway/gateway-selector').then(({ GatewaySelector }) => {
+      selectorRegistry.add('gateway', GatewaySelector);
+    }),
     import('./plugin/plugin-selector').then(({ PluginSelector }) => {
       selectorRegistry.add('plugin', PluginSelector);
     }),
     import('./user/user-selector').then(({ UserSelector }) => {
       selectorRegistry.add('user', UserSelector);
     }),
+    import('./media-server/media-server-selector').then(
+      ({ MediaServerSelector }) => {
+        selectorRegistry.add('mediaServer', MediaServerSelector);
+      },
+    ),
   ]);
 }

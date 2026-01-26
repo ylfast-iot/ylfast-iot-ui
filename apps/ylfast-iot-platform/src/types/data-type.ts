@@ -7,6 +7,7 @@ export type Recordable<T = any> = Record<string, T>;
 export type DataType =
   | 'ARRAY'
   | 'BOOLEAN'
+  | 'BYTE'
   | 'DATE'
   | 'DOUBLE'
   | 'ENUM'

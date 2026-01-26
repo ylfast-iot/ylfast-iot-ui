@@ -1,6 +1,7 @@
 import type { QueryParamEntity, Recordable } from '#/adapter';
-import type { BasicModel, ValidateResult } from '#/api/basic';
+import type { BasicModel, SaveResult, ValidateResult } from '#/api/basic';
 import type { ConfigMetadata } from '#/types/config-metadata';
+import type { DeviceMetadata } from '#/types/metadata';
 
 import { buildBasicCrudApis } from '#/api/basic';
 import { requestClient } from '#/api/request';
@@ -93,7 +94,7 @@ export namespace IotPluginApi {
     /**
      * 物模型
      */
-    metadata?: Recordable;
+    metadata?: DeviceMetadata;
   }
 
   /**
@@ -333,3 +334,112 @@ export const getAllPlugins = (params?: QueryParamEntity) => {
   params.paging = false;
   return IotPluginApi.basicCrudApis.postQueryNoPaging(params);
 };
+
+/**
+ * 插件数据ID映射
+ */
+export interface IotPluginDataIdMapping extends BasicModel {
+  type: string;
+  pluginId: string;
+  internalId: string;
+  externalId: string;
+}
+
+export namespace IotPluginMappingApi {
+  const BASE_URL = '/iot/plugin/mapping';
+
+  export const Apis = {
+    save: `${BASE_URL}/{type}/{pluginId}/{internalId}`,
+    queryOne: `${BASE_URL}/{type}/{pluginId}/{internalId}`,
+    queryAllByType: `${BASE_URL}/{type}/_all`,
+    queryAll: `${BASE_URL}/{type}/{pluginId}/_all`,
+    query: `${BASE_URL}/_query`,
+  };
+}
+
+/**
+ * @description: 保存数据ID映射
+ * @param type 插件数据类型
+ * @param pluginId 插件实例ID (接入网关id)
+ * @param internalId 内部数据ID （设备、产品id）
+ * @param externalId 插件数据ID (Body)
+ */
+export const savePluginDataIdMapping = (
+  type: string,
+  pluginId: string,
+  internalId: string,
+  externalId: string,
+) =>
+  requestClient.request<SaveResult>(
+    parseTemplate(IotPluginMappingApi.Apis.save, {
+      type,
+      pluginId,
+      internalId,
+    }),
+    {
+      method: 'PATCH',
+      data: externalId,
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+    },
+  );
+
+/**
+ * @description: 获取数据ID映射
+ * @param type 插件数据类型
+ * @param pluginId 插件实例ID (接入网关id)
+ * @param internalId 内部数据ID （设备、产品id）
+ */
+export const getPluginDataIdMapping = (
+  type: string,
+  pluginId: string,
+  internalId: string,
+) =>
+  requestClient.get<IotPluginDataIdMapping>(
+    parseTemplate(IotPluginMappingApi.Apis.queryOne, {
+      type,
+      pluginId,
+      internalId,
+    }),
+  );
+
+/**
+ * @description: 获取指定类型的所有ID映射 (Deprecated)
+ * @param type 插件数据类型
+ * @param includes 指定查询的插件数据ID
+ */
+export const getPluginDataIdMappingsByType = (
+  type: string,
+  includes?: string[],
+) =>
+  requestClient.post<IotPluginDataIdMapping[]>(
+    parseTemplate(IotPluginMappingApi.Apis.queryAllByType, { type }),
+    includes,
+  );
+
+/**
+ * @description: 获取指定类型的所有ID映射
+ * @param type 插件数据类型
+ * @param pluginId 插件实例ID (接入网关id)
+ * @param includes 指定查询的插件数据ID
+ */
+export const getAllPluginDataIdMappings = (
+  type: string,
+  pluginId: string,
+  includes?: string[],
+) =>
+  requestClient.post<IotPluginDataIdMapping[]>(
+    parseTemplate(IotPluginMappingApi.Apis.queryAll, { type, pluginId }),
+    includes,
+  );
+
+/**
+ * @description: 动态查询ID映射
+ * @param queryParam 查询参数
+ */
+export const queryPluginDataIdMappings = (queryParam: QueryParamEntity) =>
+  requestClient.post<IotPluginDataIdMapping[]>(
+    IotPluginMappingApi.Apis.query,
+    queryParam,
+  );

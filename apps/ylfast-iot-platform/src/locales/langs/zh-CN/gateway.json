@@ -1,5 +1,6 @@
 {
   "name": "网关名称",
+  "selectTitle": "选择网关",
   "title": "设备网关",
   "description": "网关描述",
   "provider": "接入方式",
@@ -135,5 +136,68 @@
   },
   "pagination": {
     "total": "共 {total} 条"
+  },
+  "deviceAccess": {
+    "accessGateway": "接入网关",
+    "switchGateway": "切换网关",
+    "selectGateway": "请选择接入网关",
+    "selectNow": "立即选择",
+    "pluginProduct": "插件产品",
+    "selectPluginProduct": "请选择插件产品",
+    "saveConfig": "保存配置",
+    "channelInfo": "通道信息",
+    "protocolInfo": "协议信息",
+    "noAddress": "暂无地址信息",
+    "noDesc": "暂无描述",
+    "noProtocolDetail": "暂无协议详情",
+    "selectGatewayFirst": "请先在左侧选择接入网关",
+    "loadFailed": "加载网关信息失败",
+    "selectorInitFailed": "网关选择器初始化失败",
+    "saveSuccess": "保存成功",
+    "saveFailed": "保存失败",
+    "disableSwitch": "当前产品下已存在设备，禁止切换网关",
+    "tsl": {
+      "conflictTitle": "物模型合并策略",
+      "pluginVsTransport": "检测到 插件物模型 与 传输协议物模型 冲突",
+      "newVsExisting": "检测到 新物模型 与 现有产品物模型 冲突",
+      "step1Title": "步骤1: 选择合并策略",
+      "step2Title": "步骤2: 与现有物模型合并",
+      "confirmMerge": "确认合并",
+      "mergeSteps": {
+        "transport": {
+          "name": "传输协议物模型合并",
+          "description": "将传输协议物模型与现有产品物模型合并"
+        },
+        "plugin": {
+          "name": "插件物模型合并",
+          "description": "将插件物模型与已合并的物模型进一步合并"
+        }
+      },
+      "comparison": {
+        "metric": "指标",
+        "itemName": "项目名称",
+        "source": "当前物模型",
+        "target": "基础物模型",
+        "preview": "合并后",
+        "properties": "属性",
+        "functions": "功能",
+        "events": "事件",
+        "tags": "标签",
+        "expands": "扩展"
+      },
+      "diff": {
+        "added": "新增",
+        "removed": "删除",
+        "unchanged": "保留"
+      },
+      "merge": "取并集 (Merge)",
+      "mergeDesc": "保留所有属性,冲突时优先使用新属性",
+      "intersect": "取交集 (Intersect)",
+      "intersectDesc": "只保留两者都存在的属性 (按ID匹配)",
+      "overwrite": "覆盖 (Overwrite)",
+      "overwriteDesc": "完全替换为新物模型",
+      "ignore": "不处理 (Ignore)",
+      "ignoreDesc": "保留原有物模型,忽略新属性"
+    }
   }
 }

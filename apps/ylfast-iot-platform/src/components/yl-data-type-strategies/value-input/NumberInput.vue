@@ -8,9 +8,12 @@ import { $t } from '@vben/locales';
 
 import { InputNumber } from 'ant-design-vue';
 
+import { selectRegistry } from '#/components/business/select-registry';
+import YlApiSelect from '#/components/yl-api-select';
 import { getComponentProps, isDisabled } from '#/utils/config-metadata';
 
 const props = defineProps<{
+  formModel?: any;
   prop: ConfigPropertyMetadata;
   value: any;
 }>();
@@ -30,10 +33,37 @@ const typeDef = computed(() => props.prop.type as NumberTypeDef);
 const isFloat = computed(() =>
   ['DOUBLE', 'FLOAT'].includes(props.prop.type.type),
 );
+
+const componentType = computed(
+  () => getComponentProps(props.prop).type as string,
+);
+
+const apiSelectComponent = computed(() => {
+  const businessId =
+    getComponentProps(props.prop).businessId ||
+    props.prop.type?.expands?.businessId;
+  if (businessId) {
+    const selectComponent = selectRegistry.get(businessId);
+    if (selectComponent) {
+      return selectComponent;
+    }
+  }
+  return YlApiSelect;
+});
 </script>
 
 <template>
+  <component
+    :is="apiSelectComponent"
+    v-if="componentType === 'select'"
+    v-model:value="innerValue"
+    v-bind="getComponentProps(prop)"
+    class="w-full"
+    :disabled="isDisabled(prop)"
+    :form-model="formModel"
+  />
   <InputNumber
+    v-else
     v-model:value="innerValue"
     :placeholder="`${$t('ylConfigMetadataForm.pleaseEnter')}${props.prop.name}`"
     class="w-full"

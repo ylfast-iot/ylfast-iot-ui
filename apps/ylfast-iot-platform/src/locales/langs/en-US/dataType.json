@@ -3,6 +3,7 @@
   "types": {
     "STRING": "String",
     "PASSWORD": "Password",
+    "BYTE": "Byte",
     "INTEGER": "Integer",
     "LONG": "Long",
     "SHORT": "Short",

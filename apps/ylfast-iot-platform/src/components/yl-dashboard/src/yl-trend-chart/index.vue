@@ -103,7 +103,7 @@ const isLoading = computed(() => props.loading || internalLoading.value);
     </div>
 
     <!-- Content -->
-    <div class="relative h-[300px] w-full overflow-hidden">
+    <div class="relative flex w-full flex-1 overflow-hidden">
       <div v-if="isLoading" class="flex h-full flex-col justify-between">
         <div class="px-2 pt-2">
           <Skeleton active :paragraph="{ rows: 1 }" />

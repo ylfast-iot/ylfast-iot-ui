@@ -63,7 +63,14 @@ export namespace IotNetCompApi {
 
   export interface Address {
     address: string;
+    // health = 1 正常 0 已禁用 -1 无法访问
     health: number;
+    // 是否正常
+    ok: boolean;
+    // 是否无法访问
+    bad: boolean;
+    // 是否禁用
+    disabled: boolean;
   }
 
   export interface NetworkTypeDetail {

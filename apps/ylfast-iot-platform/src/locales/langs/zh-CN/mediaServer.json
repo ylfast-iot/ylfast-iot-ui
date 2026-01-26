@@ -1,0 +1,40 @@
+{
+  "selectTitle": "选择流媒体服务",
+  "name": "服务名称",
+  "provider": "服务提供商",
+  "enabled": "是否启用",
+  "shareCluster": "集群是否共享配置",
+  "configuration": "服务配置",
+  "cluster": {
+    "title": "集群配置",
+    "serverId": "服务器ID",
+    "tags": "标签",
+    "configuration": "特定配置",
+    "add": "新增服务器配置"
+  },
+  "action": {
+    "start": "启动",
+    "shutdown": "停止",
+    "startSuccess": "流媒体服务启动成功",
+    "shutdownSuccess": "流媒体服务已停止"
+  },
+  "config": {
+    "independent": "独立配置",
+    "independentDesc": "节点差异化配置，根据不同服务器节点设置特定参数。",
+    "cluster": "共享配置",
+    "sharedDesc": "全局统一配置，适用于集群节点配置一致的场景。",
+    "mode": "配置模式",
+    "shared": "共享配置"
+  },
+  "clusterConfig": {
+    "nodePrefix": "节点 #",
+    "assignNode": "指派服务器节点",
+    "removeNode": "移除节点",
+    "addNode": "添加节点配置",
+    "empty": "暂无集群配置",
+    "validateError": "请选择第 {nodes} 个节点的服务器"
+  },
+  "tips": {
+    "selectProviderFirst": "选择服务提供商后将自动加载配置表单"
+  }
+}

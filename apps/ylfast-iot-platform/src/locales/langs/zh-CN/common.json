@@ -1,4 +1,4 @@
-{
+﻿{
   "action": {
     "label": "操作",
     "action": "操作",
@@ -14,13 +14,16 @@
     "upload": "上传",
     "confirm": "确认",
     "cancel": "取消",
+    "next": "下一步",
+    "previous": "上一步",
     "confirmDelete": "确认删除吗？",
     "confirmEnable": "确认启用吗？",
     "confirmDisable": "确认禁用吗？",
     "unbind": "解绑",
     "batchUnbind": "批量解绑",
     "batchDelete": "批量删除",
-    "addSub": "新增子级"
+    "addSub": "新增子级",
+    "debug": "调试"
   },
   "autoGenerate": "自动生成",
   "basicInfo": "基本信息",
@@ -40,6 +43,7 @@
   "deleteSuccess": "删除成功",
   "saveSuccess": "保存成功",
   "uploadSuccess": "上传成功",
+  "copy": "复制",
   "copySuccess": "已复制到剪贴板",
   "success": "成功",
   "createSuccess": "创建成功",
@@ -50,6 +54,7 @@
   "confirmUnbind": "确认解绑吗？",
   "confirmDeleteMsg": "确认删除该记录吗？此操作不可恢复。",
   "comingSoon": "敬请期待",
+  "developing": "开发中",
   "noData": "暂无数据",
   "noDescription": "暂无描述",
   "selectFile": "选择文件",
@@ -83,5 +88,6 @@
   "methods": "接入方式",
   "back": "返回",
   "group": "分组",
-  "address": "地址"
+  "address": "地址",
+  "processing": "处理中"
 }

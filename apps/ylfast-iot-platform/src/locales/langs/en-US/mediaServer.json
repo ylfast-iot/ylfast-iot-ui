@@ -1,0 +1,40 @@
+{
+  "selectTitle": "Select Media Server",
+  "name": "Server Name",
+  "provider": "Provider",
+  "enabled": "Enabled",
+  "shareCluster": "Share Cluster Config",
+  "configuration": "Configuration",
+  "cluster": {
+    "title": "Cluster Config",
+    "serverId": "Server ID",
+    "tags": "Tags",
+    "configuration": "Specific Config",
+    "add": "Add Server Config"
+  },
+  "action": {
+    "start": "Start",
+    "shutdown": "Shutdown",
+    "startSuccess": "Media server started successfully",
+    "shutdownSuccess": "Media server shut down successfully"
+  },
+  "config": {
+    "independent": "Independent",
+    "independentDesc": "Differential configuration for each node, setting specific parameters per server.",
+    "cluster": "Shared",
+    "sharedDesc": "Global unified configuration, suitable for clusters with identical node settings.",
+    "mode": "Config Mode",
+    "shared": "Shared Config"
+  },
+  "clusterConfig": {
+    "nodePrefix": "Node #",
+    "assignNode": "Assign Server Node",
+    "removeNode": "Remove Node",
+    "addNode": "Add Node Config",
+    "empty": "No cluster configuration",
+    "validateError": "Please select the server for node {nodes}"
+  },
+  "tips": {
+    "selectProviderFirst": "Select a provider to automatically load the configuration form"
+  }
+}

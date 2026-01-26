@@ -7,13 +7,15 @@ import { TabPane, Tabs } from 'ant-design-vue';
 
 import CertificateSelectorDemo from './components/CertificateSelectorDemo.vue';
 import DeviceSelectorDemo from './components/DeviceSelectorDemo.vue';
+import GatewaySelectorDemo from './components/GatewaySelectorDemo.vue';
+import MediaServerSelectorDemo from './components/MediaServerSelectorDemo.vue';
 import NetworkSelectorDemo from './components/NetworkSelectorDemo.vue';
 import PluginSelectorDemo from './components/PluginSelectorDemo.vue';
 import ProductSelectorDemo from './components/ProductSelectorDemo.vue';
 import ProtocolSelectorDemo from './components/ProtocolSelectorDemo.vue';
 import UserSelectorDemo from './components/UserSelectorDemo.vue';
 
-const activeKey = ref('device');
+const activeKey = ref('gateway');
 </script>
 
 <template>
@@ -45,6 +47,11 @@ const activeKey = ref('device');
           <NetworkSelectorDemo />
         </TabPane>
 
+        <!-- Tab 6: Gateway Selector -->
+        <TabPane key="gateway" tab="网关选择器 (GatewaySelector)">
+          <GatewaySelectorDemo />
+        </TabPane>
+
         <!-- Tab 3: Certificate Selector -->
         <TabPane key="certificate" tab="证书选择器 (CertificateSelector)">
           <CertificateSelectorDemo />
@@ -53,6 +60,14 @@ const activeKey = ref('device');
         <!-- Tab 4: User Selector -->
         <TabPane key="user" tab="用户选择器 (UserSelector)">
           <UserSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 5: Media Server Selector -->
+        <TabPane
+          key="media-server"
+          tab="流媒体服务选择器 (MediaServerSelector)"
+        >
+          <MediaServerSelectorDemo />
         </TabPane>
       </Tabs>
     </div>
