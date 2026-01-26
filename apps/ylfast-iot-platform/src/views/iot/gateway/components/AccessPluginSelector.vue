@@ -41,19 +41,19 @@ const pagination = ref({
 // 搜索表单配置
 const searchFormSchemas: YlDcFormSchema[] = [
   {
-    field: 'pluginId',
+    field: 'id',
     label: $t('gateway.detail.id'),
     component: 'Input',
     termTypes: ['like'],
   },
   {
-    field: 'pluginName',
+    field: 'name',
     label: $t('gateway.detail.name'),
     component: 'Input',
     termTypes: ['like'],
   },
   {
-    field: 'pluginDescription',
+    field: 'description',
     label: $t('gateway.detail.desc'),
     component: 'Input',
     termTypes: ['like'],
