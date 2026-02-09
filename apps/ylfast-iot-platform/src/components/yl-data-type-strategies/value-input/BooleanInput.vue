@@ -35,6 +35,9 @@ function convertValue(val: any, type: string | undefined) {
   if (type === 'BOOLEAN') {
     return String(val).toLowerCase() === 'true';
   }
+  if (type === 'STRING' || !type) {
+    return String(val);
+  }
   return val;
 }
 

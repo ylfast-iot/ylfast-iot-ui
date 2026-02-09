@@ -49,6 +49,62 @@ const emit = defineEmits([
   'cancel',
 ]);
 
+function getDefaultValues(prop: ConfigPropertyMetadata): any {
+  const expands = prop.type.expands;
+  if (expands?.defaultValue !== undefined) {
+    return expands.defaultValue;
+  }
+
+  if (prop.type.type === 'OBJECT') {
+    const obj: any = {};
+    const subProps = (prop.type as any).properties; // For ObjectDef style
+    if (Array.isArray(subProps)) {
+      subProps.forEach((sub) => {
+        const subDefault = getDefaultValues({
+          property: sub.id,
+          type: sub.valueType,
+          name: sub.name,
+          expands: sub.expands,
+        } as any);
+        if (subDefault !== undefined) {
+          obj[sub.id] = subDefault;
+        }
+      });
+    }
+    return Object.keys(obj).length > 0 ? obj : undefined;
+  }
+  return undefined;
+}
+
+function initFormModelWithDefaults(
+  metadata: ConfigMetadata | ConfigMetadata[] | undefined,
+  model: Recordable,
+) {
+  if (!metadata) return;
+
+  const allProperties: ConfigPropertyMetadata[] = [];
+  if (Array.isArray(metadata)) {
+    metadata.forEach((meta) => allProperties.push(...meta.properties));
+  } else if ((metadata as any).properties) {
+    allProperties.push(...(metadata as any).properties);
+  }
+
+  allProperties.forEach((prop) => {
+    if (
+      prop.type.type === 'OBJECT' &&
+      prop.type.expands?.configMetadata &&
+      model[prop.property] === undefined
+    ) {
+      model[prop.property] = {};
+    } else if (model[prop.property] === undefined) {
+      const defaultVal = getDefaultValues(prop);
+      if (defaultVal !== undefined) {
+        model[prop.property] = defaultVal;
+      }
+    }
+  });
+}
+
 const slots = useSlots();
 
 const formModel = reactive<Recordable>({});
@@ -99,6 +155,7 @@ watch(
   (newVal) => {
     if (newVal) {
       Object.assign(formModel, newVal);
+      initFormModelWithDefaults(metadataRef.value, formModel);
     }
   },
   { immediate: true, deep: true },
@@ -110,6 +167,7 @@ watch(
   (newVal) => {
     if (newVal) {
       Object.assign(formModel, newVal);
+      initFormModelWithDefaults(metadataRef.value, formModel);
     }
   },
   { immediate: true, deep: true },
@@ -128,31 +186,17 @@ watch(
 
 // 监听 metadata 变化
 watch(
+  metadataRef,
+  (newVal) => {
+    initFormModelWithDefaults(newVal, formModel);
+  },
+  { immediate: true },
+);
+
+watch(
   () => props.metadata,
   (newVal) => {
     metadataRef.value = newVal;
-    const allProperties: ConfigPropertyMetadata[] = [];
-
-    if (Array.isArray(newVal)) {
-      newVal.forEach((meta) => allProperties.push(...meta.properties));
-    } else if (newVal?.properties) {
-      allProperties.push(...newVal.properties);
-    }
-
-    allProperties.forEach((prop) => {
-      if (
-        prop.type.type === 'OBJECT' &&
-        prop.type.expands?.configMetadata &&
-        formModel[prop.property] === undefined
-      ) {
-        formModel[prop.property] = {};
-      } else if (
-        prop.type.expands?.defaultValue !== undefined &&
-        formModel[prop.property] === undefined
-      ) {
-        formModel[prop.property] = prop.type.expands.defaultValue;
-      }
-    });
   },
   { immediate: true },
 );
@@ -182,7 +226,11 @@ const ConfigItemsRenderer = (renderProps: any) => {
     slots,
     parentProps: getDescriptionsProps,
     registerRef: (property, el) => {
-      if (el) childRefs.value[property] = el;
+      if (el) {
+        childRefs.value[property] = el;
+      } else {
+        delete childRefs.value[property];
+      }
     },
   });
 };
@@ -259,6 +307,7 @@ const action: YlConfigMetadataDescActionType = {
     if (newProps.editMode !== undefined) {
       internalEditMode.value = newProps.editMode;
     }
+    initFormModelWithDefaults(metadataRef.value, formModel);
   },
   toggleEditMode,
   setEditMode,
@@ -278,14 +327,10 @@ const action: YlConfigMetadataDescActionType = {
     }
 
     allProperties.forEach((prop) => {
-      if (prop.type.type === 'OBJECT' && prop.type.expands?.configMetadata) {
-        formModel[prop.property] = {};
-      } else if (prop.type.expands?.defaultValue === undefined) {
-        delete formModel[prop.property];
-      } else {
-        formModel[prop.property] = prop.type.expands.defaultValue;
-      }
+      delete formModel[prop.property];
     });
+
+    initFormModelWithDefaults(metadataRef.value, formModel);
   },
   setFieldsValue: (values) => {
     Object.assign(formModel, values);
@@ -336,8 +381,4 @@ defineExpose(action);
   </div>
 </template>
 
-<style scoped>
-.yl-config-metadata-desc {
-  /* 组件样式 */
-}
-</style>
+<style scoped></style>

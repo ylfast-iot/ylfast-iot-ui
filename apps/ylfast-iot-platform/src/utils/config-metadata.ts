@@ -155,6 +155,11 @@ export function formatValue(value: any, prop: ConfigPropertyMetadata): string {
     return JSON.stringify(value, null, 2);
   }
 
+  // 密码类型
+  if (prop.type.type === 'PASSWORD') {
+    return '********';
+  }
+
   // 其他类型直接转字符串
   return String(value);
 }

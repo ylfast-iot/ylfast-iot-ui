@@ -35,6 +35,6 @@ const typeDef = computed(() => props.prop.type as StringTypeDef);
     :disabled="isDisabled(prop)"
     :maxlength="typeDef.maxLength"
     allow-clear
-    v-bind="getComponentProps(prop)"
+    v-bind="getComponentProps(prop) as any"
   />
 </template>

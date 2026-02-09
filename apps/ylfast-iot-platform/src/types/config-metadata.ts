@@ -84,36 +84,36 @@ export interface PropertyValueType extends DataTypeDef {
       // select = 下拉框
       type?: 'select' | ArrayTypeInputType | string | StringTypeInputType;
     } &
-    // 选择器相关属性
-    BaseSelectorProps; // 组件属性
+      // 选择器相关属性
+      BaseSelectorProps; // 组件属性
     configMetadata?:
-    | ConfigMetadata
-    | ConfigMetadata[]
-    | ConfigPropertyMetadata
-    | ConfigPropertyMetadata[]; // 嵌套对象配置
+      | ConfigMetadata
+      | ConfigMetadata[]
+      | ConfigPropertyMetadata
+      | ConfigPropertyMetadata[]; // 嵌套对象配置
     defaultValue?: any; // 默认值
     disabled?: boolean; // 是否禁用
     ifShow?: boolean; // 是否显示
     linkageProperty?: string; // 属性联动
-    linkagePropertyIsSelectValue?: boolean; // 联动属性是否为选择器值，linkageProperty会失效
     linkagePropertyBooleanMapConfig?: {
       // key为属性标识 value为联动配置
       [key: string]:
-      | ConfigMetadata
-      | ConfigMetadata[]
-      | ConfigPropertyMetadata
-      | ConfigPropertyMetadata[]
-      | null;
+        | ConfigMetadata
+        | ConfigMetadata[]
+        | ConfigPropertyMetadata
+        | ConfigPropertyMetadata[]
+        | null;
     }; // 布尔映射
     linkagePropertyEnumMapConfig?: {
       // key为属性标识 value为联动配置
       [key: string]:
-      | ConfigMetadata
-      | ConfigMetadata[]
-      | ConfigPropertyMetadata
-      | ConfigPropertyMetadata[]
-      | null;
+        | ConfigMetadata
+        | ConfigMetadata[]
+        | ConfigPropertyMetadata
+        | ConfigPropertyMetadata[]
+        | null;
     }; // 属性联动枚举映射
+    linkagePropertyIsSelectValue?: boolean; // 联动属性是否为选择器值，linkageProperty会失效
     maxLength?: number; // 最大长度
     required?: boolean; // 是否必填
     rules?: Rule | Rule[]; // 表单验证规则

@@ -9,9 +9,11 @@ import ActionFooterDemo from './components/ActionFooterDemo.vue';
 import BasicDemo from './components/BasicDemo.vue';
 import BooleanLinkageDemo from './components/BooleanLinkageDemo.vue';
 import ComplexDemo from './components/ComplexDemo.vue';
+import DynamicLinkageDemo from './components/DynamicLinkageDemo.vue';
 import HeaderCustomDemo from './components/HeaderCustomDemo.vue';
 import ImportDemo from './components/ImportDemo.vue';
 import MultiFormDemo from './components/MultiFormDemo.vue';
+import ObjectDefaultValueDemo from './components/ObjectDefaultValueDemo.vue';
 import PureNestedDemo from './components/PureNestedDemo.vue';
 import VbenFormIntegrationDemo from './components/VbenFormIntegrationDemo.vue';
 
@@ -40,6 +42,14 @@ const activeKey = ref('basic');
 
         <TabPane key="multi" tab="多表单渲染">
           <MultiFormDemo />
+        </TabPane>
+
+        <TabPane key="dynamicLinkage" tab="动态联动示例">
+          <DynamicLinkageDemo />
+        </TabPane>
+
+        <TabPane key="objectDefault" tab="对象默认值填充">
+          <ObjectDefaultValueDemo />
         </TabPane>
 
         <TabPane key="headerCustom" tab="标题自定义">

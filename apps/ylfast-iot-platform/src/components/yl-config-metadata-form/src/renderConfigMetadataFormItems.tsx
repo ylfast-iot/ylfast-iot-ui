@@ -78,13 +78,14 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
         linkageProperty: string;
         metadata: ConfigMetadata | ConfigMetadata[] | undefined;
       } {
-
     // Select map config based on property type
     const isBoolean = prop.type.type === 'BOOLEAN';
-    const linkageMap = isBoolean 
-      ? (prop.type.expands?.linkagePropertyBooleanMapConfig  || prop.type.expands?.linkagePropertyEnumMapConfig)
-      : (prop.type.expands?.linkagePropertyEnumMapConfig || prop.type.expands?.linkagePropertyBooleanMapConfig);
-      
+    const linkageMap = isBoolean
+      ? prop.type.expands?.linkagePropertyBooleanMapConfig ||
+        prop.type.expands?.linkagePropertyEnumMapConfig
+      : prop.type.expands?.linkagePropertyEnumMapConfig ||
+        prop.type.expands?.linkagePropertyBooleanMapConfig;
+
     let linkageProperty = prop.type.expands?.linkageProperty || '';
     if (!linkageMap) return undefined;
     const val = formModel.value[prop.property];
@@ -93,12 +94,9 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
     if (prop.type.expands?.linkagePropertyIsSelectValue === true) {
       linkageProperty = String(val);
     }
-    
+
     const config = linkageMap[String(val)];
     if (!config) return undefined;
-
-
-
 
     let linkageMetadata:
       | undefined
@@ -152,6 +150,32 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
         formModel.value[linkageMetadata.linkageProperty] || {};
     }
     return linkageMetadata;
+  }
+
+  // Linkage cleanup logic helper
+  function handleLinkageCleanup(prop: ConfigPropertyMetadata, val: any) {
+    const oldVal = formModel.value[prop.property];
+    if (oldVal === val) return;
+
+    const expands = prop.type.expands;
+    const isBoolean = prop.type.type === 'BOOLEAN';
+    const linkageMap = isBoolean
+      ? expands?.linkagePropertyBooleanMapConfig ||
+        expands?.linkagePropertyEnumMapConfig
+      : expands?.linkagePropertyEnumMapConfig ||
+        expands?.linkagePropertyBooleanMapConfig;
+
+    if (
+      linkageMap && // 1. Handle dynamic linkagePropertyIsSelectValue
+      expands?.linkagePropertyIsSelectValue === true
+    ) {
+      Object.keys(linkageMap).forEach((key) => {
+        if (key !== String(val) && formModel.value[key] !== undefined) {
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+          delete formModel.value[key];
+        }
+      });
+    }
   }
 
   return (
@@ -245,6 +269,7 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                           hideNestedHeader={props.hideNestedHeader}
                           hideRootHeader={props.hideRootHeader}
                           isNested={true}
+                          key={prop.property}
                           metadata={objectMetadata}
                           model={formModel.value[prop.property]}
                           onUpdate:model={(val) =>
@@ -258,9 +283,10 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                   ) : (
                     <StrategyInputFormItem
                       formModel={formModel.value}
-                      onUpdate:value={(val: any) =>
-                        (formModel.value[prop.property] = val)
-                      }
+                      onUpdate:value={(val: any) => {
+                        handleLinkageCleanup(prop, val);
+                        formModel.value[prop.property] = val;
+                      }}
                       prop={prop}
                       ref={(el) => props.registerRef(prop.property, el)}
                       value={formModel.value[prop.property]}
@@ -274,6 +300,7 @@ export function renderConfigMetadataFormItems(props: RenderProps) {
                         hideNestedHeader={props.hideNestedHeader}
                         hideRootHeader={props.hideRootHeader}
                         isNested={true}
+                        key={linkageMetadata.linkageProperty}
                         metadata={linkageMetadata.metadata}
                         model={formModel.value[linkageMetadata.linkageProperty]}
                         onUpdate:model={(val) =>

@@ -47,12 +47,10 @@ const booleanLinkageMetadata: ConfigMetadata = {
       name: 'Enable Notifications',
       type: {
         type: 'BOOLEAN',
-        trueValue: 'true',
-        falseValue: 'false',
         expands: {
-          defaultValue: 'false',
+          defaultValue: false,
           linkageProperty: 'details',
-          linkagePropertyEnumMapConfig: {
+          linkagePropertyBooleanMapConfig: {
             true: notificationConfig,
           },
         },
