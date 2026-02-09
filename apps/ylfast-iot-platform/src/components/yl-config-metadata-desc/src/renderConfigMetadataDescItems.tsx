@@ -81,13 +81,21 @@ export function renderConfigMetadataDescItems(props: RenderProps) {
         linkageProperty: string;
         metadata: ConfigMetadata | ConfigMetadata[] | undefined;
       } {
-    const linkageMap = prop.type.expands?.linkagePropertyEnumMapConfig;
-    const linkageProperty = prop.type.expands?.linkageProperty || '';
+    // Select map config based on property type
+    const isBoolean = prop.type.type === 'BOOLEAN';
+    const linkageMap = isBoolean 
+      ? (prop.type.expands?.linkagePropertyBooleanMapConfig  || prop.type.expands?.linkagePropertyEnumMapConfig)
+      : (prop.type.expands?.linkagePropertyEnumMapConfig || prop.type.expands?.linkagePropertyBooleanMapConfig);
+      
+    let linkageProperty = prop.type.expands?.linkageProperty || '';
     if (!linkageMap) return undefined;
-
     const val = formModel.value[prop.property];
     if (val === undefined || val === null) return undefined;
-
+    // Use current value as linkage property if linkagePropertyIsSelectValue is true
+    if (prop.type.expands?.linkagePropertyIsSelectValue === true) {
+      linkageProperty = String(val);
+    }
+    
     const config = linkageMap[String(val)];
     if (!config) return undefined;
 
