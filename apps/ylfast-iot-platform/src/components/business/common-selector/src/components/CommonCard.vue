@@ -16,6 +16,7 @@ const props = withDefaults(defineProps<CommonSelectorProps>(), {
   defaultSelectedRows: () => [],
   idField: 'id',
   searchFormSchemas: () => [],
+  showMoreButton: true,
 });
 
 const emit = defineEmits(['selectionChange']);
@@ -33,10 +34,11 @@ const pagination = reactive({
 
 // Cache current search terms
 const currentTerms = ref<Term[]>([]);
+const oldParamsTermsStr = ref('');
 
 // Search Form
 const [DynamicSearchForm] = useYlDcForm({
-  showMoreButton: true,
+  showMoreButton: props.showMoreButton,
   layoutOption: {
     cols: 2,
     breakpoints: { xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 3 },
@@ -153,13 +155,19 @@ watch(
   { immediate: true, deep: true },
 );
 
+// Consolidated Watcher for Params & Initial Fetch
 watch(
   () => props.paramsTerms,
-  () => {
+  (newTerms) => {
+    const newTermsStr = JSON.stringify(newTerms || []);
+    if (newTermsStr === oldParamsTermsStr.value && list.value.length > 0)
+      return;
+
+    oldParamsTermsStr.value = newTermsStr;
     pagination.current = 1;
     fetchData();
   },
-  { deep: true },
+  { deep: true, immediate: true },
 );
 
 // Pagination
@@ -170,7 +178,7 @@ function handlePageChange(page: number, pageSize: number) {
 }
 
 onMounted(() => {
-  fetchData();
+  // fetchData is now handled by the immediate watch on paramsTerms
 });
 
 defineExpose({ getSelection, clearSelection, setSelection });

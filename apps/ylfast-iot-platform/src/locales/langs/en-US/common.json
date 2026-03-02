@@ -16,6 +16,7 @@
     "cancel": "Cancel",
     "next": "Next",
     "previous": "Previous",
+    "prev": "Previous",
     "confirmDelete": "Are you sure you want to delete?",
     "confirmEnable": "Are you sure you want to enable?",
     "confirmDisable": "Are you sure you want to disable?",
@@ -23,8 +24,11 @@
     "batchUnbind": "Batch Unbind",
     "batchDelete": "Batch Delete",
     "addSub": "Add Sub",
-    "debug": "Debug"
+    "debug": "Debug",
+    "enable": "Enable",
+    "disable": "Disable"
   },
+  "contentPending": "Content Pending",
   "autoGenerate": "Auto Generate",
   "basicInfo": "Basic Information",
   "name": "Name",
@@ -56,6 +60,8 @@
   "developing": "Under Development",
   "noData": "No Data",
   "noDescription": "No Description",
+  "confirmEnable": "Confirm Enable",
+  "confirmDisable": "Confirm Disable",
   "selectFile": "Select File",
   "placeholder": {
     "input": "Please enter",

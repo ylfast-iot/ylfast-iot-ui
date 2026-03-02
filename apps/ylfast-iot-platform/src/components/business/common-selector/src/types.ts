@@ -88,6 +88,8 @@ export interface CommonSelectorProps<T = any> extends BaseSelectorProps<T> {
   searchFormSchemas?: YlDcFormSchema[];
   /** 表格列配置 */
   tableColumns?: VxeGridProps['columns'];
+  /** 搜索表单更多按钮 */
+  showMoreButton?: boolean;
 }
 
 /**

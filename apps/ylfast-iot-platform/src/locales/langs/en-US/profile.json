@@ -2,7 +2,26 @@
   "basic": "Basic Settings",
   "security": "Security Settings",
   "password": "Change Password",
-  "notice": "Notification Settings",
+  "subscriptions": {
+    "title": "Message Subscriptions",
+    "description": "Manage your notification subscriptions across the platform",
+    "noChannels": "No available subscriptions",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe",
+    "boundAccount": "Bound Account",
+    "notBound": "Not Bound",
+    "changeBoundAccount": "Change Account",
+    "goToBasicSetting": "Please go to 'Basic Settings' to change your bound account",
+    "subscribeSuccess": "Subscribed successfully",
+    "unsubscribeSuccess": "Unsubscribed successfully",
+    "tip": "You can select the channels you want to receive notifications from"
+  },
+  "message": {
+    "title": "Site Messages",
+    "description": "View and manage your site messages and notifications",
+    "emptyCategories": "No message categories available",
+    "modalTitle": "Notification Details"
+  },
   "info": {
     "avatar": "Avatar",
     "avatarHelp": "Avatar upload needs backend API",

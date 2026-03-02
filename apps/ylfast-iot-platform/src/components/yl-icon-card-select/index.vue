@@ -37,14 +37,12 @@ const activeClass =
 const inactiveClass =
   'border-slate-100 hover:border-primary/30 bg-white dark:bg-[#1b1b1b] dark:border-gray-800';
 
-function getIconColorClass(option: Option) {
-  const color = option.color || 'blue';
-  return `text-${color}-500 dark:text-${color}-400`;
+function getIconColorClass(_option: Option) {
+  return `text-white`;
 }
 
 function getBgColorClass(option: Option) {
-  const color = option.color || 'blue';
-  return `bg-${color}-500/10 dark:bg-${color}-500/20`;
+  return option.color || 'bg-blue-500';
 }
 </script>
 

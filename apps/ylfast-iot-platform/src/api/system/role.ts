@@ -1,5 +1,5 @@
 import type { QueryParamEntity } from '#/adapter';
-import type { I18nSupport } from '#/api/basic.d';
+import type { I18nSupport, PagerResult } from '#/api/basic';
 
 import { requestClient } from '#/api/request';
 
@@ -29,11 +29,17 @@ export namespace SystemRoleApi {
 // Role APIs
 
 export function queryRole(params: QueryParamEntity) {
-  return requestClient.get<any>('/role/_query', { params });
+  return requestClient.get<PagerResult<SystemRoleApi.RoleEntity>>(
+    '/role/_query',
+    { params },
+  );
 }
 
 export function queryRolePost(params: QueryParamEntity) {
-  return requestClient.post<any>('/role/_query', params);
+  return requestClient.post<PagerResult<SystemRoleApi.RoleEntity>>(
+    '/role/_query',
+    params,
+  );
 }
 
 export function queryRoleNoPaging(params: QueryParamEntity) {

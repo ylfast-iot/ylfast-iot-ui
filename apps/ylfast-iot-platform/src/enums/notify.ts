@@ -14,7 +14,7 @@ export type NotifyType =
   | 'wechat';
 
 /**
- * 通知服务商
+ * 通知服务商 (内部枚举值)
  */
 export type NotifyProvider =
   | 'aliyun'
@@ -25,16 +25,43 @@ export type NotifyProvider =
   | 'httpWebhook'
   | 'simple';
 
+/**
+ * 后端订阅服务商 ID (subscriberProviderId)
+ */
+export type NotifySubscriberProvider =
+  | 'inside-mail'
+  | 'notifier-dingTalk'
+  | 'notifier-email'
+  | 'notifier-sms'
+  | 'notifier-voice'
+  | 'notifier-webhook'
+  | 'notifier-wechat';
+
 export interface NotifyEnumDict extends EnumDict<string> {
   color?: string;
   icon?: string;
   text: string; // Required by EnumDict
+  subscriberProviderId?: NotifySubscriberProvider;
+  // 用户字段，当前subscriberProviderId对应的用户字段，用于通知订阅创建通道时变量值自动填充
+  /**
+   * userField = {
+            source: 'relation',
+            relation: {
+                objectType: 'user',
+                objectSource: {
+                    source: 'upper',
+                    upperKey: 'subscriber',
+                },
+            },
+        }
+   */
+  userField?: string;
 }
 
 /**
- * 通知类型配置
+ * 通知类型配置 (通用分类)
  */
-export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
+export const NOTIFY_TYPE_ENUMS: Record<NotifyType, NotifyEnumDict> = {
   dingTalk: {
     value: 'dingTalk',
     get label() {
@@ -43,8 +70,9 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.dingTalk');
     },
-    icon: 'logos:dingtalk-icon',
+    icon: 'ant-design:dingtalk-outlined',
     color: 'blue',
+    subscriberProviderId: 'notifier-dingTalk',
   },
   email: {
     value: 'email',
@@ -54,8 +82,9 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.email');
     },
-    icon: 'lucide:mail',
+    icon: 'ic:round-email',
     color: 'orange',
+    subscriberProviderId: 'notifier-email',
   },
   sms: {
     value: 'sms',
@@ -65,8 +94,9 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.sms');
     },
-    icon: 'lucide:message-square',
+    icon: 'ic:baseline-sms',
     color: 'green',
+    subscriberProviderId: 'notifier-sms',
   },
   voice: {
     value: 'voice',
@@ -76,8 +106,9 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.voice');
     },
-    icon: 'lucide:phone-outgoing',
+    icon: 'icon-park-solid:voice',
     color: 'purple',
+    subscriberProviderId: 'notifier-voice',
   },
   webhook: {
     value: 'webhook',
@@ -87,8 +118,9 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.webhook');
     },
-    icon: 'lucide:webhook',
+    icon: 'logos:webhooks',
     color: 'gray',
+    subscriberProviderId: 'notifier-webhook',
   },
   wechat: {
     value: 'wechat',
@@ -98,13 +130,15 @@ export const NOTIFY_TYPE_ENUMS: { [key in NotifyType]: NotifyEnumDict } = {
     get text() {
       return $t('notify.types.wechat');
     },
-    icon: 'logos:wechat',
+    icon: 'mingcute:wechat-fill',
     color: 'green',
+    subscriberProviderId: 'notifier-wechat',
   },
 };
 
 /**
- * 通知服务商配置
+ * 通知服务商配置 (业务组件库配置)
+ * 使用 subscriberProviderId 关联后端 ID
  */
 export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
   // 钉钉
@@ -118,6 +152,8 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'ant-design:dingtalk-outlined',
     color: 'blue',
+    subscriberProviderId: 'notifier-dingTalk',
+    userField: 'userid_list',
   },
   dingTalkRobotWebHook: {
     value: 'dingTalkRobotWebHook',
@@ -141,6 +177,8 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'ic:round-email',
     color: 'orange',
+    subscriberProviderId: 'notifier-email',
+    userField: 'sendTo',
   },
   // 短信
   aliYunSms: {
@@ -153,6 +191,8 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'ic:baseline-sms',
     color: 'green',
+    subscriberProviderId: 'notifier-sms',
+    userField: 'phoneNumber',
   },
   // 语音
   aliyun: {
@@ -165,6 +205,8 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'icon-park-solid:voice',
     color: 'purple',
+    subscriberProviderId: 'notifier-voice',
+    userField: 'calledNumber',
   },
   // Webhook
   httpWebhook: {
@@ -177,6 +219,7 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'logos:webhooks',
     color: 'blue',
+    subscriberProviderId: 'notifier-webhook',
   },
   // 微信
   corpMessage: {
@@ -189,5 +232,7 @@ export const NOTIFY_PROVIDER_ENUMS: Record<NotifyProvider, NotifyEnumDict> = {
     },
     icon: 'mingcute:wechat-fill',
     color: 'green',
+    subscriberProviderId: 'notifier-wechat',
+    userField: 'toUser',
   },
 };

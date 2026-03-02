@@ -1,0 +1,22 @@
+{
+  "list": "Application List",
+  "name": "Application Name",
+  "provider": "Provider/Type",
+  "code": "Application Code",
+  "state": "State",
+  "connectState": "Connection State",
+  "add": "Add Application",
+  "addTitle": "Add Application Integration",
+  "editTitle": "Edit Application Integration",
+  "selectProvider": "Select Provider",
+  "configInfo": "Configuration",
+  "docDesc": "Documentation",
+  "providers": {
+    "internalStandalone": "Internal Standalone App",
+    "internalIntegrated": "Internal Integrated App",
+    "wechatWebapp": "WeChat Web App",
+    "wechatMiniapp": "WeChat Mini Program",
+    "dingtalkEntApp": "DingTalk Enterprise Internal App",
+    "thirdParty": "Third-party App"
+  }
+}

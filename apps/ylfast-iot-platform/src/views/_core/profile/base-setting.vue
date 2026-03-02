@@ -119,7 +119,7 @@ async function handleSave(key: string) {
   if (config.validator) {
     const result = config.validator.safeParse(tempValue.value);
     if (!result.success) {
-      message.error(result.error.errors[0].message);
+      message.error(result.error.errors[0]?.message);
       return;
     }
   }
@@ -193,7 +193,7 @@ function formatDate(val: number | string | undefined) {
 
           <div v-if="activeKey !== item.key" class="text-sm text-gray-500">
             <template v-if="item.type === 'date'">
-              {{ formatDate(userInfo[item.key]) }}
+              {{ formatDate(userInfo[item.key] as number) }}
             </template>
             <template v-else-if="item.type === 'textarea'">
               <div class="whitespace-pre-wrap">

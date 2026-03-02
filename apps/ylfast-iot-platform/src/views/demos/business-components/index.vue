@@ -10,6 +10,8 @@ import DeviceSelectorDemo from './components/DeviceSelectorDemo.vue';
 import GatewaySelectorDemo from './components/GatewaySelectorDemo.vue';
 import MediaServerSelectorDemo from './components/MediaServerSelectorDemo.vue';
 import NetworkSelectorDemo from './components/NetworkSelectorDemo.vue';
+import NotifyConfigSelectorDemo from './components/NotifyConfigSelectorDemo.vue';
+import NotifyTemplateSelectorDemo from './components/NotifyTemplateSelectorDemo.vue';
 import PluginSelectorDemo from './components/PluginSelectorDemo.vue';
 import ProductSelectorDemo from './components/ProductSelectorDemo.vue';
 import ProtocolSelectorDemo from './components/ProtocolSelectorDemo.vue';
@@ -68,6 +70,22 @@ const activeKey = ref('gateway');
           tab="流媒体服务选择器 (MediaServerSelector)"
         >
           <MediaServerSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 6: Notify Config Selector -->
+        <TabPane
+          key="notify-config"
+          tab="通知配置选择器 (NotifyConfigSelector)"
+        >
+          <NotifyConfigSelectorDemo />
+        </TabPane>
+
+        <!-- Tab 7: Notify Template Selector -->
+        <TabPane
+          key="notify-template"
+          tab="通知模板选择器 (NotifyTemplateSelector)"
+        >
+          <NotifyTemplateSelectorDemo />
         </TabPane>
       </Tabs>
     </div>

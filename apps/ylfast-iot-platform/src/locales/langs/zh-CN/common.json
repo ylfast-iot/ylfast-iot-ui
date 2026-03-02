@@ -16,6 +16,7 @@
     "cancel": "取消",
     "next": "下一步",
     "previous": "上一步",
+    "prev": "上一步",
     "confirmDelete": "确认删除吗？",
     "confirmEnable": "确认启用吗？",
     "confirmDisable": "确认禁用吗？",
@@ -23,8 +24,11 @@
     "batchUnbind": "批量解绑",
     "batchDelete": "批量删除",
     "addSub": "新增子级",
-    "debug": "调试"
+    "debug": "调试",
+    "enable": "启用",
+    "disable": "禁用"
   },
+  "contentPending": "内容待处理",
   "autoGenerate": "自动生成",
   "basicInfo": "基本信息",
   "name": "名称",
@@ -57,6 +61,8 @@
   "developing": "开发中",
   "noData": "暂无数据",
   "noDescription": "暂无描述",
+  "confirmEnable": "确认启用",
+  "confirmDisable": "确认禁用",
   "selectFile": "选择文件",
   "placeholder": {
     "input": "请输入",

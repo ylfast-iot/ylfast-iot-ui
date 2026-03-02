@@ -6,6 +6,8 @@ export type SelectorType =
   | 'gateway'
   | 'mediaServer'
   | 'network'
+  | 'notifyConfig'
+  | 'notifyTemplate'
   | 'plugin'
   | 'product'
   | 'protocol'
@@ -62,5 +64,11 @@ export async function registerSelectors() {
         selectorRegistry.add('mediaServer', MediaServerSelector);
       },
     ),
+    import('./notify/config-selector').then(({ NotifyConfigSelector }) => {
+      selectorRegistry.add('notifyConfig', NotifyConfigSelector);
+    }),
+    import('./notify/template-selector').then(({ NotifyTemplateSelector }) => {
+      selectorRegistry.add('notifyTemplate', NotifyTemplateSelector);
+    }),
   ]);
 }

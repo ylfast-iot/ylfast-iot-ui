@@ -1,0 +1,22 @@
+{
+  "list": "应用列表",
+  "name": "应用名称",
+  "provider": "应用类型/提供商",
+  "code": "应用编码",
+  "state": "状态",
+  "connectState": "连接状态",
+  "add": "新增应用",
+  "addTitle": "新增应用接入",
+  "editTitle": "编辑应用接入",
+  "selectProvider": "选择应用提供商",
+  "configInfo": "配置信息",
+  "docDesc": "文档描述",
+  "providers": {
+    "internalStandalone": "内部独立应用",
+    "internalIntegrated": "内部集成应用",
+    "wechatWebapp": "微信网站应用",
+    "wechatMiniapp": "微信小程序应用",
+    "dingtalkEntApp": "钉钉企业内部应用",
+    "thirdParty": "第三方应用"
+  }
+}

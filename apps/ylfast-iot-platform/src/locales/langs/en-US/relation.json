@@ -1,0 +1,13 @@
+{
+  "list": "Relation Management",
+  "add": "Add Relation",
+  "edit": "Edit Relation",
+  "objectType": "Source Object Type",
+  "objectTypeName": "Source Object Name",
+  "relation": "Relation Identifier",
+  "name": "Forward Relation Name",
+  "reverseName": "Reverse Relation Name",
+  "targetType": "Target Object Type",
+  "targetTypeName": "Target Object Name",
+  "description": "Description"
+}

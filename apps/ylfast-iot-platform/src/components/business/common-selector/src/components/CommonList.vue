@@ -3,7 +3,7 @@ import type { CommonSelectorProps, SelectorActionType } from '../types';
 
 import type { QueryParamEntity } from '#/adapter';
 
-import { nextTick, watch } from 'vue';
+import { nextTick, ref, watch } from 'vue';
 
 import { useYlVxeTableCard } from '#/components/yl-vxe-table-card';
 
@@ -15,6 +15,7 @@ const props = withDefaults(defineProps<CommonSelectorProps>(), {
   idField: 'id',
   tableColumns: () => [],
   searchFormSchemas: () => [],
+  showMoreButton: true,
 });
 
 const emit = defineEmits(['selectionChange']);
@@ -25,6 +26,7 @@ const [TableCard, gridApi] = useYlVxeTableCard<any>({
   searchFormMode: 'yl-dc-form',
   ylDcFromOptions: {
     formSchemas: props.searchFormSchemas,
+    showMoreButton: props.showMoreButton,
   },
   separator: false,
   gridOptions: {
@@ -121,6 +123,19 @@ watch(
     setSelection(rows || []);
   },
   { immediate: true, deep: true },
+);
+
+const oldParamsTermsStr = ref('');
+watch(
+  () => props.paramsTerms,
+  (newTerms) => {
+    const newTermsStr = JSON.stringify(newTerms || []);
+    if (newTermsStr === oldParamsTermsStr.value) return;
+
+    oldParamsTermsStr.value = newTermsStr;
+    gridApi.grid.commitProxy('reload');
+  },
+  { deep: true, immediate: true },
 );
 
 function handleSelectionChange() {

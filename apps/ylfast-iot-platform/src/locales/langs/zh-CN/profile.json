@@ -2,7 +2,26 @@
   "basic": "基本设置",
   "security": "安全设置",
   "password": "修改密码",
-  "notice": "新消息提醒",
+  "subscriptions": {
+    "title": "消息订阅",
+    "description": "管理您平台内各种类型的消息通知订阅",
+    "noChannels": "暂无可用订阅",
+    "subscribe": "订阅",
+    "unsubscribe": "取消订阅",
+    "boundAccount": "绑定账号",
+    "notBound": "暂未绑定",
+    "changeBoundAccount": "更换绑定账号",
+    "goToBasicSetting": "请前往“基本设置”修改您的绑定账号",
+    "subscribeSuccess": "订阅成功",
+    "unsubscribeSuccess": "取消订阅成功",
+    "tip": "您可以选择需要接收消息的通道进行订阅"
+  },
+  "message": {
+    "title": "站内信",
+    "description": "查看和管理您的各项站内信通知",
+    "emptyCategories": "暂无可用的消息分类",
+    "modalTitle": "通知详情"
+  },
   "info": {
     "avatar": "头像",
     "avatarHelp": "头像上传功能需对接后端接口",

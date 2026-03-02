@@ -17,14 +17,15 @@ import {
 } from 'ant-design-vue';
 
 import { getUserInfoApi } from '#/api';
-import { uploadApi } from '#/api/system/file';
+import { uploadFile } from '#/api/system/file';
 import { saveUserDetails } from '#/api/system/user';
 import { $t } from '#/locales';
 
 import ProfileBase from './base-setting.vue';
-import ProfileNotificationSetting from './notification-setting.vue';
+import ProfileBoundAccountSetting from './bound-account-setting.vue';
+import ProfileMessageSetting from './message-setting.vue';
 import ProfilePasswordSetting from './password-setting.vue';
-import ProfileSecuritySetting from './security-setting.vue';
+import ProfileSubscriptionSetting from './subscription-setting.vue';
 
 const UploadIcon = createIconifyIcon('lucide:upload');
 const UserIcon = createIconifyIcon('lucide:user');
@@ -32,6 +33,9 @@ const RoleIcon = createIconifyIcon('lucide:shield-check');
 const OrgIcon = createIconifyIcon('lucide:building-2');
 const SettingsIcon = createIconifyIcon('lucide:settings');
 const LockIcon = createIconifyIcon('lucide:lock');
+const BellIcon = createIconifyIcon('lucide:bell');
+const MailIcon = createIconifyIcon('lucide:mail');
+const LinkIcon = createIconifyIcon('lucide:link');
 
 const activeTab = ref<string>('basic');
 const userInfo = ref<Partial<UserDetail>>({});
@@ -42,8 +46,13 @@ const profileBaseRef = ref();
 const menuItems = computed(() => [
   { key: 'basic', label: $t('profile.basic'), icon: SettingsIcon },
   { key: 'password', label: $t('profile.password'), icon: LockIcon },
-  // { key: 'security', label: $t('profile.security'), icon: ShieldIcon }, // Hidden
-  // { key: 'notice', label: $t('profile.notice'), icon: BellIcon }, // Hidden
+  {
+    key: 'subscription',
+    label: $t('profile.subscriptions.title'),
+    icon: BellIcon,
+  },
+  { key: 'message', label: $t('profile.message.title'), icon: MailIcon },
+  { key: 'binding', label: '第三方账号绑定', icon: LinkIcon },
 ]);
 
 const currentComponent = computed(() => {
@@ -51,14 +60,18 @@ const currentComponent = computed(() => {
     case 'basic': {
       return ProfileBase;
     }
-    case 'notice': {
-      return ProfileNotificationSetting;
+    case 'binding': {
+      return ProfileBoundAccountSetting;
     }
+    case 'message': {
+      return ProfileMessageSetting;
+    }
+
     case 'password': {
       return ProfilePasswordSetting;
     }
-    case 'security': {
-      return ProfileSecuritySetting;
+    case 'subscription': {
+      return ProfileSubscriptionSetting;
     }
     default: {
       return ProfileBase;
@@ -80,11 +93,9 @@ async function fetchUserData() {
  * 封装上传头像接口
  */
 async function uploadAvatarApi(file: File) {
-  return uploadApi({
-    bucketName: 'static',
-    dir: 'avatar',
-    file,
-    filename: file.name,
+  return uploadFile(file, {
+    bucket: 'static',
+    options: [{ value: 'publicAccess', text: 'Public Access' }],
   });
 }
 
@@ -95,7 +106,7 @@ async function handleCustomRequest(options: any) {
   const { file, onSuccess, onError } = options;
   try {
     const res = await uploadAvatarApi(file);
-    const newAvatarUrl = res.url;
+    const newAvatarUrl = res.accessUrl || '';
 
     // 更新本地显示
     avatarUrl.value = newAvatarUrl;
@@ -266,15 +277,19 @@ async function handleUpdateSuccess() {
           </div>
 
           <!-- Right Content -->
-          <div class="h-full flex-1 overflow-y-auto p-6 md:p-10">
-            <h2 class="mb-6 text-xl font-bold text-gray-800 dark:text-white">
+          <div class="flex h-full flex-1 flex-col overflow-hidden p-6 md:p-10">
+            <h2
+              class="mb-6 shrink-0 text-xl font-bold text-gray-800 dark:text-white"
+            >
               {{ menuItems.find((i) => i.key === activeTab)?.label }}
             </h2>
-            <component
-              :is="currentComponent"
-              ref="profileBaseRef"
-              @success="handleUpdateSuccess"
-            />
+            <div class="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+              <component
+                :is="currentComponent"
+                ref="profileBaseRef"
+                @success="handleUpdateSuccess"
+              />
+            </div>
           </div>
         </div>
       </Card>

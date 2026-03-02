@@ -1,0 +1,13 @@
+{
+  "list": "关系管理",
+  "add": "新增关系",
+  "edit": "编辑关系",
+  "objectType": "源对象类型",
+  "objectTypeName": "源对象名称",
+  "relation": "关系标识",
+  "name": "正向关系名称",
+  "reverseName": "反向关系名称",
+  "targetType": "目标对象类型",
+  "targetTypeName": "目标对象名称",
+  "description": "说明"
+}

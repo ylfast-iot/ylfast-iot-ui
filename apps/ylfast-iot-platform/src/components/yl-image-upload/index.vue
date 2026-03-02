@@ -8,7 +8,7 @@ import { $t } from '@vben/locales';
 
 import { message, Upload } from 'ant-design-vue';
 
-import { uploadApi } from '#/api/system/file';
+import { uploadFile } from '#/api/system/file';
 
 const props = withDefaults(
   defineProps<{
@@ -52,13 +52,12 @@ const customRequest = async (options: any) => {
   const { file, onError, onSuccess } = options;
   loading.value = true;
   try {
-    const res = await uploadApi({
-      bucketName: props.bucketName,
-      dir: props.dir,
-      file,
+    const res = await uploadFile(file, {
+      bucket: props.bucketName,
+      options: [{ value: 'publicAccess', text: 'Public Access' }],
     });
-    // 适配新的 FileUploadRes 类型
-    const url = res.url;
+    // 适配新的 FileInfo 类型
+    const url = res.accessUrl || '';
 
     imageUrl.value = url;
     emit('update:value', url);

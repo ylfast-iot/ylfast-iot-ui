@@ -13,10 +13,12 @@ import {
   Switch,
 } from 'ant-design-vue';
 
+import { NotifyConfigSelector } from '#/components/business/notify/config-selector';
 import DingTalkOrgSelect from '#/components/business/notify/dingTalk/DingTalkOrgSelect.vue';
 import DingTalkUserSelect from '#/components/business/notify/dingTalk/DingTalkUserSelect.vue';
 import AliyunSmsSignSelect from '#/components/business/notify/sms/AliyunSmsSignSelect.vue';
 import AliyunSmsTemplateSelect from '#/components/business/notify/sms/AliyunSmsTemplateSelect.vue';
+import { NotifyTemplateSelector } from '#/components/business/notify/template-selector';
 import WeChatOrgSelect from '#/components/business/notify/wechat/WeChatOrgSelect.vue';
 import WeChatTagSelect from '#/components/business/notify/wechat/WeChatTagSelect.vue';
 import WeChatUserSelect from '#/components/business/notify/wechat/WeChatUserSelect.vue';
@@ -48,6 +50,9 @@ const formModel = reactive({
   // 搜索控制对比
   noSearchUser: undefined,
   formattedDeptIds: '',
+  // 通用选择器
+  notifyConfig: undefined,
+  notifyTemplate: undefined,
 });
 
 const labelCol = { span: 6 };
@@ -150,6 +155,24 @@ const wrapperCol = { span: 18 };
                 config-id="${configId}"
                 :allow-search="false"
                 :form-model="formModel"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Divider orientation="left">
+          General Selectors (通用选择器演示)
+        </Divider>
+        <Row :gutter="16">
+          <Col :span="12">
+            <Form.Item label="通知配置">
+              <NotifyConfigSelector v-model:value="formModel.notifyConfig" />
+            </Form.Item>
+          </Col>
+          <Col :span="12">
+            <Form.Item label="通知模板">
+              <NotifyTemplateSelector
+                v-model:value="formModel.notifyTemplate"
               />
             </Form.Item>
           </Col>

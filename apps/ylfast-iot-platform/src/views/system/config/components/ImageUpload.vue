@@ -7,7 +7,7 @@ import { createIconifyIcon } from '@vben/icons';
 
 import { message, Upload } from 'ant-design-vue';
 
-import { uploadApi } from '#/api/system/file';
+import { uploadFile } from '#/api/system/file';
 import { $t } from '#/locales';
 
 const props = withDefaults(
@@ -19,6 +19,7 @@ const props = withDefaults(
     height?: string;
     objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
     value?: string;
+    width?: string;
   }>(),
   {
     bucketName: 'public',
@@ -27,6 +28,7 @@ const props = withDefaults(
     height: '128px',
     objectFit: 'contain',
     value: '',
+    width: '128px',
   },
 );
 
@@ -50,13 +52,12 @@ const customRequest = async (options: any) => {
   const { file, onSuccess, onError } = options;
   loading.value = true;
   try {
-    const res = await uploadApi({
-      bucketName: props.bucketName,
-      dir: props.dir,
-      file,
+    const res = await uploadFile(file, {
+      bucket: props.bucketName,
+      options: [{ value: 'publicAccess', text: 'Public Access' }],
     });
-    // 适配新的 FileUploadRes 类型
-    const url = res.url;
+    // 适配新的 FileInfo 类型
+    const url = res.accessUrl || '';
 
     imageUrl.value = url;
     emit('update:value', url);
@@ -113,7 +114,7 @@ const beforeUpload = (file: File) => {
     :custom-request="customRequest"
     :before-upload="beforeUpload"
     :disabled="disabled"
-    :style="{ height }"
+    :style="{ height, width }"
     @change="handleChange"
   >
     <img

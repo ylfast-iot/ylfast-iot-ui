@@ -92,6 +92,18 @@ const coreRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    name: 'SsoCallback',
+    path: '/auth/sso/callback',
+    component: () => import('#/views/_core/authentication/sso-callback.vue'),
+    meta: {
+      title: $t('authentication.sso.callback', '授权回调处理'),
+      hideInTab: true,
+      hideInMenu: true,
+      hideInBreadcrumb: true,
+      ignoreAccess: true, // 可能需要避免路由守卫拦截
+    },
+  },
 ];
 
 export { coreRoutes, fallbackNotFoundRoute };

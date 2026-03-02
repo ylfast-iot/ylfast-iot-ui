@@ -3,8 +3,8 @@ import type { QueryParamEntity } from '#/adapter';
 import { requestClient } from '#/api/request';
 import { parseTemplate } from '#/utils';
 
-export interface BasicModel {
-  id: string;
+export interface BasicModel<T = string> {
+  id: T;
   creatorId?: string;
   creatorName?: string;
   createTime?: number;
