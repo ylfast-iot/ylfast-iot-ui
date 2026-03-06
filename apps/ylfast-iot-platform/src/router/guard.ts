@@ -5,6 +5,7 @@ import { preferences } from '@vben/preferences';
 import { useAccessStore, useUserStore } from '@vben/stores';
 import { startProgress, stopProgress } from '@vben/utils';
 
+import { tokenIsValid } from '#/api';
 import { accessRoutes, coreRouteNames } from '#/router/routes';
 import { useAuthStore } from '#/store';
 
@@ -45,6 +46,35 @@ function setupCommonGuard(router: Router) {
  * @param router
  */
 function setupAccessGuard(router: Router) {
+  /**
+   * 当重定向目标为后端 OAuth2 授权地址时，附带当前登录 token。
+   * 目的：前后端分离场景下，避免后端无法识别前端本地 token 导致重复跳转登录页。
+   */
+  function appendTokenForOAuth2Authorize(
+    redirectPath: string,
+    accessToken?: string,
+  ) {
+    if (!/^https?:\/\//i.test(redirectPath) || !accessToken) {
+      return redirectPath;
+    }
+    try {
+      const url = new URL(redirectPath, window.location.origin);
+      // 仅对 OAuth2 授权入口添加 token，避免污染其他外部跳转。
+      if (!url.pathname.endsWith('/oauth2/authorize')) {
+        return redirectPath;
+      }
+      const normalizedToken = accessToken.replace(/^Bearer\s+/i, '');
+      if (!normalizedToken) {
+        return redirectPath;
+      }
+      // 始终覆盖 URL 中可能残留的旧 token，避免后端使用过期 token 反复鉴权失败。
+      url.searchParams.set('access_token', normalizedToken);
+      return url.toString();
+    } catch {
+      return redirectPath;
+    }
+  }
+
   router.beforeEach(async (to, from) => {
     const accessStore = useAccessStore();
     const userStore = useUserStore();
@@ -52,12 +82,28 @@ function setupAccessGuard(router: Router) {
 
     // 基本路由，这些路由不需要进入权限拦截
     if (coreRouteNames.includes(to.name as string)) {
+      // 如果token过期了，清空token
+      const tokenExist = await tokenIsValid();
+      if (to.path === LOGIN_PATH && !tokenExist) {
+        accessStore.setAccessToken(null);
+        accessStore.setRefreshToken(null);
+        accessStore.setIsAccessChecked(false);
+      }
+
       if (to.path === LOGIN_PATH && accessStore.accessToken) {
-        return decodeURIComponent(
+        const redirectPath = decodeURIComponent(
           (to.query?.redirect as string) ||
             userStore.userInfo?.homePath ||
             preferences.app.defaultHomePath,
         );
+        if (/^https?:\/\//i.test(redirectPath)) {
+          window.location.href = appendTokenForOAuth2Authorize(
+            redirectPath,
+            accessStore.accessToken,
+          );
+          return false;
+        }
+        return redirectPath;
       }
       return true;
     }
@@ -107,13 +153,23 @@ function setupAccessGuard(router: Router) {
     accessStore.setAccessMenus(accessibleMenus);
     accessStore.setAccessRoutes(accessibleRoutes);
     accessStore.setIsAccessChecked(true);
-    const redirectPath = (from.query.redirect ??
-      (to.path === preferences.app.defaultHomePath
-        ? userInfo.homePath || preferences.app.defaultHomePath
-        : to.fullPath)) as string;
+    const redirectPath = decodeURIComponent(
+      (from.query.redirect ??
+        (to.path === preferences.app.defaultHomePath
+          ? userInfo.homePath || preferences.app.defaultHomePath
+          : to.fullPath)) as string,
+    );
+
+    if (/^https?:\/\//i.test(redirectPath)) {
+      window.location.href = appendTokenForOAuth2Authorize(
+        redirectPath,
+        accessStore.accessToken,
+      );
+      return false;
+    }
 
     return {
-      ...router.resolve(decodeURIComponent(redirectPath)),
+      ...router.resolve(redirectPath),
       replace: true,
     };
   });

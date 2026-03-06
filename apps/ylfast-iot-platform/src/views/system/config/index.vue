@@ -50,6 +50,9 @@ interface ConfigRules {
   };
   paths: {
     'base-path': RuleObject[];
+    'oauth2-authorize-page': RuleObject[];
+    'sso-callback': RuleObject[];
+    'sso-redirect': RuleObject[];
   };
 }
 
@@ -68,6 +71,27 @@ const rules: ConfigRules = {
       {
         required: true,
         message: $t('config.placeholder.basePath'),
+        trigger: 'blur',
+      },
+    ],
+    'sso-redirect': [
+      {
+        required: true,
+        message: $t('config.placeholder.ssoRedirect'),
+        trigger: 'blur',
+      },
+    ],
+    'sso-callback': [
+      {
+        required: true,
+        message: $t('config.placeholder.ssoCallback'),
+        trigger: 'blur',
+      },
+    ],
+    'oauth2-authorize-page': [
+      {
+        required: true,
+        message: $t('config.placeholder.oauth2AuthorizePage'),
         trigger: 'blur',
       },
     ],
@@ -203,6 +227,42 @@ onMounted(() => {
                   <Input
                     v-model:value="configData.paths['base-path']"
                     :placeholder="$t('config.placeholder.basePath')"
+                  />
+                </FormItem>
+              </Col>
+              <Col :span="12">
+                <FormItem
+                  :label="$t('config.paths.ssoRedirect')"
+                  :name="['paths', 'sso-redirect']"
+                  :rules="rules.paths['sso-redirect']"
+                >
+                  <Input
+                    v-model:value="configData.paths['sso-redirect']"
+                    :placeholder="$t('config.placeholder.ssoRedirect')"
+                  />
+                </FormItem>
+              </Col>
+              <Col :span="12">
+                <FormItem
+                  :label="$t('config.paths.ssoCallback')"
+                  :name="['paths', 'sso-callback']"
+                  :rules="rules.paths['sso-callback']"
+                >
+                  <Input
+                    v-model:value="configData.paths['sso-callback']"
+                    :placeholder="$t('config.placeholder.ssoCallback')"
+                  />
+                </FormItem>
+              </Col>
+              <Col :span="12">
+                <FormItem
+                  :label="$t('config.paths.oauth2AuthorizePage')"
+                  :name="['paths', 'oauth2-authorize-page']"
+                  :rules="rules.paths['oauth2-authorize-page']"
+                >
+                  <Input
+                    v-model:value="configData.paths['oauth2-authorize-page']"
+                    :placeholder="$t('config.placeholder.oauth2AuthorizePage')"
                   />
                 </FormItem>
               </Col>

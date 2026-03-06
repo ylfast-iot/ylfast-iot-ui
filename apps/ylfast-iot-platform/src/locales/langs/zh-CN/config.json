@@ -14,7 +14,10 @@
     "supportBg": "支持 jpg,png,svg,jfif,pjp,pjpeg,jpeg"
   },
   "paths": {
-    "basePath": "基础路径 (Base Path)"
+    "basePath": "基础路径 (Base Path)",
+    "ssoRedirect": "OAuth2/SSO未登录跳转地址",
+    "ssoCallback": "接入第三方平台时的回调地址",
+    "oauth2AuthorizePage": "OAuth2授权页地址"
   },
   "amap": {
     "apiKey": "高德地图 apiKey",
@@ -24,6 +27,9 @@
   "placeholder": {
     "title": "请输入系统名称",
     "basePath": "请输入API基础路径",
+    "ssoRedirect": "请输入前端访问地址（例如：http://localhost:5666）",
+    "ssoCallback": "请输入回调地址（例如：http://localhost:5666/auth/sso/callback）",
+    "oauth2AuthorizePage": "请输入授权页地址（例如：${api.base-path}/oauth2/authorize.html）",
     "input": "请输入"
   },
   "action": {

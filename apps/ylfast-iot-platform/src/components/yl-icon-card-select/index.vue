@@ -42,7 +42,48 @@ function getIconColorClass(_option: Option) {
 }
 
 function getBgColorClass(option: Option) {
-  return option.color || 'bg-blue-500';
+  if (!option.color) return 'bg-blue-500';
+
+  const colorMap: Record<string, string> = {
+    blue: 'bg-blue-500',
+    orange: 'bg-orange-500',
+    green: 'bg-green-500',
+    purple: 'bg-purple-500',
+    gray: 'bg-gray-500',
+    red: 'bg-red-500',
+    cyan: 'bg-cyan-500',
+    yellow: 'bg-yellow-500',
+  };
+
+  if (colorMap[option.color]) {
+    return colorMap[option.color];
+  }
+
+  if (option.color.startsWith('bg-')) {
+    return option.color;
+  }
+
+  return '';
+}
+
+function getBgStyle(option: Option) {
+  if (!option.color) return {};
+
+  const knownColors = [
+    'blue',
+    'orange',
+    'green',
+    'purple',
+    'gray',
+    'red',
+    'cyan',
+    'yellow',
+  ];
+  if (knownColors.includes(option.color) || option.color.startsWith('bg-')) {
+    return {};
+  }
+
+  return { backgroundColor: option.color };
 }
 </script>
 
@@ -59,6 +100,7 @@ function getBgColorClass(option: Option) {
       <div
         class="flex h-12 w-12 items-center justify-center rounded-sm transition-all duration-300 group-hover:scale-110"
         :class="[getBgColorClass(option), getIconColorClass(option)]"
+        :style="getBgStyle(option)"
       >
         <IconifyIcon :icon="option.icon || 'lucide:box'" class="h-7 w-7" />
       </div>

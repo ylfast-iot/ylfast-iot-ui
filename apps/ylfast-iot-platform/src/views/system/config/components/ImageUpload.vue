@@ -124,10 +124,12 @@ const beforeUpload = (file: File) => {
       class="h-full w-full"
       :style="{ objectFit }"
     />
-    <div v-else>
-      <LoadingOutlined v-if="loading" />
-      <PlusOutlined v-else />
-      <div class="ant-upload-text">{{ $t('config.action.upload') }}</div>
+    <div v-else class="flex h-full w-full flex-col items-center justify-center">
+      <LoadingOutlined v-if="loading" class="text-2xl text-muted-foreground" />
+      <PlusOutlined v-else class="text-2xl text-muted-foreground" />
+      <div class="mt-2 text-sm text-muted-foreground">
+        {{ $t('config.action.upload') }}
+      </div>
     </div>
   </Upload>
 </template>

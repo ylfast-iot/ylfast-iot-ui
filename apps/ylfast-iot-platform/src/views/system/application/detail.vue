@@ -295,7 +295,6 @@ async function handleSave() {
           ? await pageFormApi.getValues()
           : undefined,
       } as ApplicationApi.ApplicationEntity,
-      grants: [],
     };
 
     // Add dummy values logic if we use real endpoint later, but basic is sufficient:

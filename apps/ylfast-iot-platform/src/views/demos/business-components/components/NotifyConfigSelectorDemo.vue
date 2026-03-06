@@ -36,7 +36,7 @@ async function handleOpenHook() {
     showSearchForm: true,
   });
   if (rows && rows.length > 0) {
-    hookResult.value = `选中: ${rows[0].name} (${value})`;
+    hookResult.value = `选中: ${rows[0]?.name} (${value})`;
     message.success('选择完成');
   } else {
     hookResult.value = '未选择';

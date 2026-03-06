@@ -16,13 +16,12 @@ import MenuOptionsEditor from './components/MenuOptionsEditor.vue';
  * 获取所有视图组件路径
  */
 const componentKeys: string[] = Object.keys(
-  import.meta.glob('../../**/*.vue'), // Adjust glob pattern to scan all .vue files within the views directory
+  import.meta.glob('/src/views/**/*.vue'), // Adjust glob pattern to scan all .vue files within the views directory
 )
   .map((v) => {
-    const path = v.replace('../../', ''); // Adjust path replacement based on the glob pattern
+    const path = v.replace('/src/views/', ''); // Adjust path replacement based on the glob pattern
     const finalPath = path.endsWith('.vue') ? path.slice(0, -4) : path;
-    const componentKey = finalPath.replace(/^views\//, '');
-    return componentKey;
+    return finalPath;
   })
   .filter((v) => !v.startsWith('.'));
 const componentOptions = componentKeys.map((key) => ({ value: key }));

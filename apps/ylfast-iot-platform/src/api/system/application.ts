@@ -223,8 +223,8 @@ export namespace ApplicationApi {
   export interface ApplicationSaveRequest {
     /** 应用信息 */
     application: ApplicationEntity;
-    /** 授权信息列表 */
-    grants: ApiGroupGrantEntity[];
+    /** 授权信息列表 , 为null或undefined则只更改应用，为[]或具体值则会覆盖更新授权*/
+    grants?: ApiGroupGrantEntity[];
   }
 
   /** 应用菜单信息 */
@@ -263,6 +263,11 @@ export namespace ApplicationApi {
     permissions: Record<string, string[]>[];
   }
 
+  export interface ApplicationOperationInfo {
+    operationId: string;
+    [key: string]: any;
+  }
+
   /** API授权请求 */
   export interface ApiGrantRequest {
     /** 客户端ID */
@@ -272,11 +277,44 @@ export namespace ApplicationApi {
   }
 
   /** 授权详情 */
+  export interface ApplicationGrantedInfo {
+    /** 应用ID */
+    appId: string;
+    /** 接口操作ID */
+    operationId: string;
+    /** 权限项列表 */
+    permissions: Record<string, string[]>[];
+  }
+
+  /** 授权详情 */
   export interface GrantedInfo {
     /** 授权时间 */
     grantTime: number;
     /** 授权范围 */
     scope: string;
+  }
+
+  export interface ApplicationOperationInfo {
+    /**
+     * 接口操作ID
+     */
+    operationId: string;
+    /**
+     * 请求方法
+     */
+    method: string;
+    /**
+     * 请求路径
+     */
+    path: string;
+    /**
+     * 接口摘要
+     */
+    summary: string;
+    /**
+     * 是否全局启用授权
+     */
+    enabled: boolean;
   }
 
   /** 已授权应用信息 */
@@ -480,14 +518,16 @@ export const queryApplicationSdk = () =>
  * 查询可授权API操作
  */
 export const queryApplicationOperations = () =>
-  requestClient.get<any[]>(ApplicationApi.Apis.operations);
+  requestClient.get<ApplicationApi.ApplicationOperationInfo[]>(
+    ApplicationApi.Apis.operations,
+  );
 
 /**
  * 批量保存授权API操作
  * @param operations 操作ID列表
  */
 export const batchSaveApplicationOperations = (operations: string[]) =>
-  requestClient.patch<any>(ApplicationApi.Apis.batchOperations, operations);
+  requestClient.patch<number>(ApplicationApi.Apis.batchOperations, operations);
 
 /**
  * 批量删除授权API操作
@@ -538,7 +578,9 @@ export const grantApplicationDelete = (
  * @param id 应用ID
  */
 export const queryApplicationGranted = (id: string) =>
-  requestClient.get<any[]>(parseTemplate(ApplicationApi.Apis.granted, { id }));
+  requestClient.get<ApplicationApi.ApplicationGrantedInfo[]>(
+    parseTemplate(ApplicationApi.Apis.granted, { id }),
+  );
 
 /**
  * 查询当前用户已授权应用

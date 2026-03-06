@@ -4,6 +4,7 @@ import { z } from '@vben/common-ui';
 
 import { getOrganizationTree } from '#/api/system/organization';
 import { queryGroupDetailTree } from '#/api/system/role';
+import { SIGNATURE_METHOD } from '#/enums';
 
 export interface IntegrationFormStrategy {
   key: string;
@@ -104,6 +105,13 @@ function getSsoConfigSchemaByProvider(provider: string) {
           componentProps: {
             placeholder: '允许重定向的回调地址 (如 https://...)',
           },
+        },
+        {
+          fieldName: 'configuration.accessTokenProperty',
+          label: 'Access Token 属性映射 (accessTokenProperty)',
+          component: 'Input',
+          help: '表示返回数据中 access_token 属性的映射（支持 x.x.x）。不填时默认取响应结构中的 access_token 属性。',
+          componentProps: { placeholder: '如 data.accessToken (选填)' },
         },
         {
           fieldName: 'configuration.userProperty.userId',
@@ -393,6 +401,18 @@ export const apiServerStrategy: IntegrationFormStrategy = {
           rules: (values: Record<string, any>) =>
             values.clientId ? 'required' : undefined,
           triggerFields: ['clientId'],
+        },
+      },
+      {
+        fieldName: 'signature',
+        label: '签名方式',
+        component: 'Select',
+        rules: 'required',
+        defaultValue: SIGNATURE_METHOD.MD5.value,
+        help: '当通过签名方式访问接口时会用到',
+        componentProps: {
+          placeholder: '请选择签名方式',
+          options: Object.values(SIGNATURE_METHOD),
         },
       },
       {

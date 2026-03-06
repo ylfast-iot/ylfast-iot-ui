@@ -24,6 +24,7 @@ const selectedProvider = ref<ApplicationApi.ApplicationProviderInfo | null>(
 );
 
 const [Modal, modalApi] = useVbenModal({
+  class: 'w-[420px]',
   onCancel() {
     selectedProvider.value = null;
     modalApi.close();

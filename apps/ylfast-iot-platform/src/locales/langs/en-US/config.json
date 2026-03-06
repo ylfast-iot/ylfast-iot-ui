@@ -14,7 +14,10 @@
     "supportBg": "Supports jpg, png, svg, jfif, pjp, pjpeg, jpeg"
   },
   "paths": {
-    "basePath": "Base Path"
+    "basePath": "Base Path",
+    "ssoRedirect": "OAuth2/SSO Unlogged Redirect Path",
+    "ssoCallback": "Third-party Platform Callback Path",
+    "oauth2AuthorizePage": "OAuth2 Authorize Page Path"
   },
   "amap": {
     "apiKey": "AMap apiKey",
@@ -24,6 +27,9 @@
   "placeholder": {
     "title": "Please enter system name",
     "basePath": "Please enter API base path",
+    "ssoRedirect": "Please enter frontend access path (e.g. http://localhost:5666)",
+    "ssoCallback": "Please enter callback path (e.g. http://localhost:5666/auth/sso/callback)",
+    "oauth2AuthorizePage": "Please enter authorize page path (e.g. ${api.base-path}/oauth2/authorize.html)",
     "input": "Please enter"
   },
   "action": {

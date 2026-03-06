@@ -7,7 +7,7 @@ import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
 
 import { formatDate } from '@vueuse/core';
-import { Popconfirm, Tooltip } from 'ant-design-vue';
+import { Dropdown, Menu, MenuItem, Popconfirm, Tooltip } from 'ant-design-vue';
 
 import { getProviderConfig } from '#/enums/application';
 
@@ -16,12 +16,16 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
+  apiDebug: [row: ApplicationApi.ApplicationEntity];
+  apiGrant: [row: ApplicationApi.ApplicationEntity];
   click: [row: ApplicationApi.ApplicationEntity];
   delete: [row: ApplicationApi.ApplicationEntity];
   disable: [row: ApplicationApi.ApplicationEntity];
   edit: [row: ApplicationApi.ApplicationEntity];
   enable: [row: ApplicationApi.ApplicationEntity];
 }>();
+
+const MoreHorizontal = createIconifyIcon('lucide:more-horizontal');
 
 // Icons
 const EditIcon = createIconifyIcon('lucide:edit-3');
@@ -268,6 +272,30 @@ const statusBadge = computed(() => {
           </div>
         </Popconfirm>
       </Tooltip>
+
+      <Dropdown
+        placement="topRight"
+        v-if="row.integrationModes?.some((m: any) => m.value === 'apiServer')"
+      >
+        <template #overlay>
+          <Menu>
+            <MenuItem key="api-grant" @click.stop="emit('apiGrant', row)">
+              API 赋权
+            </MenuItem>
+            <MenuItem key="api-debug" @click.stop="emit('apiDebug', row)">
+              API 调试
+            </MenuItem>
+          </Menu>
+        </template>
+        <div
+          class="group/btn flex flex-1 cursor-pointer items-center justify-center text-slate-400 transition-colors hover:bg-white hover:text-primary dark:hover:bg-gray-800"
+          @click.stop
+        >
+          <MoreHorizontal
+            class="h-4 w-4 transition-transform group-hover/btn:scale-110"
+          />
+        </div>
+      </Dropdown>
     </div>
   </div>
 </template>

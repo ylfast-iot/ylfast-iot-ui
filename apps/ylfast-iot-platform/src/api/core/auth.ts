@@ -70,3 +70,10 @@ export async function getAccessCodesApi() {
     .get<Authentication>('/authorize/me')
     .then(adaptToPermissionCode);
 }
+
+/**
+ * 验证token是否有效
+ */
+export async function tokenIsValid() {
+  return requestClient.get<boolean>('/user/token/_validate');
+}

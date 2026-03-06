@@ -9,7 +9,15 @@ import { useRouter } from 'vue-router';
 import { Page, useVbenModal } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 
-import { Button, message, Popconfirm, Tag } from 'ant-design-vue';
+import {
+  Button,
+  Dropdown,
+  Menu,
+  MenuItem,
+  message,
+  Popconfirm,
+  Tag,
+} from 'ant-design-vue';
 
 import {
   applicationCrudApis,
@@ -129,6 +137,20 @@ function handleEdit(row: Recordable<any>) {
   });
 }
 
+function handleApiGrant(row: Recordable<any>) {
+  router.push({
+    path: '/system/application/api-grant',
+    query: {
+      id: row.id,
+      name: row.name,
+    },
+  });
+}
+
+function handleApiDebug(_row: Recordable<any>) {
+  message.info($t('common.notImplemented', '功能开发中'));
+}
+
 async function handleEnable(row: ApplicationApi.ApplicationEntity) {
   try {
     await enableApplication(row.id);
@@ -227,6 +249,24 @@ async function handleDelete(row: Recordable<any>) {
               {{ $t('common.action.delete', '删除') }}
             </Button>
           </Popconfirm>
+
+          <Dropdown
+            v-if="
+              row.integrationModes?.some((m: any) => m.value === 'apiServer')
+            "
+          >
+            <template #overlay>
+              <Menu>
+                <MenuItem key="api-grant" @click="handleApiGrant(row)">
+                  API 赋权
+                </MenuItem>
+                <MenuItem key="api-debug" @click="handleApiDebug(row)">
+                  API 调试
+                </MenuItem>
+              </Menu>
+            </template>
+            <Button size="small" type="link"> 更 多 </Button>
+          </Dropdown>
         </template>
 
         <!-- Card Template -->
@@ -237,6 +277,8 @@ async function handleDelete(row: Recordable<any>) {
             @enable="handleEnable"
             @disable="handleDisable"
             @edit="handleEdit"
+            @api-grant="handleApiGrant"
+            @api-debug="handleApiDebug"
           />
         </template>
       </TableCard>
