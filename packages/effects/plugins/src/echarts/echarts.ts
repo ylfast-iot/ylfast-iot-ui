@@ -13,13 +13,7 @@ import type {
 } from 'echarts/components';
 import type { ComposeOption } from 'echarts/core';
 
-import {
-  BarChart,
-  GaugeChart,
-  LineChart,
-  PieChart,
-  RadarChart,
-} from 'echarts/charts';
+import { BarChart,GaugeChart, LineChart, PieChart, RadarChart } from 'echarts/charts';
 import {
   // 数据集组件
   DatasetComponent,
@@ -33,14 +27,17 @@ import {
   TransformComponent,
 } from 'echarts/components';
 import * as echarts from 'echarts/core';
-import { LabelLayout, UniversalTransition } from 'echarts/features';
+import {
+  LabelLayout,
+  LegacyGridContainLabel,
+  UniversalTransition,
+} from 'echarts/features';
 import { CanvasRenderer } from 'echarts/renderers';
 
 // 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
 export type ECOption = ComposeOption<
   | BarSeriesOption
   | DatasetComponentOption
-  | DataZoomComponentOption
   | GridComponentOption
   | LineSeriesOption
   | TitleComponentOption
@@ -61,10 +58,12 @@ echarts.use([
   BarChart,
   LineChart,
   LabelLayout,
+  LegacyGridContainLabel,
   UniversalTransition,
   CanvasRenderer,
   LegendComponent,
   ToolboxComponent,
 ]);
+export type { ECOption } from './types';
 
 export default echarts;
