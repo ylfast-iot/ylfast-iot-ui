@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { UserDetail } from '#/adapter/hsweb/user';
+import type { ComponentKey } from '#/views/_core/profile/enums';
 
 import { computed, onMounted, ref } from 'vue';
 
@@ -37,7 +38,7 @@ const BellIcon = createIconifyIcon('lucide:bell');
 const MailIcon = createIconifyIcon('lucide:mail');
 const LinkIcon = createIconifyIcon('lucide:link');
 
-const activeTab = ref<string>('basic');
+const activeTab = ref<ComponentKey>('basic');
 const userInfo = ref<Partial<UserDetail>>({});
 const avatarUrl = ref<string>('');
 
@@ -78,6 +79,15 @@ const currentComponent = computed(() => {
     }
   }
 });
+
+/**
+ * 路由组件
+ * @param key
+ * @param _params
+ */
+function routeComponent(key: ComponentKey, _params: Record<string, any> = {}) {
+  activeTab.value = key;
+}
 
 onMounted(async () => {
   await fetchUserData();
@@ -260,7 +270,7 @@ async function handleUpdateSuccess() {
                     activeTab === item.key,
                   'text-gray-600 dark:text-gray-400': activeTab !== item.key,
                 }"
-                @click="activeTab = item.key"
+                @click="activeTab = item.key as ComponentKey"
               >
                 <component
                   :is="item.icon"
@@ -285,6 +295,7 @@ async function handleUpdateSuccess() {
             </h2>
             <div class="min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
               <component
+                @route="(key: ComponentKey) => routeComponent(key)"
                 :is="currentComponent"
                 ref="profileBaseRef"
                 @success="handleUpdateSuccess"

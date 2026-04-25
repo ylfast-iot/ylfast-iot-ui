@@ -1,0 +1,78 @@
+{
+  "basic": {
+    "pageTitle": "基础配置",
+    "pageDescription": "维护告警级别默认配置与后续数据流转能力入口。",
+    "tabs": {
+      "level": "告警级别",
+      "flow": "数据流转"
+    },
+    "levelConfigTitle": "告警级别配置",
+    "levelConfigDescription": "支持维护系统默认的 5 级告警名称，告警配置会直接引用这里的级别定义。",
+    "levelPrefix": "级别",
+    "levelTagPrefix": "等级编号",
+    "levelPlaceholder": "请输入告警级别名称",
+    "defaults": {
+      "level1": "超紧急",
+      "level2": "紧急",
+      "level3": "严重",
+      "level4": "一般",
+      "level5": "提醒"
+    },
+    "levelHints": {
+      "level1": "用于需要立即升级处理的高危告警。",
+      "level2": "用于影响范围较大、需要快速响应的告警。",
+      "level3": "用于需要重点跟进的核心异常告警。",
+      "level4": "用于常规异常提醒与一般处置场景。",
+      "level5": "用于低影响的提示类告警通知。"
+    },
+    "actions": {
+      "save": "保存"
+    },
+    "helpTitle": "功能说明",
+    "helpItems": {
+      "1": "告警级别用于描述告警的严重程度，请根据业务管理方式进行自定义。",
+      "2": "告警级别将在告警配置中被引用。",
+      "3": "最多可配置 5 个级别。"
+    },
+    "flowPending": "数据流转功能暂未开放",
+    "message": {
+      "levelRequired": "请完整填写 5 个告警级别名称",
+      "saveSuccess": "默认告警级别保存成功"
+    }
+  },
+  "config": {
+    "list": {
+      "add": "新增告警配置"
+    },
+    "fields": {
+      "description": "告警说明",
+      "level": "告警级别",
+      "name": "告警名称",
+      "sceneName": "关联场景",
+      "targetType": "告警目标类型"
+    },
+    "messages": {
+      "disableSuccess": "告警配置已禁用",
+      "enableSuccess": "告警配置已启用"
+    },
+    "detail": {
+      "title": {
+        "add": "新增告警配置",
+        "edit": "编辑告警配置"
+      },
+      "tabs": {
+        "basic": "基础配置",
+        "record": "告警记录",
+        "scene": "关联场景联动"
+      },
+      "placeholders": {
+        "record": "告警记录功能待开发",
+        "scene": "关联场景联动功能待开发"
+      },
+      "messages": {
+        "saveBeforeMoreTabs": "请先保存基础配置后再继续"
+      },
+      "targetTypeSupportPrefix": "支持触发器："
+    }
+  }
+}

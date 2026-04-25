@@ -1,0 +1,103 @@
+{
+  "name": "Scene Name",
+  "triggerType": "Trigger Type",
+  "state": "Status",
+  "description": "Description",
+  "list": "Scene Linkage List",
+  "selectTriggerType": "Please select a trigger type",
+  "trigger": {
+    "timer": "Timer",
+    "manual": "Manual",
+    "device": "Device"
+  },
+  "detail": {
+    "title": {
+      "add": "Create Scene",
+      "edit": "Edit Scene"
+    },
+    "tabs": {
+      "basic": "Basic Info",
+      "trigger": "Trigger Config",
+      "action": "Actions"
+    },
+    "fields": {
+      "parallel": "Parallel Execute",
+      "productId": "Product ID",
+      "selector": "Device Selector",
+      "selectorValues": "Selector Values",
+      "operator": "Device Operation",
+      "eventId": "Event ID",
+      "functionId": "Function ID",
+      "functionParameters": "Function Parameters",
+      "readProperties": "Read Properties",
+      "writeProperties": "Write Properties",
+      "deviceTimer": "Operation Timer",
+      "triggerConfiguration": "Trigger Configuration",
+      "timerConfig": "Timer Configuration",
+      "actionType": "Action Type",
+      "notifyType": "Notify Type",
+      "notifierId": "Notifier ID",
+      "templateId": "Template ID",
+      "notifyVariables": "Notify Variables",
+      "delayTime": "Delay Time",
+      "delayUnit": "Delay Unit",
+      "deviceMessage": "Device Message",
+      "actionConfiguration": "Action Configuration",
+      "options": "Extra Options",
+      "terms": "Terms"
+    },
+    "sections": {
+      "triggerType": "Trigger Type",
+      "triggerConfig": "Trigger Configuration",
+      "timer": "Timer Trigger Configuration",
+      "action": "Action"
+    },
+    "deviceOperation": {
+      "online": "Device Online",
+      "offline": "Device Offline",
+      "reportProperty": "Property Report",
+      "reportEvent": "Event Report",
+      "readProperty": "Read Property",
+      "writeProperty": "Write Property",
+      "invokeFunction": "Invoke Function"
+    },
+    "delayUnit": {
+      "seconds": "Seconds",
+      "minutes": "Minutes",
+      "hours": "Hours"
+    },
+    "tips": {
+      "basic": "Basic information describes the scene itself. Configure trigger type and actions in the following tabs.",
+      "manual": "Manual trigger does not need extra configuration. After saving, it can be executed through backend execution APIs.",
+      "timer": "Timer trigger maps directly to the backend TimerSpec structure. Please fill the JSON with the real schema.",
+      "device": "Device trigger depends on the selected operation type. Arrays and objects should be filled in JSON format.",
+      "customTrigger": "This trigger is not covered by the default visual editor. Edit the trigger configuration directly with JSON.",
+      "action": "A scene must contain at least one action. Built-in actions use structured forms, other actions use JSON.",
+      "actionConfig": "Complete the configuration according to the selected action type."
+    },
+    "placeholders": {
+      "timerConfig": "{\n  \"trigger\": \"cron\",\n  \"cron\": \"0 */5 * * * ?\"\n}",
+      "selectorValues": "[\n  {\n    \"name\": \"Demo Device\",\n    \"value\": \"device-1\"\n  }\n]",
+      "readProperties": "[\n  \"temperature\"\n]",
+      "writeProperties": "{\n  \"switch\": true\n}",
+      "functionParameters": "[\n  {\n    \"name\": \"speed\",\n    \"value\": 1\n  }\n]",
+      "deviceTimer": "{\n  \"trigger\": \"cron\",\n  \"cron\": \"0 */5 * * * ?\"\n}",
+      "triggerConfiguration": "{\n  \"key\": \"value\"\n}",
+      "notifyVariables": "{\n  \"deviceName\": \"${scene.sourceName}\"\n}",
+      "deviceMessage": "{\n  \"messageType\": \"WRITE_PROPERTY\",\n  \"properties\": {\n    \"switch\": true\n  }\n}",
+      "actionConfiguration": "{\n  \"key\": \"value\"\n}",
+      "options": "{\n  \"columns\": []\n}",
+      "terms": "[]",
+      "noAction": "Please add at least one action"
+    },
+    "messages": {
+      "invalidJsonSuffix": " has invalid JSON",
+      "deviceProductRequired": "Product ID is required for device trigger",
+      "actionRequired": "Please configure at least one action",
+      "notifyConfigRequired": "Notify type, notifier ID and template ID are required for action {action}",
+      "delayTimeRequired": "Action {action} must provide a delay time greater than 0",
+      "actionDeviceProductRequired": "Action {action} must provide Product ID for device action",
+      "alarmModeSelected": "Current action uses alarm mode: {mode}"
+    }
+  }
+}

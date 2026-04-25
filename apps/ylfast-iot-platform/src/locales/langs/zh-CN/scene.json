@@ -1,0 +1,103 @@
+{
+  "name": "场景名称",
+  "triggerType": "触发方式",
+  "state": "状态",
+  "description": "说明",
+  "list": "场景联动列表",
+  "selectTriggerType": "请选择触发方式",
+  "trigger": {
+    "timer": "定时触发",
+    "manual": "手动触发",
+    "device": "设备触发"
+  },
+  "detail": {
+    "title": {
+      "add": "新增场景联动",
+      "edit": "编辑场景联动"
+    },
+    "tabs": {
+      "basic": "基础信息",
+      "trigger": "触发器配置",
+      "action": "执行动作"
+    },
+    "fields": {
+      "parallel": "并行执行",
+      "productId": "产品 ID",
+      "selector": "设备选择器",
+      "selectorValues": "选择器值",
+      "operator": "设备操作",
+      "eventId": "事件 ID",
+      "functionId": "功能 ID",
+      "functionParameters": "功能参数",
+      "readProperties": "读取属性",
+      "writeProperties": "写属性内容",
+      "deviceTimer": "操作定时器",
+      "triggerConfiguration": "触发器配置",
+      "timerConfig": "定时配置",
+      "actionType": "动作类型",
+      "notifyType": "通知类型",
+      "notifierId": "通知器 ID",
+      "templateId": "模板 ID",
+      "notifyVariables": "通知变量",
+      "delayTime": "延时时长",
+      "delayUnit": "延时单位",
+      "deviceMessage": "设备消息体",
+      "actionConfiguration": "动作配置",
+      "options": "扩展配置",
+      "terms": "过滤条件"
+    },
+    "sections": {
+      "triggerType": "触发器类型",
+      "triggerConfig": "触发器配置",
+      "timer": "定时触发配置",
+      "action": "执行动作"
+    },
+    "deviceOperation": {
+      "online": "设备上线",
+      "offline": "设备离线",
+      "reportProperty": "属性上报",
+      "reportEvent": "事件上报",
+      "readProperty": "读取属性",
+      "writeProperty": "写属性",
+      "invokeFunction": "调用功能"
+    },
+    "delayUnit": {
+      "seconds": "秒",
+      "minutes": "分钟",
+      "hours": "小时"
+    },
+    "tips": {
+      "basic": "基础信息用于描述场景联动本身，触发方式与执行动作请分别在后续标签中完成配置。",
+      "manual": "手动触发无需额外配置，保存后可通过后端执行接口手动触发当前场景。",
+      "timer": "定时触发直接对应后端 TimerSpec 结构，请按真实 JSON 结构填写。",
+      "device": "设备触发会根据当前操作类型决定需要的附加字段，数组和对象参数请使用 JSON 格式填写。",
+      "customTrigger": "当前触发器不在默认可视化范围内，直接以 JSON 方式编辑触发器配置。",
+      "action": "场景至少需要一个执行动作。内置动作已提供结构化表单，其余动作按 JSON 配置填写。",
+      "actionConfig": "请根据当前动作类型补充配置。"
+    },
+    "placeholders": {
+      "timerConfig": "{\n  \"trigger\": \"cron\",\n  \"cron\": \"0 */5 * * * ?\"\n}",
+      "selectorValues": "[\n  {\n    \"name\": \"示例设备\",\n    \"value\": \"device-1\"\n  }\n]",
+      "readProperties": "[\n  \"temperature\"\n]",
+      "writeProperties": "{\n  \"switch\": true\n}",
+      "functionParameters": "[\n  {\n    \"name\": \"speed\",\n    \"value\": 1\n  }\n]",
+      "deviceTimer": "{\n  \"trigger\": \"cron\",\n  \"cron\": \"0 */5 * * * ?\"\n}",
+      "triggerConfiguration": "{\n  \"key\": \"value\"\n}",
+      "notifyVariables": "{\n  \"deviceName\": \"${scene.sourceName}\"\n}",
+      "deviceMessage": "{\n  \"messageType\": \"WRITE_PROPERTY\",\n  \"properties\": {\n    \"switch\": true\n  }\n}",
+      "actionConfiguration": "{\n  \"key\": \"value\"\n}",
+      "options": "{\n  \"columns\": []\n}",
+      "terms": "[]",
+      "noAction": "请先添加至少一个执行动作"
+    },
+    "messages": {
+      "invalidJsonSuffix": " JSON 格式不正确",
+      "deviceProductRequired": "设备触发必须填写产品 ID",
+      "actionRequired": "请至少配置一个执行动作",
+      "notifyConfigRequired": "第 {action} 个动作的通知类型、通知器 ID 和模板 ID 必填",
+      "delayTimeRequired": "第 {action} 个动作必须填写大于 0 的延时时长",
+      "actionDeviceProductRequired": "第 {action} 个设备动作必须填写产品 ID",
+      "alarmModeSelected": "当前动作已绑定告警模式：{mode}"
+    }
+  }
+}

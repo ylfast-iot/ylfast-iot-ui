@@ -2,6 +2,7 @@
 import type { UserDetail } from '#/adapter';
 import type { IotNotifyChannelApi } from '#/api/iot/notify/channel';
 import type { IotNotificationApi } from '#/api/iot/notify/notification';
+import type { BuiltinApplicationProvider } from '#/enums/application';
 
 import { onMounted, ref } from 'vue';
 
@@ -24,8 +25,13 @@ import {
 import { getUserInfoApi } from '#/api';
 import { getAccessibleChannels } from '#/api/iot/notify/channel';
 import { doSubscribe, querySubscription } from '#/api/iot/notify/notification';
+import { queryAppBindingsMe, SsoApi } from '#/api/system/sso';
 import { saveUserDetails } from '#/api/system/user';
+import { APPLICATION_PROVIDER_ENUMS } from '#/enums/application';
 import { NOTIFY_PROVIDER_ENUMS, NOTIFY_TYPE_ENUMS } from '#/enums/notify';
+import { componentKeys } from '#/views/_core/profile/enums';
+
+type BoundApplicationInfo = SsoApi.BoundApplicationInfo;
 
 // 定义接口，复用 channel 结构以便于分类和渲染
 interface SubscriptionGroup {
@@ -34,6 +40,8 @@ interface SubscriptionGroup {
   providers: IotNotifyChannelApi.SubscriberProviderInfo[];
 }
 
+// 事件
+const emit = defineEmits(['route']);
 // 状态
 const activeKey = ref<string[]>([]);
 const loading = ref(false);
@@ -43,6 +51,8 @@ const userSubscriptions = ref<IotNotificationApi.IotNotifySubscriberEntity[]>(
 );
 const popoverState = ref<Record<string, boolean>>({});
 const userInfo = ref<Partial<UserDetail>>({});
+const dingTalkInfo = ref<BoundApplicationInfo>();
+const wxTalkInfo = ref<BoundApplicationInfo>();
 
 // 弹窗状态
 const boundAccountModalVisible = ref(false);
@@ -116,6 +126,11 @@ async function loadData() {
 
     // 3. 获取用户自身的基本信息
     userInfo.value = await getUserInfoApi();
+
+    // 4. 加载当前用户绑定信息
+    const info = await getCurBindInfo();
+    dingTalkInfo.value = info?.dingTalk;
+    wxTalkInfo.value = info?.wx;
   } finally {
     loading.value = false;
   }
@@ -230,9 +245,36 @@ function handleChangeBoundAccountClick(
 }
 
 /**
+ * 获取当前绑定信息
+ */
+async function getCurBindInfo() {
+  // 获取绑定
+  const res = await queryAppBindingsMe();
+
+  if (res && res.length > 0) {
+    // 找到应用提供
+
+    const getProvider = (provider: BuiltinApplicationProvider) => {
+      const bindings = res.filter(
+        (b) => b.provider === APPLICATION_PROVIDER_ENUMS[provider].value,
+      );
+      if (bindings && bindings.length > 0) {
+        // 默认取第一个
+        return bindings[0];
+      }
+    };
+
+    return {
+      wx: getProvider('wechat-webapp'),
+      dingTalk: getProvider('dingtalk-ent-app'),
+    };
+  }
+}
+
+/**
  * 打开绑定账号修改弹框
  */
-function openChangeBoundAccountModal(channelProvider: string) {
+async function openChangeBoundAccountModal(channelProvider: string) {
   currentProviderId.value = channelProvider;
 
   if (channelProvider === 'notifier-email') {
@@ -245,6 +287,13 @@ function openChangeBoundAccountModal(channelProvider: string) {
     channelProvider === 'notifier-wechat'
   ) {
     // 短信、语音、钉钉、微信 通常绑定手机号，或者根据实际业务来区分
+    if (
+      channelProvider === 'notifier-dingTalk' ||
+      channelProvider === 'notifier-wechat'
+    ) {
+      emit('route', componentKeys.binding);
+      return;
+    }
     boundAccountLabel.value = $t('profile.info.phone');
     newBoundAccountValue.value = userInfo.value.telephone || '';
   } else {
@@ -342,6 +391,10 @@ function getBoundAccount(channelProvider: string) {
   )
     return userInfo.value.telephone;
   // 其他扩展通道的账号获取逻辑...
+
+  if (channelProvider === 'notifier-dingTalk' && dingTalkInfo.value) {
+    return `已绑定钉钉账号（${dingTalkInfo.value.others.username}）`;
+  }
   return undefined;
 }
 

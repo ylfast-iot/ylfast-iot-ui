@@ -49,6 +49,12 @@ const cols = ref(1);
 
 // 根据容器宽度计算列数 (仿 Tailwind 逻辑)
 const updateCols = (width: number) => {
+  const customMinWidth = props.propsConfig.cardOptions?.minWidth;
+  if (customMinWidth && customMinWidth > 0) {
+    cols.value = Math.max(1, Math.floor(width / customMinWidth));
+    return;
+  }
+
   if (width >= 1536)
     cols.value = 5; // 2xl
   else if (width >= 1280)

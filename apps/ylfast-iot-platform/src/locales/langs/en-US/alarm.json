@@ -1,0 +1,78 @@
+{
+  "basic": {
+    "pageTitle": "Basic Config",
+    "pageDescription": "Maintain default alarm level settings and reserve the entry for data flow capability.",
+    "tabs": {
+      "level": "Alarm Level",
+      "flow": "Data Flow"
+    },
+    "levelConfigTitle": "Alarm Level Config",
+    "levelConfigDescription": "Maintain the default five alarm level names that will be reused by alarm configuration.",
+    "levelPrefix": "Level ",
+    "levelTagPrefix": "Level No.",
+    "levelPlaceholder": "Please enter the alarm level name",
+    "defaults": {
+      "level1": "Critical",
+      "level2": "Urgent",
+      "level3": "Major",
+      "level4": "Normal",
+      "level5": "Reminder"
+    },
+    "levelHints": {
+      "level1": "For high-risk alarms that require immediate escalation.",
+      "level2": "For alarms with larger impact that need a fast response.",
+      "level3": "For core abnormal alarms that require focused follow-up.",
+      "level4": "For routine abnormal reminders and general handling cases.",
+      "level5": "For low-impact reminder style notifications."
+    },
+    "actions": {
+      "save": "Save"
+    },
+    "helpTitle": "Feature Notes",
+    "helpItems": {
+      "1": "Alarm levels describe the severity of alarms and can be customized to match business management rules.",
+      "2": "Alarm levels will be referenced by alarm configuration.",
+      "3": "Up to five levels can be configured."
+    },
+    "flowPending": "Data flow is not available yet",
+    "message": {
+      "levelRequired": "Please fill in all five alarm level names",
+      "saveSuccess": "Default alarm levels saved successfully"
+    }
+  },
+  "config": {
+    "list": {
+      "add": "Add Alarm Config"
+    },
+    "fields": {
+      "description": "Description",
+      "level": "Alarm Level",
+      "name": "Alarm Name",
+      "sceneName": "Linked Scene",
+      "targetType": "Alarm Target Type"
+    },
+    "messages": {
+      "disableSuccess": "Alarm config disabled",
+      "enableSuccess": "Alarm config enabled"
+    },
+    "detail": {
+      "title": {
+        "add": "Add Alarm Config",
+        "edit": "Edit Alarm Config"
+      },
+      "tabs": {
+        "basic": "Basic Config",
+        "record": "Alarm Record",
+        "scene": "Scene Linkage"
+      },
+      "placeholders": {
+        "record": "Alarm record is not available yet",
+        "scene": "Scene linkage is not available yet"
+      },
+      "messages": {
+        "saveBeforeMoreTabs": "Please save the basic config first"
+      },
+      "targetTypeSupportPrefix": "Supported triggers: "
+    }
+  }
+}

@@ -52,6 +52,11 @@ export interface HswebMenu {
   owner?: string;
 
   /**
+   * 应用ID
+   */
+  application?: string;
+
+  /**
    * 菜单名称
    */
   name: string;
@@ -156,7 +161,9 @@ export function adaptHswebMenu(
       component = '';
     }
 
-    const meta = menu.options || {};
+    const meta = {
+      ...menu.options,
+    } as RouteRecordStringComponent['meta'];
 
     const vbenMenu: RouteRecordStringComponent = {
       path: menu.url,

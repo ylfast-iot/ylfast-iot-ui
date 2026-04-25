@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ApplicationApi } from '#/api/system/application';
 
-import { computed, h } from 'vue';
+import { computed } from 'vue';
 
 import { createIconifyIcon } from '@vben/icons';
 import { $t } from '@vben/locales';
@@ -35,13 +35,11 @@ const PlayIcon = createIconifyIcon('lucide:play-circle');
 const StopIcon = createIconifyIcon('lucide:stop-circle');
 const DefaultAppIcon = createIconifyIcon('lucide:layout-grid');
 
-// Dynamic Provider Icon
-const ProviderIcon = computed(() => {
+// Dynamic Provider Icon component
+const ProviderIconComponent = computed(() => {
   const providerEnum = getProviderConfig(props.row.provider);
-  if (providerEnum?.icon) {
-    return () => h(createIconifyIcon(providerEnum.icon!));
-  }
-  return DefaultAppIcon;
+  const icon = providerEnum?.icon || 'lucide:layout-grid';
+  return createIconifyIcon(icon);
 });
 
 // Formatted Time
@@ -62,7 +60,11 @@ const providerName = computed(() => {
 // Color classes from enum
 const iconColorBg = computed(() => {
   const providerEnum = getProviderConfig(props.row.provider);
-  return providerEnum?.bgClass || 'bg-blue-50';
+  if (providerEnum) {
+    // Combine background color and text color from config
+    return `${providerEnum.color || 'bg-blue-500'} ${providerEnum.bgClass || 'text-white'}`;
+  }
+  return 'bg-blue-50 text-blue-500';
 });
 
 // Status Badge Logic
@@ -127,7 +129,7 @@ const statusBadge = computed(() => {
       <!-- Icon -->
       <div
         class="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg transition-colors"
-        :class="iconColorBg"
+        :class="!row.logoUrl ? iconColorBg : ''"
       >
         <img
           v-if="row.logoUrl"
@@ -137,11 +139,8 @@ const statusBadge = computed(() => {
         />
         <component
           v-else
-          :is="ProviderIcon"
-          class="h-5 w-5"
-          :style="{
-            color: getProviderConfig(props.row.provider)?.color || '#3b82f6',
-          }"
+          :is="ProviderIconComponent"
+          class="h-6 w-6"
           stroke-width="2"
         />
       </div>
@@ -204,7 +203,7 @@ const statusBadge = computed(() => {
           class="line-clamp-1 text-[10px] leading-relaxed text-slate-500 dark:text-gray-400"
           :title="row.description"
         >
-          {{ row.description || $t('common.noDescription', '暂无描述') }}
+          {{ row.description || $t('application.noDescription', '暂无描述') }}
         </p>
       </div>
     </div>
@@ -280,10 +279,10 @@ const statusBadge = computed(() => {
         <template #overlay>
           <Menu>
             <MenuItem key="api-grant" @click.stop="emit('apiGrant', row)">
-              API 赋权
+              {{ $t('application.apiGrantTitle', '应用 API 赋权') }}
             </MenuItem>
             <MenuItem key="api-debug" @click.stop="emit('apiDebug', row)">
-              API 调试
+              {{ $t('common.apiDebug', 'API 调试') }}
             </MenuItem>
           </Menu>
         </template>

@@ -116,6 +116,8 @@ export namespace ApplicationApi {
   export interface PageConfig {
     /** 页面根地址 */
     baseUrl?: string;
+    /** 页面所属系统标识 */
+    owner?: string;
     /** 路由类型 */
     routeType?: RouteType;
     /** 跳转参数 */
@@ -129,7 +131,6 @@ export namespace ApplicationApi {
     /** 解析后的菜单查询 Path */
     parsedQueryMenuPath?: string;
   }
-
   /** 单点登录配置 */
   export interface SsoConfig {
     /** SSO配置 */
@@ -414,6 +415,11 @@ export namespace ApplicationApi {
     menuList: `${BASE_URL}/{id}/menu/list`,
     userMenuTree: `${BASE_URL}/{id}/{userId}/menu/tree`,
     userMenuList: `${BASE_URL}/{id}/{userId}/menu/list`,
+
+    // Remote menu preview
+    remoteMenuTree: `${BASE_URL}/{id}/remote-menu/tree`,
+    remoteMenuList: `${BASE_URL}/{id}/remote-menu/list`,
+
     grantTree: `${BASE_URL}/{targetType}/{targetId}/{appId}/_grant/tree`,
     grantList: `${BASE_URL}/{targetType}/{targetId}/{appId}/_grant/list`,
 
@@ -490,7 +496,11 @@ export const updateApplicationConnectState = (appId: string, owner?: string) =>
  */
 export const saveApplicationAndGrant = (
   data: ApplicationApi.ApplicationSaveRequest,
-) => requestClient.post(ApplicationApi.Apis.save, data);
+) =>
+  requestClient.post<ApplicationApi.ApplicationEntity>(
+    ApplicationApi.Apis.save,
+    data,
+  );
 
 /**
  * 保存应用并绑定菜单
@@ -498,7 +508,11 @@ export const saveApplicationAndGrant = (
  */
 export const saveApplicationWithMenu = (
   data: ApplicationApi.ApplicationMenuInfo,
-) => requestClient.post(ApplicationApi.Apis.saveWithMenu, data);
+) =>
+  requestClient.post<ApplicationApi.ApplicationEntity>(
+    ApplicationApi.Apis.saveWithMenu,
+    data,
+  );
 
 /**
  * 查询页面集成应用
@@ -685,6 +699,36 @@ export const queryUserApplicationMenuList = (
   requestClient.post<SystemMenuApi.MenuView[]>(
     parseTemplate(ApplicationApi.Apis.userMenuList, { id, userId }),
     query,
+  );
+
+/**
+ * 预览应用远端菜单树
+ * @param id 应用ID
+ * @param requestQueryMenuApi 菜单查询接口路径
+ */
+export const queryRemoteMenuTree = (id: string, requestQueryMenuApi?: string) =>
+  requestClient.get<SystemMenuApi.MenuView[]>(
+    parseTemplate(ApplicationApi.Apis.remoteMenuTree, { id }),
+    {
+      params: {
+        requestQueryMenuApi,
+      },
+    },
+  );
+
+/**
+ * 预览应用远端菜单列表
+ * @param id 应用ID
+ * @param requestQueryMenuApi 菜单查询接口路径
+ */
+export const queryRemoteMenuList = (id: string, requestQueryMenuApi?: string) =>
+  requestClient.get<SystemMenuApi.MenuView[]>(
+    parseTemplate(ApplicationApi.Apis.remoteMenuList, { id }),
+    {
+      params: {
+        requestQueryMenuApi,
+      },
+    },
   );
 
 /**

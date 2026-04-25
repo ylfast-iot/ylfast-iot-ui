@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { Page } from '@vben/common-ui';
 import { createIconifyIcon } from '@vben/icons';
+import { $t } from '@vben/locales';
 
 import { Button, message } from 'ant-design-vue';
 
@@ -37,7 +38,7 @@ const expandedKeys = ref<string[]>([]);
 
 const fetchApiData = async () => {
   if (!appId) {
-    message.error('无效的应用ID参数');
+    message.error($t('common.invalidParams', '无效的应用ID参数'));
     return;
   }
 
@@ -76,7 +77,9 @@ const fetchApiData = async () => {
         return { name: u.name, doc: docRes };
       } catch (error) {
         console.error(`Failed to load swagger doc: ${u.name}`, error);
-        message.warning(`接口文档 [${u.name}] 加载失败`);
+        message.warning(
+          `${$t('application.docLoadFailed', '接口文档加载失败')}: [${u.name}]`,
+        );
         return null;
       }
     });
@@ -130,7 +133,7 @@ const fetchApiData = async () => {
                 : [];
 
             if (tags.length === 0) {
-              docNode._tags.add('未分组');
+              docNode._tags.add($t('common.ungrouped', '未分组'));
             } else {
               tags.forEach((t: any) => docNode._tags.add(t));
             }
@@ -175,7 +178,7 @@ const fetchApiData = async () => {
     expandedKeys.value = expanded;
   } catch (error) {
     console.error(error);
-    message.error('加载 API 数据失败');
+    message.error($t('application.loadApiDataFailed', '加载 API 数据失败'));
   } finally {
     loading.value = false;
   }
@@ -187,7 +190,7 @@ const handleGoBack = () => {
 
 const handleReset = () => {
   selectedOperationIds.value = new Set(originalOperationIds.value);
-  message.success('已重置为当前保存状态');
+  message.success($t('application.resetSuccess', '已重置为当前保存状态'));
 };
 
 const handleSave = async () => {
@@ -215,10 +218,10 @@ const handleSave = async () => {
 
     // 更新 original 为当前状态，避免再次重置回老数据
     originalOperationIds.value = new Set(finalIds);
-    message.success('API 赋权保存成功');
+    message.success($t('application.apiGrantSaveSuccess', 'API 赋权保存成功'));
   } catch (error) {
     console.error(error);
-    message.error('API 赋权保存失败');
+    message.error($t('application.apiGrantSaveFailed', 'API 赋权保存失败'));
   } finally {
     saving.value = false;
   }
@@ -232,14 +235,20 @@ onMounted(() => {
 <template>
   <Page
     auto-content-height
-    :description="`配置 [ ${appName || appId || '正在加载'} ] 所属的 API 访问授权范围`"
+    :description="
+      $t('application.apiGrantDesc', [
+        appName || appId || $t('common.loading', '正在加载'),
+      ])
+    "
   >
     <template #title>
       <div class="flex items-center">
         <Button class="-ml-3 mr-2" type="link" @click="handleGoBack">
           <template #icon><BackIcon /></template>
         </Button>
-        <span class="text-lg font-medium">应用 API 赋权</span>
+        <span class="text-lg font-medium">{{
+          $t('application.apiGrantTitle', '应用 API 赋权')
+        }}</span>
       </div>
     </template>
 
@@ -250,8 +259,8 @@ onMounted(() => {
       :tree-data="treeData"
       :loading="loading"
       :saving="saving"
-      page-title="应用 API 赋权"
-      empty-text="当前数据为空"
+      :page-title="$t('application.apiGrantTitle', '应用 API 赋权')"
+      :empty-text="$t('common.noData', '当前数据为空')"
       @reset="handleReset"
       @save="handleSave"
     />

@@ -13,24 +13,24 @@ import { message } from 'ant-design-vue';
 import { getAllMenusApi } from '#/api';
 import { BasicLayout, IFrameView } from '#/layouts';
 import { $t } from '#/locales';
-import { IOT_OWNER_KEY } from '#/utils/constants';
+// import { IOT_OWNER_KEY } from '#/utils/constants';
 
 const defaultOwnParams: Term[] = [
   {
     terms: [
       {
         terms: [
-          {
-            column: 'owner',
-            termType: 'eq',
-            value: IOT_OWNER_KEY,
-          },
-          {
-            column: 'owner',
-            termType: 'isnull',
-            value: '1',
-            type: 'or',
-          },
+          // {
+          //   column: 'owner',
+          //   termType: 'eq',
+          //   value: IOT_OWNER_KEY,
+          // },
+          // {
+          //   column: 'owner',
+          //   termType: 'isnull',
+          //   value: '1',
+          //   type: 'or',
+          // },
         ],
       },
       {

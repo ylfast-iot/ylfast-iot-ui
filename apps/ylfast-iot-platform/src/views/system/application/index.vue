@@ -217,7 +217,11 @@ async function handleDelete(row: Recordable<any>) {
                   : 'default'
             "
           >
-            {{ row.connectState?.text || row.connectState?.value || '未知' }}
+            {{
+              row.connectState?.text ||
+              row.connectState?.value ||
+              $t('common.unknown', '未知')
+            }}
           </Tag>
         </template>
 
@@ -258,14 +262,16 @@ async function handleDelete(row: Recordable<any>) {
             <template #overlay>
               <Menu>
                 <MenuItem key="api-grant" @click="handleApiGrant(row)">
-                  API 赋权
+                  {{ $t('application.apiGrantTitle', '应用 API 赋权') }}
                 </MenuItem>
                 <MenuItem key="api-debug" @click="handleApiDebug(row)">
-                  API 调试
+                  {{ $t('common.apiDebug', 'API 调试') }}
                 </MenuItem>
               </Menu>
             </template>
-            <Button size="small" type="link"> 更 多 </Button>
+            <Button size="small" type="link">
+              {{ $t('common.more', '更 多') }}
+            </Button>
           </Dropdown>
         </template>
 

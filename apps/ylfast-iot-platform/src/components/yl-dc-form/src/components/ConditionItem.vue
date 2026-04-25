@@ -222,6 +222,7 @@ watch(
         <component
           :is="valueComponent"
           v-bind="valueComponentProps"
+          :key="`${conditionVM.column}-${conditionVM.termType}-${currentSchema?.component || 'Input'}`"
           :model-value="conditionVM.value"
           :value="conditionVM.value"
           @update:model-value="(val: any) => (conditionVM.value = val)"

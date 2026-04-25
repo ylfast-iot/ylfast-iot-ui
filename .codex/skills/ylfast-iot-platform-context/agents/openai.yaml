@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ylfast IoT Platform Context"
+  short_description: "快速加载 ylfast-iot-platform 的架构、页面流程与开发约定。"
+  default_prompt: "Use $ylfast-iot-platform-context to restore project context and implement UI work in apps/ylfast-iot-platform."
