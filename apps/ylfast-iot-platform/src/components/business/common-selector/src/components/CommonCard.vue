@@ -192,36 +192,34 @@ defineExpose({ getSelection, clearSelection, setSelection });
     </div>
 
     <!-- Content -->
-    <div class="min-h-[500px] flex-1 overflow-y-auto overflow-x-hidden p-1">
-      <Spin :spinning="loading">
-        <div
-          v-if="list.length > 0"
-          class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
+    <div class="min-h-0 flex-1 overflow-hidden rounded-2xl bg-white p-1">
+      <div class="h-full overflow-y-auto overflow-x-hidden p-1">
+        <Spin :spinning="loading">
           <div
-            v-for="item in list"
-            :key="item[idField || 'id']"
-            @click="toggleSelection(item)"
+            v-if="list.length > 0"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
-            <!-- Card Slot -->
-            <slot
-              name="card-item"
-              :item="item"
-              :is-selected="selectedMap.has(item[idField || 'id'])"
-            ></slot>
+            <div
+              v-for="item in list"
+              :key="item[idField || 'id']"
+              @click="toggleSelection(item)"
+            >
+              <slot
+                name="card-item"
+                :item="item"
+                :is-selected="selectedMap.has(item[idField || 'id'])"
+              ></slot>
+            </div>
           </div>
-        </div>
-        <div v-else class="flex h-64 items-center justify-center">
-          <Empty />
-        </div>
-      </Spin>
+          <div v-else class="flex h-64 items-center justify-center">
+            <Empty />
+          </div>
+        </Spin>
+      </div>
     </div>
 
     <!-- Pagination -->
-    <div
-      v-if="showPager"
-      class="flex flex-shrink-0 justify-end border-t border-border pt-3"
-    >
+    <div v-if="showPager" class="flex flex-shrink-0 justify-end pt-3">
       <Pagination
         v-model:current="pagination.current"
         v-model:page-size="pagination.pageSize"

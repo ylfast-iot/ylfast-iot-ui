@@ -6,6 +6,7 @@ import type {
 } from 'echarts/charts';
 import type {
   DatasetComponentOption,
+  DataZoomComponentOption,
   GridComponentOption,
   LegendComponentOption,
   TitleComponentOption,
@@ -17,6 +18,7 @@ import type { ComposeOption } from 'echarts/core';
 export type ECOption = ComposeOption<
   | BarSeriesOption
   | DatasetComponentOption
+  | DataZoomComponentOption
   | GridComponentOption
   | LegendComponentOption
   | LineSeriesOption
